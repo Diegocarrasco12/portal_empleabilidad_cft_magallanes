@@ -17,10 +17,20 @@ WORKDIR /var/www/html
 # Copiar código
 COPY . /var/www/html
 
-# DocumentRoot → public
+# DocumentRoot → public (y reescritura en TODAS las confs relevantes)
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
- && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
+RUN sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+      /etc/apache2/sites-available/*.conf \
+      /etc/apache2/apache2.conf \
+      /etc/apache2/conf-available/*.conf
+
+# Permitir .htaccess (AllowOverride All) en el docroot
+RUN printf '<Directory ${APACHE_DOCUMENT_ROOT}>\n\
+    Options Indexes FollowSymLinks\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>\n' > /etc/apache2/conf-available/laravel.conf \
+ && a2enconf laravel
 
 # Instalar dependencias PHP del proyecto
 RUN composer install --no-dev --prefer-dist --no-progress --no-interaction
