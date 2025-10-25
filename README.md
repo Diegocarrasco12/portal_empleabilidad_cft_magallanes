@@ -1,61 +1,227 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 Portal de Empleabilidad — CFT Magallanes
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Proyecto web institucional desarrollado para el **Centro de Formación Técnica de Magallanes**, con el objetivo de ofrecer un **portal de empleabilidad** donde estudiantes, egresados y empresas puedan interactuar en torno a ofertas laborales, postulaciones y perfiles profesionales.
 
-## About Laravel
+Este repositorio contiene la **fase 1: Frontend completo del portal**, desarrollado con **Laravel**, **Blade** y **CSS puro**, estructurado para una integración posterior con el backend y base de datos.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📁 Estructura general del proyecto
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+cft-empleabilidad/
+├─ app/
+├─ bootstrap/
+├─ config/
+├─ database/
+├─ public/
+│  ├─ css/
+│  ├─ img/
+│  ├─ js/
+│  ├─ .htaccess
+│  ├─ favicon.ico
+│  ├─ index.php
+│  └─ robots.txt
+├─ resources/
+│  ├─ css/                          # (si se decide compilar con Vite)
+│  ├─ js/                           # (si se decide compilar con Vite)
+│  └─ views/
+│     ├─ admin/
+│     │  └─ dashboard.blade.php
+│     ├─ auth/
+│     │  ├─ login.blade.php
+│     │  └─ register.blade.php
+│     ├─ empresas/
+│     │  ├─ crear_oferta.blade.php
+│     │  ├─ editar.blade.php
+│     │  └─ perfil.blade.php
+│     ├─ jobs/
+│     │  └─ index.blade.php
+│     ├─ layouts/
+│     │  └─ app.blade.php
+│     ├─ partials/
+│     │  ├─ footer.blade.php
+│     │  └─ header.blade.php
+│     ├─ users/
+│     │  ├─ editar.blade.php
+│     │  ├─ perfil.blade.php
+│     │  └─ postulaciones.blade.php
+│     └─ landing.blade.php          # Landing principal
+├─ routes/
+│  ├─ console.php
+│  └─ web.php
+├─ storage/
+│  ├─ app/
+│  ├─ framework/
+│  └─ logs/
+├─ tests/
+│  ├─ Feature/
+│  └─ Unit/
+│     └─ TestCase.php
+├─ .env.example
+├─ .gitignore
+├─ artisan
+├─ composer.json
+├─ composer.lock
+├─ package.json
+├─ vite.config.js
+└─ README.md
 
-## Learning Laravel
+Nota: La carpeta vendor/ existe localmente pero no se versiona (está ignorada por .gitignore).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+🧩 Vistas implementadas
+Landing
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+resources/views/landing.blade.php – Portada con CTA y navegación.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Usuarios (Postulantes)
 
-## Laravel Sponsors
+users/perfil.blade.php – Perfil del postulante.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+users/editar.blade.php – Formulario completo (identidad, contacto, formación, experiencia, CV, links).
 
-### Premium Partners
+users/postulaciones.blade.php – Listado de postulaciones (mock).
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Empresas
 
-## Contributing
+empresas/perfil.blade.php – Dashboard (métricas, CTA “Publicar Nueva Oferta”).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+empresas/editar.blade.php – Edición de perfil de empresa.
 
-## Code of Conduct
+empresas/crear_oferta.blade.php – Formulario para nuevas vacantes.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Jobs
 
-## Security Vulnerabilities
+jobs/index.blade.php – Buscador/listado de ofertas (mock).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Admin
 
-## License
+admin/dashboard.blade.php – Vista base del panel (maquetada).
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Layouts & Partials
+
+layouts/app.blade.php – Layout general.
+
+partials/header.blade.php, partials/footer.blade.php – Encabezado y pie del sitio.
+
+🧱 Rutas base (mock)
+
+Las rutas de navegación para esta fase están definidas en routes/web.php e incluyen:
+
+/ → landing.blade.php
+
+/empleos → jobs/index.blade.php
+
+/usuarios/perfil, /usuarios/editar
+
+/empresas/perfil, /empresas/editar, /empresas/crear
+
+/admin (dashboard mock)
+
+/login, /registrarse (auth mock)
+
+En esta entrega no hay lógica de autenticación real ni conexión a BD—solo frontend navegable.
+
+⚠️ Importante — usar WSL (Ubuntu)
+
+Para evitar problemas de entorno, todos los comandos deben correr en WSL:
+# 1) Abrir WSL (Ubuntu)
+wsl
+
+# 2) Ir a la carpeta donde trabajas (ejemplo: Proyectos)
+mkdir -p ~/Proyectos && cd ~/Proyectos
+
+# 3) Clonar el repo (crea la carpeta 'portal_empleabilidad_cft_magallanes')
+git clone https://github.com/Diegocarrasco12/portal_empleabilidad_cft_magallanes.git
+
+# 4) Entrar a la carpeta del proyecto
+cd portal_empleabilidad_cft_magallanes
+
+# 5) (opcional) Abrir en VS Code
+code .
+
+ Verificar herramientas:
+php -v
+composer -V
+node -v
+npm -v
+
+🔧 Requisitos
+
+WSL 2 con Ubuntu
+PHP 8.2+
+Composer 2.x
+Node 18+ / npm 9+
+Git
+
+🚀 Instalación y visualización (WSL)
+
+1 - Clonar el repositorio
+wsl
+cd ~
+git clone https://github.com/Diegocarrasco12/portal_empleabilidad_cft_magallanes.git
+cd portal_empleabilidad_cft_magallanes
+
+2- Instalar dependencias
+composer install
+npm install
+
+3 - Configurar variables de entorno
+cp .env.example .env
+php artisan key:generate
+
+4 - Levantar el servidor de desarrollo
+php artisan serve
+
+Abrir: http://localhost:8000
+
+5 - (Opcional) Vite en modo desarrollo
+npm run dev
+
+Base de datos: no requerida en esta fase (frontend puro).
+
+🎨 Estilos
+
+Estilos declarados principalmente en public/css/ (p. ej. empresa.css, landing.css, app.css).
+
+Componentes reutilizables: .btn, .btn-primary, .btn-publicar, .card, .grid-2, .grid-3.
+
+Diseño responsive con Flexbox y CSS Grid.
+
+Paleta acorde a la identidad del CFT Magallanes.
+
+✅ Buenas prácticas aplicadas
+
+Estructura Laravel estándar y ordenada.
+
+Vistas por dominio (users/, empresas/, jobs/, admin/).
+
+partials/ y layouts/ para reutilización.
+
+.gitignore de Laravel (no se versiona vendor/, node_modules/, .env).
+
+Preparado para integrar backend (controladores, modelos y DB en la próxima fase).
+
+
+
+🔭 Próxima etapa (backend)
+
+Autenticación (Breeze/Fortify)
+
+Modelos/Migraciones: Company, Job, JobApplication
+
+CRUD real + políticas/roles (postulante/empresa/admin)
+
+Subida de archivos (logos, CVs) — storage:link
+
+Filtros y paginación del buscador de empleos
+
+
+✍️ Autor
+
+Diego Carrasco Ordóñez
+Desarrollador Full Stack (JS / PHP / Laravel) — Chile
+📧 diegocarrasco.dev@gmail.com
+
+📝 Licencia
+
+Uso institucional/educativo; no comercial sin autorización.
