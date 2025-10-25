@@ -5,3 +5,4 @@ vendor
 storage/logs/*
 docker-compose.yml
 README.md
+.env
