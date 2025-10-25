@@ -8,6 +8,7 @@ Este repositorio contiene la **fase 1: Frontend completo del portal**, desarroll
 
 ## 📁 Estructura general del proyecto
 
+```text
 cft-empleabilidad/
 ├─ app/
 ├─ bootstrap/
@@ -22,8 +23,8 @@ cft-empleabilidad/
 │  ├─ index.php
 │  └─ robots.txt
 ├─ resources/
-│  ├─ css/                          # (si se decide compilar con Vite)
-│  ├─ js/                           # (si se decide compilar con Vite)
+│  ├─ css/
+│  ├─ js/
 │  └─ views/
 │     ├─ admin/
 │     │  └─ dashboard.blade.php
@@ -45,7 +46,7 @@ cft-empleabilidad/
 │     │  ├─ editar.blade.php
 │     │  ├─ perfil.blade.php
 │     │  └─ postulaciones.blade.php
-│     └─ landing.blade.php          # Landing principal
+│     └─ landing.blade.php
 ├─ routes/
 │  ├─ console.php
 │  └─ web.php
@@ -65,6 +66,7 @@ cft-empleabilidad/
 ├─ package.json
 ├─ vite.config.js
 └─ README.md
+
 
 Nota: La carpeta vendor/ existe localmente pero no se versiona (está ignorada por .gitignore).
 
