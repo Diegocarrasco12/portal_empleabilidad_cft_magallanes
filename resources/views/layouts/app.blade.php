@@ -24,7 +24,6 @@
     {{-- Estilos compartidos (componentes/header admin, dashboard, etc.) --}}
     {{-- Cárgalo siempre o, si prefieres, sólo para rutas admin: --}}
     {{-- @if(request()->routeIs('admin.*')) <link rel="stylesheet" href="{{ asset('css/app.css') }}"> @endif --}}
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
 
     {{-- (Adición) Estilos específicos para el panel de administración en CSS plano.
         No afecta a la landing ni al resto del sitio. --}}
