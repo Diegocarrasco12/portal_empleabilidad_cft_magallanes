@@ -1,0 +1,300 @@
+/* === Perfil Empresa (Diseño actualizado según Figma) === */
+.empresa-dashboard {
+    padding: 2rem 0;
+}
+
+/* === Header principal === */
+.empresa-header {
+    margin: 2rem auto;
+    background: #fff;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.empresa-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* Columna izquierda */
+.empresa-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.empresa-logo {
+    width: 250px;
+    height: auto;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.empresa-descripcion {
+    font-size: 0.95rem;
+    color: #444;
+    margin-bottom: 1rem;
+    max-width: 280px;
+    line-height: 1.5;
+}
+
+/* Columna derecha */
+.empresa-detalle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stats-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    text-align: left;
+}
+
+.chart-img {
+    width: 300px;
+    height: auto;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+/* Botones */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+}
+
+.btn-primary {
+    background: #c91e25;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #a8181e;
+}
+
+.btn-publicar {
+    background: #c91e25;
+    color: #fff;
+}
+
+.btn-publicar:hover {
+    background: #a8181e;
+}
+.btn-danger {
+    background: #c91e25;
+    color: #fff;
+    border-color: #c91e25;
+}
+.btn-danger:hover {
+    background: #a8181e;
+}
+
+/* === Columna central: estadísticas === */
+.empresa-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+.stats-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+.stats-list li {
+    color: #333;
+}
+
+/* === Columna derecha: gráfico + botón === */
+.chart {
+    text-align: center;
+}
+.chart img {
+    width: 240px;
+    height: auto;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+}
+.btn-publicar {
+    display: inline-block;
+    background: #c91e25;
+    color: #fff;
+    font-weight: 600;
+    padding: 0.9rem 1.8rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s ease;
+    font-size: 1rem;
+}
+.btn-publicar:hover {
+    background: #a8181e;
+}
+
+/* === Sección Mis Ofertas Activas === */
+.empresa-ofertas {
+    margin-top: 2rem;
+}
+.ofertas-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.oferta-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.oferta-icon img {
+    width: 48px;
+    margin-bottom: 0.5rem;
+}
+.link {
+    display: inline-block;
+    margin-top: 0.4rem;
+    color: #c91e25;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* === Sección Publicar Nueva Oferta === */
+.empresa-publicar {
+    margin-top: 3rem;
+    background: #fafafa;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+}
+.empresa-publicar h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+.publicar-contenedor p {
+    max-width: 600px;
+    margin: 0 auto 1.2rem;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+/* === Postulaciones Recientes === */
+.empresa-postulaciones {
+    margin-top: 3rem;
+}
+.postulaciones-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.postulante-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.postulante-card img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.postulante-info h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.postulante-info p {
+    margin: 0.3rem 0;
+    color: #555;
+    font-size: 0.9rem;
+}
+.ver-todos {
+    display: block;
+    margin-top: 1rem;
+    text-align: right;
+    font-size: 0.9rem;
+    color: #c91e25;
+}
+
+/* === Responsive === */
+@media (max-width: 1024px) {
+    .empresa-top {
+        grid-template-columns: 1fr 1fr;
+        text-align: center;
+    }
+    .chart img {
+        margin: 0 auto;
+    }
+    .ofertas-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .postulaciones-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 768px) {
+    .empresa-top {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .empresa-info,
+    .empresa-stats,
+    .chart {
+        align-items: center;
+    }
+    .ofertas-grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 1rem;
+        scroll-snap-type: x proximity;
+    }
+    .oferta-card {
+        flex: 0 0 280px;
+        scroll-snap-align: start;
+    }
+    .postulaciones-grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 1rem;
+    }
+    .postulante-card {
+        flex: 0 0 280px;
+    }
+}
+@media (max-width: 900px) {
+    .empresa-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .empresa-detalle {
+        margin-top: 1.5rem;
+    }
+
+    .chart-img {
+        width: 100%;
+        max-width: 280px;
+    }
+}
