@@ -2,10 +2,10 @@
 
 @section('content')
     <!--
-                            Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
-                            principales descritas en el diseño de referencia: hero, trabajos
-                            destacados, empresas destacadas, testimonios y llamada a la acción.
-                          -->
+                                                        Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
+                                                        principales descritas en el diseño de referencia: hero, trabajos
+                                                        destacados, empresas destacadas, testimonios y llamada a la acción.
+                                                      -->
 
     <!-- Sección Hero -->
     <section class="hero">
@@ -147,6 +147,54 @@
         </div>
     </section>
 
+    <!-- Blogs y páginas de interés e información adicional -->
+    <section class="cft-blog py-5">
+        <div class="container">
+            <p class="overline text-center mb-2">Recursos de Empleabilidad</p>
+            <h2 class="display-6 text-center fw-bold mb-4">
+                Conoce las últimas novedades para tu empleabilidad
+            </h2>
+
+            <div class="cft-blog-grid">
+                <!-- Item 1 -->
+                <article class="cft-blog-card">
+                    <a href="{{ route('empleabilidad.show', 'como-prepararte-entrevista') }}"
+                        class="cft-blog-media ratio ratio-16x9">
+                        <img src="/img/otros/ent.png" alt="Persona en entrevista laboral">
+                    </a>
+                    <h3 class="cft-blog-title mt-3 mb-2">Cómo prepararte para una entrevista</h3>
+                    <a href="{{ route('empleabilidad.show', 'como-prepararte-entrevista') }}" class="btn btn-cft">LEER
+                        MÁS</a>
+                </article>
+
+                <!-- Item 2 -->
+                <article class="cft-blog-card">
+                    <a href="{{ route('empleabilidad.show', 'cv-exitoso-en-5-pasos') }}"
+                        class="cft-blog-media ratio ratio-16x9">
+                        <img src="/img/otros/cv.png" alt="Currículum vitae sobre escritorio">
+                    </a>
+                    <h3 class="cft-blog-title mt-3 mb-2">5 consejos para un CV exitoso</h3>
+                    <a href="{{ route('empleabilidad.show', 'cv-exitoso-en-5-pasos') }}" class="btn btn-cft">LEER MÁS</a>
+                </article>
+
+                <!-- Item 3 -->
+                <article class="cft-blog-card">
+                    <a href="{{ route('empleabilidad.show', 'tendencias-laborales-magallanes') }}"
+                        class="cft-blog-media ratio ratio-16x9">
+                        <img src="/img/otros/sin-titulo-1.png" alt="Vista de empresa y empleabilidad en Magallanes">
+                    </a>
+                    <h3 class="cft-blog-title mt-3 mb-2">Tendencias laborales en Magallanes</h3>
+                    <a href="{{ route('empleabilidad.show', 'tendencias-laborales-magallanes') }}" class="btn btn-cft">LEER
+                        MÁS</a>
+                </article>
+
+                <!-- CTA -->
+                <div class="cft-blog-cta">
+                    <a href="{{ route('empleabilidad.index') }}" class="btn btn-cft">Ver todos los recursos</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Llamado a la acción final -->
     <section class="call-to-action">

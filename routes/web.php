@@ -73,3 +73,9 @@ Route::get('/empleos', function () {
     // en el futuro aquí leerás request()->query() para filtrar en BD
     return view('jobs.index');
 })->name('jobs.index');
+// Recursos de Empleabilidad
+Route::get('/recursos-empleabilidad', [\App\Http\Controllers\EmpleabilidadController::class, 'index'])
+    ->name('empleabilidad.index');
+
+Route::get('/recursos-empleabilidad/{slug}', [\App\Http\Controllers\EmpleabilidadController::class, 'show'])
+    ->name('empleabilidad.show');
