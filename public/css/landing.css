@@ -1013,3 +1013,58 @@ img {
         min-width: 260px;
     }
 }
+/* === Cinturón de seguridad global (landing) === */
+html, body { overflow-x: hidden; width: 100%; }
+
+/* Evita desbordes accidentales de secciones grandes */
+main, .site-header, .site-footer { overflow-x: hidden; }
+
+/* A) Menú móvil como overlay real: no expande el layout cuando está cerrado */
+@media (max-width: 768px) {
+  .main-nav {
+    position: fixed;       /* superposición real */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(320px, 85vw);
+    max-width: 85vw;
+    transform: translateX(100%);  /* fuera de vista sin afectar scrollWidth */
+    background: #fff;
+    border-left: 1px solid #e6e6e6;
+    border-radius: 0;      /* evita px extra por curvas */
+    box-shadow: none;      /* evita sombras que sumen ancho */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    will-change: transform;
+    z-index: 1000;
+  }
+  .main-nav.open { transform: translateX(0); }
+}
+
+/* B) Secciones con velos/gradientes: recortan su contenido */
+.featured-companies,
+.featured-jobs,
+.featured_jobs,
+.testimonials-section { overflow: hidden; }
+
+/* C) Los contenedores que scrollean NO llevan padding (va al wrapper/sección) */
+@media (max-width: 768px) {
+  .companies-row,
+  .featured-jobs .jobs-grid,
+  .featured_jobs .jobs-grid,
+  .testimonials {
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 1rem 0.5rem;   /* aire visual sin aumentar el scrollWidth */
+  }
+
+  /* Velos laterales: solo efecto visual, sin capturar eventos */
+  .featured-companies::before,
+  .featured-companies::after,
+  .featured-jobs::before,
+  .featured-jobs::after,
+  .featured_jobs::before,
+  .featured_jobs::after {
+    pointer-events: none;
+  }
+}

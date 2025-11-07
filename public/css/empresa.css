@@ -298,3 +298,18 @@
         max-width: 280px;
     }
 }
+/* === Cinturón de seguridad (empresa) === */
+html, body { overflow-x: hidden; width: 100%; }
+
+/* Los wrappers recortan; el carrusel scrollea */
+@media (max-width: 768px) {
+  .empresa-ofertas,
+  .empresa-postulaciones { overflow: hidden; }
+
+  .ofertas-grid,
+  .postulaciones-grid {
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 12px 8px;   /* aire sin ensanchar el documento */
+  }
+}
