@@ -1068,3 +1068,43 @@ main, .site-header, .site-footer { overflow-x: hidden; }
     pointer-events: none;
   }
 }
+/* === Mantener el header por encima y el menú por debajo del header === */
+@media (max-width: 768px) {
+  /* 1) Header siempre visible por encima del drawer */
+  .site-header {
+    position: sticky;       /* o fixed si prefieres que no “empuje” nada */
+    top: 0;
+    z-index: 2000;          /* mayor que el del drawer */
+  }
+
+  /* 2) Definimos la altura del header para calcular el alto del drawer */
+  :root { --header-h: 80px; } /* ajusta si tu header mide otra cosa */
+
+  /* 3) Drawer anclado por debajo del header, sin taparlo */
+  .main-nav {
+    position: fixed;
+    top: var(--header-h);
+    right: 0;
+    bottom: 0;
+    width: min(320px, 85vw);
+    max-width: 85vw;
+    height: calc(100dvh - var(--header-h));
+    transform: translateX(100%);
+    background: #fff;
+    border-left: 1px solid #e6e6e6;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1000;          /* menor que el header */
+    will-change: transform;
+  }
+
+  .main-nav.open { transform: translateX(0); }
+
+  /* 4) Asegura que el botón burger quede clickeable por encima */
+  .burger {
+    position: relative;
+    z-index: 2100;          /* mayor que el drawer */
+  }
+}

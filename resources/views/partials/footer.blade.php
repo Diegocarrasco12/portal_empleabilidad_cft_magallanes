@@ -10,7 +10,6 @@
     <div class="footer-col footer-brand">
       <div class="footer-logo-group">
         <img src="{{ asset('img/iconos/footer (1).png') }}" alt="CFT Magallanes" />
-        <img src="{{ asset('img/iconos/footer (2).png') }}" alt="CFTECH" />
       </div>
 
       <p class="footer-heading">CFT MAGALLANES EMPLEABILIDAD</p>
