@@ -8,13 +8,14 @@
             <form class="jobs-search" action="{{ route('jobs.index') }}" method="GET" novalidate>
                 <div class="input-wrap">
                     <img src="{{ asset('img/iconos/search.svg') }}" alt="" aria-hidden="true">
-                    <input type="text" name="q" value="{{ request('q') }}"
-                        placeholder="Cargo, palabra clave o empresa…">
+                    <input id="search-q" type="text" name="q" value="{{ request('q') }}"
+                        placeholder="Cargo, palabra clave o empresa…"
+                        aria-label="Buscar por cargo, palabra clave o empresa">
                 </div>
-
                 <div class="input-wrap">
                     <img src="{{ asset('img/iconos/location.svg') }}" alt="" aria-hidden="true">
-                    <input type="text" name="l" value="{{ request('l') }}" placeholder="Ciudad o región">
+                    <input id="search-location" type="text" name="l" value="{{ request('l') }}"
+                        placeholder="Ciudad o región" aria-label="Buscar por ciudad o región">
                 </div>
 
                 <select name="j" class="select">
@@ -80,8 +81,10 @@
                     <div class="filter-block">
                         <h3>Rango salarial (CLP)</h3>
                         <div class="range-row">
-                            <input type="number" name="smin" placeholder="Mín.">
-                            <input type="number" name="smax" placeholder="Máx.">
+                            <input id="salary-min" type="number" name="smin" placeholder="Mín."
+                                aria-label="Salario mínimo en pesos chilenos">
+                            <input id="salary-max" type="number" name="smax" placeholder="Máx."
+                                aria-label="Salario máximo en pesos chilenos">
                         </div>
                     </div>
 
@@ -99,9 +102,6 @@
                     <div class="actions">
                         <button type="submit" class="btn-apply">Aplicar filtros</button>
                     </div>
-
-
-                    <button class="btn btn-primary btn-full">Aplicar filtros</button>
                 </form>
             </aside>
 

@@ -117,6 +117,7 @@ img {
     /* imagen y encuadre como en el mockup */
     background: #f2f2f2 url("/img/hero/hero-desktop.png") no-repeat 68% center /
         cover;
+    filter: brightness(0.85);
 
     /* altura y layout */
     min-height: clamp(720px, 74vh, 980px);
@@ -144,7 +145,7 @@ img {
 .hero-content {
     width: min(58vw, 900px); /* más ancho para que quepa 1 línea */
     max-width: none;
-    color: #fff;
+    color: #f2f2f2;
     position: relative;
     z-index: 1;
 
@@ -298,7 +299,7 @@ img {
     margin: 0 0 0.2rem;
 }
 .job-card .location {
-    color: #999;
+    color: #666;
     margin: 0 0 0.6rem;
 }
 .job-card .details-link {
@@ -462,7 +463,7 @@ img {
     letter-spacing: 0.12em;
     text-transform: uppercase;
     font-size: 0.85rem;
-    color: #a3a3a3;
+    color: #666666;
     margin: 0 0 0.25rem 0;
 }
 .cft-blog .display-6 {
@@ -521,10 +522,7 @@ img {
 }
 
 /* Links */
-.cft-blog a {
-    color: inherit;
-    text-decoration: none;
-}
+
 .cft-blog a:hover .cft-blog-title {
     text-decoration: underline;
 }
@@ -1014,97 +1012,115 @@ img {
     }
 }
 /* === Cinturón de seguridad global (landing) === */
-html, body { overflow-x: hidden; width: 100%; }
+html,
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
 
 /* Evita desbordes accidentales de secciones grandes */
-main, .site-header, .site-footer { overflow-x: hidden; }
+main,
+.site-header,
+.site-footer {
+    overflow-x: hidden;
+}
 
 /* A) Menú móvil como overlay real: no expande el layout cuando está cerrado */
 @media (max-width: 768px) {
-  .main-nav {
-    position: fixed;       /* superposición real */
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: min(320px, 85vw);
-    max-width: 85vw;
-    transform: translateX(100%);  /* fuera de vista sin afectar scrollWidth */
-    background: #fff;
-    border-left: 1px solid #e6e6e6;
-    border-radius: 0;      /* evita px extra por curvas */
-    box-shadow: none;      /* evita sombras que sumen ancho */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    will-change: transform;
-    z-index: 1000;
-  }
-  .main-nav.open { transform: translateX(0); }
+    .main-nav {
+        position: fixed; /* superposición real */
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(320px, 85vw);
+        max-width: 85vw;
+        transform: translateX(
+            100%
+        ); /* fuera de vista sin afectar scrollWidth */
+        background: #fff;
+        border-left: 1px solid #e6e6e6;
+        border-radius: 0; /* evita px extra por curvas */
+        box-shadow: none; /* evita sombras que sumen ancho */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        will-change: transform;
+        z-index: 1000;
+    }
+    .main-nav.open {
+        transform: translateX(0);
+    }
 }
 
 /* B) Secciones con velos/gradientes: recortan su contenido */
 .featured-companies,
 .featured-jobs,
 .featured_jobs,
-.testimonials-section { overflow: hidden; }
+.testimonials-section {
+    overflow: hidden;
+}
 
 /* C) Los contenedores que scrollean NO llevan padding (va al wrapper/sección) */
 @media (max-width: 768px) {
-  .companies-row,
-  .featured-jobs .jobs-grid,
-  .featured_jobs .jobs-grid,
-  .testimonials {
-    padding-left: 0;
-    padding-right: 0;
-    margin: 0 1rem 0.5rem;   /* aire visual sin aumentar el scrollWidth */
-  }
+    .companies-row,
+    .featured-jobs .jobs-grid,
+    .featured_jobs .jobs-grid,
+    .testimonials {
+        padding-left: 0;
+        padding-right: 0;
+        margin: 0 1rem 0.5rem; /* aire visual sin aumentar el scrollWidth */
+    }
 
-  /* Velos laterales: solo efecto visual, sin capturar eventos */
-  .featured-companies::before,
-  .featured-companies::after,
-  .featured-jobs::before,
-  .featured-jobs::after,
-  .featured_jobs::before,
-  .featured_jobs::after {
-    pointer-events: none;
-  }
+    /* Velos laterales: solo efecto visual, sin capturar eventos */
+    .featured-companies::before,
+    .featured-companies::after,
+    .featured-jobs::before,
+    .featured-jobs::after,
+    .featured_jobs::before,
+    .featured_jobs::after {
+        pointer-events: none;
+    }
 }
 /* === Mantener el header por encima y el menú por debajo del header === */
 @media (max-width: 768px) {
-  /* 1) Header siempre visible por encima del drawer */
-  .site-header {
-    position: sticky;       /* o fixed si prefieres que no “empuje” nada */
-    top: 0;
-    z-index: 2000;          /* mayor que el del drawer */
-  }
+    /* 1) Header siempre visible por encima del drawer */
+    .site-header {
+        position: sticky; /* o fixed si prefieres que no “empuje” nada */
+        top: 0;
+        z-index: 2000; /* mayor que el del drawer */
+    }
 
-  /* 2) Definimos la altura del header para calcular el alto del drawer */
-  :root { --header-h: 80px; } /* ajusta si tu header mide otra cosa */
+    /* 2) Definimos la altura del header para calcular el alto del drawer */
+    :root {
+        --header-h: 80px;
+    } /* ajusta si tu header mide otra cosa */
 
-  /* 3) Drawer anclado por debajo del header, sin taparlo */
-  .main-nav {
-    position: fixed;
-    top: var(--header-h);
-    right: 0;
-    bottom: 0;
-    width: min(320px, 85vw);
-    max-width: 85vw;
-    height: calc(100dvh - var(--header-h));
-    transform: translateX(100%);
-    background: #fff;
-    border-left: 1px solid #e6e6e6;
-    border-radius: 0;
-    box-shadow: none;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    z-index: 1000;          /* menor que el header */
-    will-change: transform;
-  }
+    /* 3) Drawer anclado por debajo del header, sin taparlo */
+    .main-nav {
+        position: fixed;
+        top: var(--header-h);
+        right: 0;
+        bottom: 0;
+        width: min(320px, 85vw);
+        max-width: 85vw;
+        height: calc(100dvh - var(--header-h));
+        transform: translateX(100%);
+        background: #fff;
+        border-left: 1px solid #e6e6e6;
+        border-radius: 0;
+        box-shadow: none;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        z-index: 1000; /* menor que el header */
+        will-change: transform;
+    }
 
-  .main-nav.open { transform: translateX(0); }
+    .main-nav.open {
+        transform: translateX(0);
+    }
 
-  /* 4) Asegura que el botón burger quede clickeable por encima */
-  .burger {
-    position: relative;
-    z-index: 2100;          /* mayor que el drawer */
-  }
+    /* 4) Asegura que el botón burger quede clickeable por encima */
+    .burger {
+        position: relative;
+        z-index: 2100; /* mayor que el drawer */
+    }
 }

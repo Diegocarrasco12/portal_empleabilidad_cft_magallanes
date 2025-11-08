@@ -144,51 +144,6 @@
                 </div>
             </section>
 
-            {{-- === Preferencias de publicaciones === --}}
-            <section class="card">
-                <h2>Preferencias de publicaciones</h2>
-
-                <div class="grid-3">
-                    <div class="field">
-                        <label for="recepcion">Recepción de postulaciones *</label>
-                        <select id="recepcion" name="recepcion">
-                            <option value="interno">En la plataforma</option>
-                            <option value="email">Por correo</option>
-                            <option value="url">URL externa</option>
-                        </select>
-                    </div>
-
-                    <div class="field">
-                        <label for="email_postulaciones">Correo para postulaciones</label>
-                        <input id="email_postulaciones" name="email_postulaciones" type="email"
-                            placeholder="postula@empresa.cl">
-                    </div>
-
-                    <div class="field">
-                        <label for="url_postulaciones">URL externa (si aplica)</label>
-                        <input id="url_postulaciones" name="url_postulaciones" type="url"
-                            placeholder="https://empresa.trabajaen.com/ofertas/123">
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="field">
-                        <label for="mostrar_sueldo">Mostrar rango salarial</label>
-                        <select id="mostrar_sueldo" name="mostrar_sueldo">
-                            <option value="si">Sí</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label for="mostrar_logo">Mostrar logo en ofertas</label>
-                        <select id="mostrar_logo" name="mostrar_logo">
-                            <option value="si">Sí</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-                </div>
-            </section>
-
             {{-- === Representante (opcional) === --}}
             <section class="card">
                 <h2>Representante (opcional)</h2>

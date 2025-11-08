@@ -109,55 +109,6 @@
                 </div>
             </section>
 
-            {{-- === Experiencia (dos bloques de ejemplo) === --}}
-            <section class="card">
-                <h2>Experiencia</h2>
-
-                <div class="exp-block">
-                    <div class="grid-3">
-                        <div class="field">
-                            <label>Puesto</label>
-                            <input type="text" name="exp[0][puesto]" placeholder="Asistente de enfermería">
-                        </div>
-                        <div class="field">
-                            <label>Empresa</label>
-                            <input type="text" name="exp[0][empresa]" placeholder="Clínica Regional del Sur">
-                        </div>
-                        <div class="field">
-                            <label>Periodo</label>
-                            <input type="text" name="exp[0][periodo]" placeholder="03/2024 – 09/2024">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Funciones / Logros</label>
-                        <textarea name="exp[0][detalle]" rows="2" placeholder="Describe brevemente tus tareas principales y logros."></textarea>
-                    </div>
-                </div>
-
-                <div class="exp-block">
-                    <div class="grid-3">
-                        <div class="field">
-                            <label>Puesto</label>
-                            <input type="text" name="exp[1][puesto]" placeholder="Práctica profesional">
-                        </div>
-                        <div class="field">
-                            <label>Empresa</label>
-                            <input type="text" name="exp[1][empresa]" placeholder="Hospital Base">
-                        </div>
-                        <div class="field">
-                            <label>Periodo</label>
-                            <input type="text" name="exp[1][periodo]" placeholder="01/2024 – 02/2024">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Funciones / Logros</label>
-                        <textarea name="exp[1][detalle]" rows="2" placeholder="Describe brevemente tus tareas principales y logros."></textarea>
-                    </div>
-                </div>
-
-                <p class="hint">Puedes agregar más experiencias más adelante (funcionalidad dinámica).</p>
-            </section>
-
             {{-- === CV / Portafolio === --}}
             <section class="card">
                 <h2>CV y enlaces</h2>
@@ -206,28 +157,6 @@
                             <option>Presencial</option>
                             <option>Híbrido</option>
                             <option>Remoto</option>
-                        </select>
-                    </div>
-                </div>
-            </section>
-
-            {{-- === Visibilidad de perfil === --}}
-            <section class="card">
-                <h2>Visibilidad</h2>
-                <div class="grid-2">
-                    <div class="field">
-                        <label for="visibilidad">Perfil visible para empresas</label>
-                        <select id="visibilidad" name="visibilidad">
-                            <option value="publico">Sí, hacer mi perfil visible</option>
-                            <option value="privado">No, mantener mi perfil privado</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label for="alertas">Alertas de ofertas por email</label>
-                        <select id="alertas" name="alertas">
-                            <option value="diario">Diario</option>
-                            <option value="semanal">Semanal</option>
-                            <option value="off">Desactivar</option>
                         </select>
                     </div>
                 </div>
@@ -360,14 +289,6 @@
                 border: 1px dashed #d1d5db;
                 border-radius: 8px;
                 background: #fafafa;
-            }
-
-            .exp-block {
-                border: 1px dashed #e5e7eb;
-                border-radius: 12px;
-                padding: 1rem;
-                margin-bottom: .8rem;
-                background: #fcfcfc;
             }
 
             .form-actions {
