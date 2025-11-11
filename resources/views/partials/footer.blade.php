@@ -9,7 +9,7 @@
     <!-- Col 1: Logos + descripción -->
     <div class="footer-col footer-brand">
       <div class="footer-logo-group">
-        <img src="{{ asset('img/iconos/footer (1).png') }}" alt="CFT Magallanes" />
+        <img src="{{ asset('img/iconos/logo.png') }}" alt="CFT Magallanes" />
       </div>
 
       <p class="footer-heading">CFT MAGALLANES EMPLEABILIDAD</p>
