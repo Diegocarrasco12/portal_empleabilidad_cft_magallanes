@@ -5,69 +5,125 @@
 
         {{-- Header: tarjeta izquierda (avatar + datos) y derecha (actividad reciente) --}}
         <section class="user-top grid-2">
+
             {{-- Tarjeta izquierda --}}
             <article class="card user-card">
                 <div class="user-head">
                     <img class="user-avatar" src="{{ asset('img/testimonios/test (2).png') }}" alt="Avatar estudiante">
+
                     <div class="user-meta">
-                        <h2 class="user-name">Daniela Soto</h2>
-                        <p class="user-status">📘 Estado Carrera: Egresado<br>🎓 Técnico en Enfermería</p>
+                        <h2 class="user-name">
+                            {{ $estudiante->usuario->nombre }} {{ $estudiante->usuario->apellido }}
+                        </h2>
+
+                        <p class="user-status">
+                            📘 Estado Carrera:
+                            <strong>{{ $estudiante->estado_carrera ?? 'No informado' }}</strong>
+                            <br>
+                            🎓 {{ $estudiante->carrera ?? 'Carrera no registrada' }}
+                        </p>
                     </div>
                 </div>
 
                 <p class="user-intro">
-                    Hola, Daniela, aquí puedes gestionar tus postulaciones y revisar las ofertas disponibles para ti.
+                    {{ $estudiante->resumen
+                        ? $estudiante->resumen
+                        : 'Aquí puedes gestionar tus postulaciones y revisar las ofertas disponibles para ti.' }}
                 </p>
 
                 <div class="user-actions">
                     <a href="{{ url('/usuarios/editar') }}" class="btn btn-primary">Editar Perfil</a>
-                    <a href="{{ url('/usuarios/cv') }}" class="btn btn-outline">Ver CV</a>
+
+                    @if ($estudiante->ruta_cv)
+                        <a href="{{ asset('storage/' . $estudiante->ruta_cv) }}" target="_blank" class="btn btn-outline">
+                            Ver CV
+                        </a>
+                    @else
+                        <a href="#" class="btn btn-outline disabled">Sin CV</a>
+                    @endif
                 </div>
             </article>
 
-            {{-- Tarjeta derecha: Actividad Reciente --}}
+
+            {{-- Tarjeta derecha – Actividad Reciente (Mock por ahora) --}}
             <article class="card activity-card">
                 <header class="card-header">
                     <h3>Actividad Reciente</h3>
                 </header>
 
                 <ul class="activity-list">
-                    <li>✉️ <strong>3</strong> Postulaciones enviadas</li>
-                    <li>👤 <strong>1</strong> Avance en tu postulación</li>
-                    <li>💡 <strong>2</strong> Ofertas nuevas disponibles</li>
+                    <li>✉️ <strong>0</strong> Postulaciones enviadas</li>
+                    <li>👤 <strong>0</strong> Avance en tus postulaciones</li>
+                    <li>💡 <strong>0</strong> Ofertas nuevas recomendadas</li>
                 </ul>
 
                 <div class="activity-cta">
                     <a href="{{ url('/usuarios/postulaciones') }}" class="btn btn-primary">Mis Postulaciones</a>
                 </div>
             </article>
+
         </section>
 
-        {{-- Mis Postulaciones --}}
+
+
+        {{-- ======================
+            MIS POSTULACIONES
+        ======================= --}}
         <section class="user-section">
             <h3 class="section-title">Mis Postulaciones</h3>
 
-            <div class="cards-grid-3">
-                @for ($i = 0; $i < 3; $i++)
-                    <article class="card job-card">
-                        <header class="job-head">
-                            <img src="{{ asset('img/empresas/empresa (3).png') }}" alt="Oferta" class="job-icon">
-                            <h4 class="job-title">Técnico en Mantenimiento Industrial</h4>
-                        </header>
-                        <p class="job-company">Magallanes Logística SPA</p>
+            @if ($postulaciones->isEmpty())
+                <p style="text-align:center; color:#6b7280; margin-bottom:1rem;">
+                    Aún no has postulado a ninguna oferta. Explora las vacantes disponibles y envía tu primera postulación.
+                </p>
+            @else
+                <div class="cards-grid-3">
+                    @foreach ($postulaciones as $postulacion)
+                        @php
+                            $oferta = $postulacion->oferta;
+                            $empresa = $oferta?->empresa;
+                            $titulo = $oferta?->titulo ?? 'Oferta sin título';
+                            $empresaNombre = $empresa?->nombre_comercial ?? 'Empresa no registrada';
+                            $estado = $postulacion->estado_postulacion ?? 'postulado';
+                            $fecha = $postulacion->fecha_postulacion
+                                ? $postulacion->fecha_postulacion->format('d-m-Y')
+                                : null;
+                        @endphp
 
-                        <div class="job-meta">
-                            <div class="job-meta-item">⏳ En proceso</div>
-                            <div class="job-meta-item">📅 10 de octubre de 2025</div>
-                        </div>
+                        <article class="card job-card">
+                            <header class="job-head">
+                                <img src="{{ asset('img/empresas/empresa (3).png') }}" alt="Oferta" class="job-icon">
+                                <h4 class="job-title">{{ $titulo }}</h4>
+                            </header>
 
-                        <a href="#" class="job-link">Ver Detalles</a>
-                    </article>
-                @endfor
-            </div>
+                            <p class="job-company">{{ $empresaNombre }}</p>
+
+                            <div class="job-meta">
+                                <div class="job-meta-item">
+                                    ⏳ {{ ucfirst(str_replace('_', ' ', $estado)) }}
+                                </div>
+
+                                @if ($fecha)
+                                    <div class="job-meta-item">
+                                        📅 {{ $fecha }}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <a href="{{ route('users.postulaciones') }}" class="job-link">
+                                Ver detalle
+                            </a>
+                        </article>
+                    @endforeach
+                </div>
+            @endif
         </section>
 
-        {{-- Ofertas Recomendadas --}}
+
+
+        {{-- ======================
+            OFERTAS RECOMENDADAS (mock)
+        ======================= --}}
         <section class="user-section">
             <h3 class="section-title alt">Ofertas Recomendadas</h3>
 
@@ -76,8 +132,10 @@
                     <article class="card job-card">
                         <header class="job-head">
                             <img src="{{ asset('img/empresas/empresa (4).png') }}" alt="Oferta" class="job-icon">
+
                             <h4 class="job-title">Asistente Laboratorio Clínico</h4>
                         </header>
+
                         <p class="job-company">Clínica Regional del Sur</p>
 
                         <div class="job-meta">
@@ -89,8 +147,15 @@
                 @endfor
             </div>
         </section>
+
     </main>
 
+
+
+
+    {{-- ======================
+        ESTILOS
+    ======================= --}}
     @push('styles')
         <style>
             /* Contenedor general */
@@ -98,7 +163,6 @@
                 padding: 1.25rem 0 2rem;
             }
 
-            /* Grids */
             .grid-2 {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -111,7 +175,6 @@
                 gap: 1rem;
             }
 
-            /* Tarjetas base */
             .card {
                 background: #fff;
                 border: 1px solid #eee;
@@ -120,13 +183,7 @@
                 box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
             }
 
-            .card-header h3 {
-                margin: 0;
-                font-size: 1.05rem;
-            }
-
-            /* Header usuario */
-            .user-card .user-head {
+            .user-head {
                 display: flex;
                 align-items: center;
                 gap: .9rem;
@@ -147,7 +204,6 @@
             }
 
             .user-status {
-                margin: .15rem 0 0;
                 color: #555;
                 font-size: .92rem;
                 line-height: 1.35;
@@ -164,25 +220,17 @@
                 flex-wrap: wrap;
             }
 
-            /* Actividad reciente */
-            .activity-card .activity-list {
+            .activity-list {
                 list-style: none;
-                padding: 0;
                 margin: .5rem 0 1rem;
+                padding: 0;
             }
 
-            .activity-card .activity-list li {
+            .activity-list li {
                 margin: .45rem 0;
                 font-size: .95rem;
-                color: #111827;
             }
 
-            .activity-cta {
-                display: flex;
-                justify-content: flex-start;
-            }
-
-            /* Job cards */
             .job-head {
                 display: flex;
                 align-items: center;
@@ -210,7 +258,6 @@
                 display: flex;
                 gap: .75rem;
                 flex-wrap: wrap;
-                color: #374151;
                 font-size: .9rem;
                 margin-bottom: .5rem;
             }
@@ -222,91 +269,12 @@
                 border-radius: 8px;
             }
 
-            .job-link {
-                color: #c91e25;
-                text-decoration: none;
-                font-weight: 600;
-                font-size: .92rem;
-            }
-
-            /* Títulos de sección */
-            .user-section {
-                margin-top: 1.25rem;
-            }
-
             .section-title {
-                margin: .25rem 0 .75rem;
+                text-align: center;
                 font-size: 1.1rem;
                 font-weight: 800;
                 color: #c91e25;
-                text-align: center;
                 margin: .5rem 0 1rem;
-            }
-
-            .section-title.alt {
-                color: #c91e25;
-                text-align: center;
-                margin: .5rem 0 1rem;
-            }
-
-            /* Botones (reutilizamos la línea pro que venías usando) */
-            .btn {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: .4rem;
-                border-radius: 10px;
-                padding: .75rem 1.1rem;
-                font-weight: 700;
-                line-height: 1;
-                border: 1px solid transparent;
-                text-decoration: none;
-                cursor: pointer;
-                transition: background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .06s ease;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-            }
-
-            .btn:active {
-                transform: translateY(1px);
-            }
-
-            .btn-primary {
-                background: #c91e25;
-                color: #fff;
-                border-color: #c91e25;
-            }
-
-            .btn-primary:hover {
-                background: #b01920;
-                border-color: #b01920;
-            }
-
-            .btn-primary:focus {
-                outline: 0;
-                box-shadow: 0 0 0 4px rgba(201, 30, 37, .18);
-            }
-
-            .btn-outline {
-                background: #fff;
-                color: #111827;
-                border-color: #d1d5db;
-            }
-
-            .btn-outline:hover {
-                background: #f9fafb;
-                border-color: #cbd5e1;
-            }
-
-            .btn-outline:focus {
-                outline: 0;
-                box-shadow: 0 0 0 4px rgba(2, 132, 199, .15);
-            }
-
-            /* Responsive */
-            @media (max-width:1024px) {
-                .cards-grid-3 {
-                    grid-template-columns: 1fr 1fr;
-                }
             }
 
             @media (max-width:820px) {
@@ -314,20 +282,7 @@
                     grid-template-columns: 1fr;
                 }
             }
-
-            @media (max-width:680px) {
-                .cards-grid-3 {
-                    display: flex;
-                    gap: 1rem;
-                    overflow-x: auto;
-                    scroll-snap-type: x proximity;
-                }
-
-                .cards-grid-3>.card {
-                    flex: 0 0 280px;
-                    scroll-snap-align: start;
-                }
-            }
         </style>
     @endpush
+
 @endsection

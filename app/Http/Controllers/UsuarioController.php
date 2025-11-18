@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Estudiante;
-use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
 {
@@ -16,14 +15,24 @@ class UsuarioController extends Controller
 
         $estudiante = Estudiante::where('usuario_id', $usuarioId)->first();
 
+        $postulaciones = collect();
+
+        if ($estudiante) {
+            $postulaciones = $estudiante->postulaciones()
+                ->with(['oferta.empresa'])
+                ->orderByDesc('fecha_postulacion')
+                ->limit(6)
+                ->get();
+        }
+
         return view('users.perfil', [
-            'estudiante' => $estudiante,
+            'estudiante'    => $estudiante,
+            'postulaciones' => $postulaciones,
         ]);
     }
 
     /**
      * Formulario para editar datos del postulante.
-     * Más adelante definimos los campos editables.
      */
     public function editar()
     {
@@ -36,13 +45,25 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Lista de postulaciones del usuario.
-     * De momento solo cargamos la vista; luego se conectará
-     * a la tabla "postulaciones" para mostrar datos reales.
+     * Lista completa de postulaciones del usuario.
      */
     public function postulaciones()
     {
-        // TODO: traer postulaciones reales del estudiante logueado
-        return view('users.postulaciones');
+        $usuarioId = session('usuario_id');
+        $estudiante = Estudiante::where('usuario_id', $usuarioId)->first();
+
+        $postulaciones = collect();
+
+        if ($estudiante) {
+            $postulaciones = $estudiante->postulaciones()
+                ->with(['oferta.empresa'])
+                ->orderByDesc('fecha_postulacion')
+                ->get();
+        }
+
+        return view('users.postulaciones', [
+            'estudiante'    => $estudiante,
+            'postulaciones' => $postulaciones,
+        ]);
     }
 }
