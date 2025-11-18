@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Estudiante;
+use App\Models\Postulacion;
+use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
 {
     /**
-     * Perfil del postulante/estudiante logueado.
+     * PERFIL DEL POSTULANTE
      */
     public function perfil()
     {
@@ -15,24 +17,20 @@ class UsuarioController extends Controller
 
         $estudiante = Estudiante::where('usuario_id', $usuarioId)->first();
 
-        $postulaciones = collect();
-
-        if ($estudiante) {
-            $postulaciones = $estudiante->postulaciones()
-                ->with(['oferta.empresa'])
-                ->orderByDesc('fecha_postulacion')
-                ->limit(6)
-                ->get();
-        }
+        // 🔥 Cargar postulaciones para la vista del perfil
+        $postulaciones = Postulacion::with(['oferta.empresa'])
+            ->where('estudiante_id', $estudiante->id)
+            ->orderBy('fecha_postulacion', 'desc')
+            ->get();
 
         return view('users.perfil', [
-            'estudiante'    => $estudiante,
+            'estudiante' => $estudiante,
             'postulaciones' => $postulaciones,
         ]);
     }
 
     /**
-     * Formulario para editar datos del postulante.
+     * FORMULARIO PARA EDITAR PERFIL
      */
     public function editar()
     {
@@ -45,25 +43,19 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Lista completa de postulaciones del usuario.
+     * LISTA DE POSTULACIONES DEL USUARIO
      */
     public function postulaciones()
     {
         $usuarioId = session('usuario_id');
         $estudiante = Estudiante::where('usuario_id', $usuarioId)->first();
 
-        $postulaciones = collect();
+        // 🔥 Cargar postulaciones reales
+        $postulaciones = Postulacion::with(['oferta.empresa'])
+            ->where('estudiante_id', $estudiante->id)
+            ->orderBy('fecha_postulacion', 'desc')
+            ->get();
 
-        if ($estudiante) {
-            $postulaciones = $estudiante->postulaciones()
-                ->with(['oferta.empresa'])
-                ->orderByDesc('fecha_postulacion')
-                ->get();
-        }
-
-        return view('users.postulaciones', [
-            'estudiante'    => $estudiante,
-            'postulaciones' => $postulaciones,
-        ]);
+        return view('users.postulaciones', compact('postulaciones'));
     }
 }
