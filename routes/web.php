@@ -1,81 +1,114 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmpleabilidadController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\UsuarioController;
 
+/*
+|--------------------------------------------------------------------------
+| WEB ROUTES – CFT Empleabilidad
+|--------------------------------------------------------------------------
+| Estructura:
+| 1) Rutas públicas (landing, login, registro, recursos)
+| 2) Rutas protegidas por sesión manual  (auth.custom)
+| 3) Rutas protegidas por rol           (role:admin/empresa/postulante)
+|
+| La autenticación se maneja en AuthController usando la tabla "usuarios".
+|--------------------------------------------------------------------------
+*/
+
+
+/* ============================================================
+   1) RUTA PRINCIPAL / LANDING (Pública)
+============================================================ */
 Route::view('/', 'landing')->name('home');
-Route::get('/admin', function () {
-    // Datos “mock” para el saludo (opcional)
-    return view('admin.dashboard', [
-        'adminName' => 'Macarena Navarro',
-    ]);
-    // Perfil admin    
-})->name('admin.dashboard');
-// Perfil empresa
-Route::get('/empresas/perfil', function () {
-    return view('empresas.perfil');
-})->name('empresas.perfil');
-// Editar perfil empresa (form)
-Route::get('/empresas/editar', function () {
-    return view('empresas.editar');
-})->name('empresas.editar');
-
-// Guardar perfil empresa (mock)
-Route::post('/empresas/perfil/update', function (\Illuminate\Http\Request $request) {
-    // TODO: validar/guardar en BD
-    return redirect()->route('empresas.perfil')->with('ok', 'Perfil de empresa actualizado');
-})->name('empresas.perfil.update');
 
 
-// Crear nueva oferta Vista de creación
-Route::get('/empresas/crear', function () {
-    return view('empresas.crear_oferta');
-})->name('empresas.crear');
 
-// Envío del formulario (ajusta a tu controlador real)
-Route::post('/empresas/ofertas', function () {
-    // TODO: validar/guardar -> redirigir
-    return redirect()->route('empresas.perfil')->with('ok', 'Oferta publicada');
-})->name('empresas.ofertas.store');
-// Perfil usuario
-Route::get('/usuarios/perfil', function () {
-    return view('users.perfil');
-})->name('usuarios.perfil');
-Route::get('/usuarios/editar', function () {
-    return view('users.editar');
-})->name('usuarios.editar');
-// Perfil postulante: lista de postulaciones
-Route::get('/usuarios/postulaciones', function () {
-    return view('users.postulaciones');
-})->name('users.postulaciones');
-// Mostrar login
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+/* ============================================================
+   2) AUTENTICACIÓN REAL – AuthController (Público)
+============================================================ */
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
-// Procesar login (mock: sólo redirige)
-// Cuando integres Auth real, reemplaza por tu controlador.
-Route::post('/login', function (\Illuminate\Http\Request $request) {
-    // Aquí iría tu lógica real de autenticación
-    return redirect('/'); // o a /admin, /usuarios/perfil, etc.
+Route::get('/registrarse', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/registrarse', [AuthController::class, 'register'])->name('register.process');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+
+/* ============================================================
+   3) RUTAS PROTEGIDAS POR SESIÓN MANUAL – auth.custom
+============================================================ */
+Route::middleware('auth.custom')->group(function () {
+
+    /* ------------------------- ADMIN (rol: admin) ------------------------- */
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin', [AdminController::class, 'dashboard'])
+            ->name('admin.dashboard');
+    });
+
+
+    /* ------------------------- EMPRESAS (rol: empresa) ------------------------- */
+    Route::middleware('role:empresa')
+        ->prefix('empresas')
+        ->group(function () {
+
+            Route::get('/perfil', [EmpresaController::class, 'perfil'])
+                ->name('empresas.perfil');
+
+            Route::get('/editar', [EmpresaController::class, 'editar'])
+                ->name('empresas.editar');
+
+            Route::post('/perfil/update', [EmpresaController::class, 'updatePerfil'])
+                ->name('empresas.perfil.update');
+
+            Route::get('/crear', [EmpresaController::class, 'crearOferta'])
+                ->name('empresas.crear');
+
+            Route::post('/ofertas', [EmpresaController::class, 'storeOferta'])
+                ->name('empresas.ofertas.store');
+        });
+
+
+    /* -------------------- POSTULANTES / USUARIOS (rol: postulante) -------------------- */
+    Route::middleware('role:postulante')
+        ->prefix('usuarios')
+        ->group(function () {
+
+            Route::get('/perfil', [UsuarioController::class, 'perfil'])
+                ->name('usuarios.perfil');
+
+            Route::get('/editar', [UsuarioController::class, 'editar'])
+                ->name('usuarios.editar');
+
+            // Mantenemos el nombre original de la ruta para no romper vistas antiguas
+            Route::get('/postulaciones', [UsuarioController::class, 'postulaciones'])
+                ->name('users.postulaciones');
+        });
+
 });
-// Mostrar registro
-Route::get('/registrarse', function () {
-    return view('auth.register');
-})->name('register');
 
-// Procesar registro (demo: redirige; luego conectas a tu lógica real)
-Route::post('/registrarse', function (\Illuminate\Http\Request $request) {
-    // Aquí conectarás con tu UserController/validator/creación de cuenta
-    return redirect('/login')->with('status', 'Cuenta creada. Revisa tu correo para confirmar (demo).');
-});
-// Buscador de empleos (mock)
+
+
+/* ============================================================
+   4) BUSCADOR DE EMPLEOS (PÚBLICO – mock)
+============================================================ */
 Route::get('/empleos', function () {
-    // en el futuro aquí leerás request()->query() para filtrar en BD
     return view('jobs.index');
 })->name('jobs.index');
-// Recursos de Empleabilidad
-Route::get('/recursos-empleabilidad', [\App\Http\Controllers\EmpleabilidadController::class, 'index'])
+
+
+
+/* ============================================================
+   5) RECURSOS DE EMPLEABILIDAD (Controlador real)
+============================================================ */
+Route::get('/recursos-empleabilidad', [EmpleabilidadController::class, 'index'])
     ->name('empleabilidad.index');
 
-Route::get('/recursos-empleabilidad/{slug}', [\App\Http\Controllers\EmpleabilidadController::class, 'show'])
+Route::get('/recursos-empleabilidad/{slug}', [EmpleabilidadController::class, 'show'])
     ->name('empleabilidad.show');

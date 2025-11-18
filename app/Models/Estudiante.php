@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Estudiante extends Model
+{
+    protected $table = 'estudiantes';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'usuario_id',
+        'run',
+        'estado_carrera',
+        'carrera',
+        'telefono',
+        'ciudad',
+        'resumen',
+        'institucion',
+        'anio_egreso',
+        'cursos',
+        'ruta_cv',
+        'linkedin_url',
+        'portfolio_url',
+        'area_interes_id',
+        'jornada_preferencia_id',
+        'modalidad_preferencia_id',
+        'visibilidad',
+        'frecuencia_alertas',
+        'creado_en',
+        'actualizado_en',
+    ];
+
+    const CREATED_AT = 'creado_en';
+    const UPDATED_AT = 'actualizado_en';
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'usuario_id');
+    }
+}
