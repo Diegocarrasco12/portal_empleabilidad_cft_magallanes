@@ -2,6 +2,14 @@
 
 @section('content')
     <main class="container perfil-user">
+        {{-- BOTÓN CERRAR SESIÓN ARRIBA DERECHA --}}
+        <div class="logout-box">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-btn">Cerrar sesión</button>
+            </form>
+        </div>
+
 
         {{-- Header: tarjeta izquierda (avatar + datos) y derecha (actividad reciente) --}}
         <section class="user-top grid-2">
@@ -45,20 +53,20 @@
             </article>
 
 
-            {{-- Tarjeta derecha – Actividad Reciente (Mock por ahora) --}}
+            {{-- Tarjeta derecha – Actividad Reciente --}}
             <article class="card activity-card">
                 <header class="card-header">
                     <h3>Actividad Reciente</h3>
                 </header>
 
                 <ul class="activity-list">
-                    <li>✉️ <strong>0</strong> Postulaciones enviadas</li>
+                    <li>✉️ <strong>{{ count($postulaciones) }}</strong> Postulaciones enviadas</li>
                     <li>👤 <strong>0</strong> Avance en tus postulaciones</li>
                     <li>💡 <strong>0</strong> Ofertas nuevas recomendadas</li>
                 </ul>
 
                 <div class="activity-cta">
-                    <a href="{{ url('/usuarios/postulaciones') }}" class="btn btn-primary">Mis Postulaciones</a>
+                    <a href="{{ route('postulaciones.index') }}" class="btn btn-primary">Mis Postulaciones</a>
                 </div>
             </article>
 
@@ -84,9 +92,10 @@
                             $empresa = $oferta?->empresa;
                             $titulo = $oferta?->titulo ?? 'Oferta sin título';
                             $empresaNombre = $empresa?->nombre_comercial ?? 'Empresa no registrada';
-                            $estado = $postulacion->estado_postulacion ?? 'postulado';
+
+                            // FECHA LISTA PARA MOSTRAR
                             $fecha = $postulacion->fecha_postulacion
-                                ? $postulacion->fecha_postulacion->format('d-m-Y')
+                                ? date('d-m-Y', strtotime($postulacion->fecha_postulacion))
                                 : null;
                         @endphp
 
@@ -99,8 +108,9 @@
                             <p class="job-company">{{ $empresaNombre }}</p>
 
                             <div class="job-meta">
+
                                 <div class="job-meta-item">
-                                    ⏳ {{ ucfirst(str_replace('_', ' ', $estado)) }}
+                                    ⏳ Postulado
                                 </div>
 
                                 @if ($fecha)
@@ -110,7 +120,7 @@
                                 @endif
                             </div>
 
-                            <a href="{{ route('users.postulaciones') }}" class="job-link">
+                            <a href="{{ route('postulaciones.index') }}" class="job-link">
                                 Ver detalle
                             </a>
                         </article>
@@ -149,8 +159,6 @@
         </section>
 
     </main>
-
-
 
 
     {{-- ======================
@@ -281,6 +289,36 @@
                 .grid-2 {
                     grid-template-columns: 1fr;
                 }
+            }
+
+            /* BOTÓN CERRAR SESIÓN ARRIBA DERECHA */
+            .logout-box {
+                position: absolute;
+                top: 30px;
+                /* lo puedes ajustar */
+                right: 30px;
+                /* lo puedes ajustar */
+                z-index: 10;
+            }
+
+            .logout-btn {
+                background: #e02424;
+                color: white;
+                border: none;
+                padding: .45rem .9rem;
+                border-radius: 8px;
+                font-size: .9rem;
+                cursor: pointer;
+                transition: .2s;
+            }
+
+            .logout-btn:hover {
+                background: #c81e1e;
+            }
+
+            /* Asegurar que el contenedor del perfil sea relativo */
+            .perfil-user {
+                position: relative;
             }
         </style>
     @endpush

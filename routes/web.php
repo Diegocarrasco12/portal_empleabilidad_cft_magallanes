@@ -6,6 +6,9 @@ use App\Http\Controllers\EmpleabilidadController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\PostulacionController;
+use App\Http\Controllers\OfertaController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +27,10 @@ use App\Http\Controllers\UsuarioController;
 /* ============================================================
    1) RUTA PRINCIPAL / LANDING (Pública)
 ============================================================ */
+
 Route::view('/', 'landing')->name('home');
+Route::get('/ofertas/{id}', [OfertaController::class, 'show'])
+    ->name('ofertas.detalle');
 
 
 
@@ -85,12 +91,21 @@ Route::middleware('auth.custom')->group(function () {
 
             Route::get('/editar', [UsuarioController::class, 'editar'])
                 ->name('usuarios.editar');
+            // POSTULAR A UNA OFERTA
+            Route::post('/postular/{id}', [PostulacionController::class, 'store'])
+                ->name('postulaciones.store');
 
-            // Mantenemos el nombre original de la ruta para no romper vistas antiguas
-            Route::get('/postulaciones', [UsuarioController::class, 'postulaciones'])
-                ->name('users.postulaciones');
+            // VER MIS POSTULACIONES
+            Route::get('/mis-postulaciones', [PostulacionController::class, 'index'])
+                ->name('postulaciones.index');
+            // VER DETALLE DE UNA POSTULACIÓN
+            Route::get('/mis-postulaciones/{id}', [PostulacionController::class, 'show'])
+                ->name('postulaciones.show');
+            // Ruta AJAX para cargar modal de detalle de postulación
+            Route::get('/postulacion-detalle/{id}', [PostulacionController::class, 'modal'])
+                ->middleware(['auth.custom', 'role:postulante'])
+                ->name('postulaciones.modal');
         });
-
 });
 
 

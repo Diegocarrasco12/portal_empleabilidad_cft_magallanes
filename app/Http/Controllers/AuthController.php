@@ -12,13 +12,28 @@ use Illuminate\Support\Facades\Session;
 class AuthController extends Controller
 {
     /* ============================================================
-       LOGIN
+       LOGIN – FORMULARIO
     ============================================================ */
-    public function showLogin()
+    public function showLogin(Request $request)
     {
+        // Guardar la URL previa si realmente corresponde
+        if (!session('url.intended')) {
+
+            $prev = url()->previous();
+
+            // Evitar capturar / y /login como "intended"
+            if ($prev !== url('/') && $prev !== url('/login')) {
+                session(['url.intended' => $prev]);
+            }
+        }
+
         return view('auth.login');
     }
 
+
+    /* ============================================================
+       LOGIN – PROCESAR CREDENCIALES
+    ============================================================ */
     public function login(Request $request)
     {
         $request->validate([
@@ -30,29 +45,51 @@ class AuthController extends Controller
 
         if (!$usuario) {
             return back()->withErrors(['email' => 'El correo no está registrado.'])
-                         ->withInput();
+                ->withInput();
         }
 
         if (!Hash::check($request->password, $usuario->contrasena)) {
             return back()->withErrors(['password' => 'La contraseña es incorrecta.'])
-                         ->withInput();
+                ->withInput();
         }
 
-        // Sesión manual
+        // ============================================================
+        // SESIÓN MANUAL (LA CORRECTA)
+        // ============================================================
         session([
             'usuario_id'     => $usuario->id,
             'usuario_nombre' => $usuario->nombre,
-            'usuario_rol'    => $usuario->rol_id,
+            'usuario_rol'    => $usuario->rol_id,   // <-- FIX CORRECTO (NO CAMBIAR POR NOMBRE)
             'autenticado'    => true,
         ]);
 
-        // Redirección por rol
-        return match ((int)$usuario->rol_id) {
-            1 => redirect()->route('admin.dashboard'),
-            2 => redirect()->route('empresas.perfil'),
-            default => redirect()->route('usuarios.perfil'),
+
+        // ============================================================
+        // REDIRECCIÓN INTELIGENTE (si existe url.intended válida)
+        // ============================================================
+        $intended = session('url.intended');
+
+        if (
+            $intended &&
+            $intended !== url('/') &&
+            $intended !== url('/login')
+        ) {
+            session()->forget('url.intended');
+            return redirect($intended);
+        }
+
+        // ============================================================
+        // REDIRECCIÓN POR ROL
+        // ============================================================
+        $destino = match ((int)$usuario->rol_id) {
+            1       => route('admin.dashboard'),
+            2       => route('empresas.perfil'),
+            default => route('usuarios.perfil'),
         };
+
+        return redirect($destino);
     }
+
 
     /* ============================================================
        LOGOUT
@@ -63,14 +100,19 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
+
     /* ============================================================
-       REGISTRO
+       REGISTRO – FORMULARIO
     ============================================================ */
     public function showRegister()
     {
         return view('auth.register');
     }
 
+
+    /* ============================================================
+       REGISTRO – GUARDAR
+    ============================================================ */
     public function register(Request $request)
     {
         $request->validate([
