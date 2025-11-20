@@ -91,6 +91,9 @@ Route::middleware('auth.custom')->group(function () {
 
             Route::get('/editar', [UsuarioController::class, 'editar'])
                 ->name('usuarios.editar');
+            Route::post('/editar', [UsuarioController::class, 'update'])
+                ->name('usuarios.update');
+
             // POSTULAR A UNA OFERTA
             Route::post('/postular/{id}', [PostulacionController::class, 'store'])
                 ->name('postulaciones.store');

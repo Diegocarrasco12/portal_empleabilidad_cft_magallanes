@@ -27,7 +27,8 @@
                     <div class="field">
                         <label for="avatar">Foto de perfil</label>
                         <div class="avatar-row">
-                            <img class="avatar-preview" src="{{ asset('img/testimonios/test (2).png') }}"
+                            <img class="avatar-preview"
+                                src="{{ $estudiante->avatar ? asset('storage/' . $estudiante->avatar) : asset('img/testimonios/test (2).png') }}"
                                 alt="Avatar actual">
                             <div class="avatar-actions">
                                 <input type="file" id="avatar" name="avatar" accept="image/*">
@@ -39,25 +40,37 @@
                         <div class="grid-2">
                             <div class="field">
                                 <label for="nombre">Nombre</label>
-                                <input id="nombre" name="nombre" type="text" value="Daniela Soto">
+                                <input id="nombre" name="nombre" type="text"
+                                    value="{{ $estudiante->usuario->nombre }}">
+                                <div class="field">
+                                    <label for="apellido">Apellido</label>
+                                    <input id="apellido" name="apellido" type="text"
+                                        value="{{ $estudiante->usuario->apellido }}">
+                                </div>
                             </div>
                             <div class="field">
                                 <label for="run">RUN (opcional)</label>
-                                <input id="run" name="run" type="text" placeholder="11.111.111-1">
+                                <input id="run" name="run" type="text" value="{{ $estudiante->run }}">
                             </div>
                         </div>
                         <div class="grid-2">
                             <div class="field">
                                 <label for="estado">Estado carrera</label>
                                 <select id="estado" name="estado">
-                                    <option>Egresado/a</option>
-                                    <option>Estudiante</option>
-                                    <option>Titulad@</option>
+                                    <option value="Egresado/a"
+                                        {{ $estudiante->estado_carrera == 'Egresado/a' ? 'selected' : '' }}>Egresado/a
+                                    </option>
+                                    <option value="Estudiante"
+                                        {{ $estudiante->estado_carrera == 'Estudiante' ? 'selected' : '' }}>Estudiante
+                                    </option>
+                                    <option value="Titulad@"
+                                        {{ $estudiante->estado_carrera == 'Titulad@' ? 'selected' : '' }}>Titulad@</option>
                                 </select>
+
                             </div>
                             <div class="field">
                                 <label for="titulo">Carrera / Título</label>
-                                <input id="titulo" name="titulo" type="text" value="Técnico en Enfermería">
+                                <input id="titulo" name="titulo" type="text" value="{{ $estudiante->carrera }}">
                             </div>
                         </div>
                     </div>
@@ -70,21 +83,20 @@
                 <div class="grid-3">
                     <div class="field">
                         <label for="email">Correo</label>
-                        <input id="email" name="email" type="email" value="daniela@ejemplo.cl">
+                        <input id="email" name="email" type="email" value="{{ $estudiante->usuario->email }}">
                     </div>
                     <div class="field">
                         <label for="telefono">Teléfono</label>
-                        <input id="telefono" name="telefono" type="text" placeholder="+56 9 1234 5678">
+                        <input id="telefono" name="telefono" type="text" value="{{ $estudiante->telefono }}">
                     </div>
                     <div class="field">
                         <label for="ciudad">Ciudad</label>
-                        <input id="ciudad" name="ciudad" type="text" value="Punta Arenas">
+                        <input id="ciudad" name="ciudad" type="text" value="{{ $estudiante->ciudad }}">
                     </div>
                 </div>
                 <div class="field">
                     <label for="resumen">Resumen (extracto breve)</label>
-                    <textarea id="resumen" name="resumen" rows="3"
-                        placeholder="Cuenta en pocas líneas tu perfil profesional y lo que te interesa."></textarea>
+                    <textarea id="resumen" name="resumen" rows="3">{{ $estudiante->resumen }}</textarea>
                     <span class="hint">Máximo recomendado: 280–400 caracteres.</span>
                 </div>
             </section>
@@ -95,17 +107,17 @@
                 <div class="grid-2">
                     <div class="field">
                         <label for="institucion">Institución</label>
-                        <input id="institucion" name="institucion" type="text" value="CFT Magallanes">
+                        <input id="institucion" name="institucion" type="text" value="{{ $estudiante->institucion }}">
                     </div>
                     <div class="field">
                         <label for="anio_egreso">Año de egreso</label>
                         <input id="anio_egreso" name="anio_egreso" type="number" min="1990" max="2099"
-                            value="2025">
+                            value="{{ $estudiante->anio_egreso }}">
                     </div>
                 </div>
                 <div class="field">
                     <label for="cursos">Cursos / Certificaciones (opcional)</label>
-                    <textarea id="cursos" name="cursos" rows="2" placeholder="Curso A (2024), Certificación B (2025)"></textarea>
+                    <textarea id="cursos" name="cursos" rows="2">{{ $estudiante->cursos }}</textarea>
                 </div>
             </section>
 
@@ -116,17 +128,23 @@
                     <div class="field">
                         <label for="cv">Subir CV (PDF)</label>
                         <input id="cv" name="cv" type="file" accept="application/pdf">
+                        @if ($estudiante->ruta_cv)
+                            <p class="hint">
+                                CV actual: <a href="{{ asset('storage/' . $estudiante->ruta_cv) }}" target="_blank">Ver
+                                    PDF</a>
+                            </p>
+                        @endif
+
                         <span class="hint">Máx. 4MB. Formato PDF.</span>
                     </div>
                     <div class="field">
                         <label for="linkedin">LinkedIn (opcional)</label>
-                        <input id="linkedin" name="linkedin" type="url"
-                            placeholder="https://www.linkedin.com/in/tu-perfil">
+                        <input id="linkedin" name="linkedin" type="url" value="{{ $estudiante->linkedin_url }}">
                     </div>
                 </div>
                 <div class="field">
                     <label for="portfolio">Portafolio / Sitio (opcional)</label>
-                    <input id="portfolio" name="portfolio" type="url" placeholder="https://tusitio.com">
+                    <input id="portfolio" name="portfolio" type="url" value="{{ $estudiante->portfolio_url }}">
                 </div>
             </section>
 
@@ -134,33 +152,48 @@
             <section class="card">
                 <h2>Preferencias</h2>
                 <div class="grid-3">
+
                     <div class="field">
                         <label for="area">Área de interés</label>
                         <select id="area" name="area">
-                            <option>Salud</option>
-                            <option>Administración</option>
-                            <option>Logística</option>
-                            <option>Turismo</option>
+                            <option value="1" {{ $estudiante->area_interes_id == 1 ? 'selected' : '' }}>Salud
+                            </option>
+                            <option value="2" {{ $estudiante->area_interes_id == 2 ? 'selected' : '' }}>
+                                Administración</option>
+                            <option value="3" {{ $estudiante->area_interes_id == 3 ? 'selected' : '' }}>Logística
+                            </option>
+                            <option value="4" {{ $estudiante->area_interes_id == 4 ? 'selected' : '' }}>Turismo
+                            </option>
                         </select>
                     </div>
+
                     <div class="field">
                         <label for="jornada">Jornada</label>
                         <select id="jornada" name="jornada">
-                            <option>Completa</option>
-                            <option>Media jornada</option>
-                            <option>Práctica</option>
+                            <option value="1" {{ $estudiante->jornada_preferencia_id == 1 ? 'selected' : '' }}>
+                                Completa</option>
+                            <option value="2" {{ $estudiante->jornada_preferencia_id == 2 ? 'selected' : '' }}>Media
+                                jornada</option>
+                            <option value="3" {{ $estudiante->jornada_preferencia_id == 3 ? 'selected' : '' }}>
+                                Práctica</option>
                         </select>
                     </div>
+
                     <div class="field">
                         <label for="modalidad">Modalidad</label>
                         <select id="modalidad" name="modalidad">
-                            <option>Presencial</option>
-                            <option>Híbrido</option>
-                            <option>Remoto</option>
+                            <option value="1" {{ $estudiante->modalidad_preferencia_id == 1 ? 'selected' : '' }}>
+                                Presencial</option>
+                            <option value="2" {{ $estudiante->modalidad_preferencia_id == 2 ? 'selected' : '' }}>
+                                Híbrido</option>
+                            <option value="3" {{ $estudiante->modalidad_preferencia_id == 3 ? 'selected' : '' }}>
+                                Remoto</option>
                         </select>
                     </div>
+
                 </div>
             </section>
+
 
             {{-- Acciones --}}
             <div class="form-actions">
