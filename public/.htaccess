@@ -4,6 +4,9 @@
     </IfModule>
 
     RewriteEngine On
+    # Permitir acceso a archivos dentro de storage (avatars, cv, etc.)
+    RewriteRule ^storage/(.*)$ storage/$1 [L,NC]
+
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

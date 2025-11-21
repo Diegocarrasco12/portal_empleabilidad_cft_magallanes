@@ -21,6 +21,7 @@ class Estudiante extends Model
         'anio_egreso',
         'cursos',
         'ruta_cv',
+        'avatar',
         'linkedin_url',
         'portfolio_url',
         'area_interes_id',
