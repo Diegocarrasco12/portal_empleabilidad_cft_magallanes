@@ -35,11 +35,10 @@ class PostulacionController extends Controller
             return back()->with('error', 'La oferta de trabajo no existe.');
         }
 
-        // 4. Validar que la oferta esté publicada
-        if (!in_array($oferta->estado, ['publicada'])) {
+        // 4. Validar que la oferta esté publicada (1 = publicada)
+        if ($oferta->estado != 1) {
             return back()->with('error', 'Esta oferta no está disponible para postulación.');
         }
-
 
 
         // Validar fecha de cierre

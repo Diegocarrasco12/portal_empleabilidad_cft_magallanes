@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Estudiante;
 use App\Models\Postulacion;
 use Illuminate\Http\Request;
+use App\Services\OfertaRecommendationService;
 
 class UsuarioController extends Controller
 {
     /**
      * PERFIL DEL POSTULANTE
      */
-    public function perfil()
+    public function perfil(OfertaRecommendationService $service)
     {
         $usuarioId = session('usuario_id');
 
@@ -23,9 +24,13 @@ class UsuarioController extends Controller
             ->orderBy('fecha_postulacion', 'desc')
             ->get();
 
+        // 🔥 Obtener ofertas recomendadas usando el Service
+        $ofertasRecomendadas = $service->getRecomendadas($estudiante);
+
         return view('users.perfil', [
             'estudiante' => $estudiante,
             'postulaciones' => $postulaciones,
+            'ofertasRecomendadas' => $ofertasRecomendadas, // ← enviado a la vista
         ]);
     }
 
@@ -151,7 +156,6 @@ class UsuarioController extends Controller
         // ===========================
         return redirect('/usuarios/perfil')->with('success', 'Perfil actualizado correctamente.');
     }
-
 
     /**
      * LISTA DE POSTULACIONES DEL USUARIO

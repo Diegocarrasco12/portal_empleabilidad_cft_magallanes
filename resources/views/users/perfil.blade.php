@@ -3,16 +3,6 @@
 @section('content')
 <main class="container perfil-user">
 
-    {{-- =========================================================
-        BOTÓN CERRAR SESIÓN (arriba derecha)
-        Mantiene consistencia con el sistema completo
-    ========================================================== --}}
-    <div class="logout-box">
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="logout-btn">Cerrar sesión</button>
-        </form>
-    </div>
 
 
     {{-- =========================================================
@@ -146,31 +136,52 @@
 
 
 
-    {{-- =========================================================
-        OFERTAS RECOMENDADAS (mock)
-    ========================================================== --}}
-    <section class="user-section">
-        <h3 class="section-title alt">Ofertas Recomendadas</h3>
+{{-- =========================================================
+    OFERTAS RECOMENDADAS (dinámico)
+========================================================== --}}
+<section class="user-section">
+    <h3 class="section-title alt">Ofertas Recomendadas</h3>
 
+    @if ($ofertasRecomendadas->isEmpty())
+        <p style="text-align:center; color:#6b7280; margin-bottom:1rem;">
+            Aún no tenemos recomendaciones suficientes para tu perfil.
+        </p>
+    @else
         <div class="cards-grid-3">
-            @for ($i = 0; $i < 3; $i++)
+            @foreach ($ofertasRecomendadas as $oferta)
+                @php
+                    $empresa = $oferta->empresa;
+                @endphp
+
                 <article class="card job-card">
                     <header class="job-head">
                         <img src="{{ asset('img/empresas/empresa (4).png') }}" class="job-icon">
-                        <h4 class="job-title">Asistente Laboratorio Clínico</h4>
+                        <h4 class="job-title">{{ $oferta->titulo }}</h4>
                     </header>
 
-                    <p class="job-company">Clínica Regional del Sur</p>
+                    <p class="job-company">
+                        {{ $empresa?->nombre_comercial ?? 'Empresa no registrada' }}
+                    </p>
 
                     <div class="job-meta">
-                        <div class="job-meta-item">📍 Punta Arenas</div>
+                        @if ($oferta->ciudad)
+                            <div class="job-meta-item">📍 {{ $oferta->ciudad }}</div>
+                        @endif
+
+                        @if ($oferta->creado_en)
+                            <div class="job-meta-item">📅 {{ date('d-m-Y', strtotime($oferta->creado_en)) }}</div>
+                        @endif
                     </div>
 
-                    <a href="#" class="job-link">Ver Detalles</a>
+                    <a href="{{ url('/ofertas/' . $oferta->id) }}" class="job-link">
+                        Ver Detalles
+                    </a>
                 </article>
-            @endfor
+            @endforeach
         </div>
-    </section>
+    @endif
+</section>
+
 
 </main>
 
