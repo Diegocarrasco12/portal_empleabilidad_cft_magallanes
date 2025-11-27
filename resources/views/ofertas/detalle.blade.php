@@ -562,5 +562,49 @@
                 padding: 1.1rem 1.1rem;
             }
         }
+
+        /* ================================
+       CENTRAR HEADER EN MOBILE
+    ================================ */
+        @media (max-width: 820px) {
+
+            /* Centrar bloque izquierdo del header */
+            .job-header-left {
+                text-align: center !important;
+                align-items: center !important;
+            }
+
+            .job-title,
+            .job-company,
+            .job-location,
+            .job-published {
+                text-align: center !important;
+                width: 100%;
+            }
+
+            /* Centrar chips */
+            .job-chips {
+                justify-content: center !important;
+            }
+
+            /* Centrar columna derecha (sueldo + botones) */
+            .job-header-right {
+                align-items: center !important;
+                text-align: center !important;
+                width: 100%;
+            }
+
+            .job-salary-badge {
+                text-align: center !important;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            /* Botones en centro */
+            .job-apply-btn,
+            .job-save-btn {
+                width: 100%;
+            }
+        }
     </style>
 @endpush

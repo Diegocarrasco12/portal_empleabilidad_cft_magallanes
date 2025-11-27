@@ -24,15 +24,33 @@ class UsuarioController extends Controller
             ->orderBy('fecha_postulacion', 'desc')
             ->get();
 
-        // 🔥 Obtener ofertas recomendadas usando el Service
+        //  contadores de postulaciones
+        $totalPostulaciones = $postulaciones->count();
+
+        // OJO: ajusta 'estado' al nombre real de tu columna
+        // (por ejemplo 'estado_postulacion' si así se llama en tu DB)
+        $postulacionesEnAvance = $postulaciones
+            ->where('estado_postulacion', '!=', 'Postulado')
+            ->count();
+
+
+        //  Obtener ofertas recomendadas usando el Service
         $ofertasRecomendadas = $service->getRecomendadas($estudiante);
 
+        // contador de ofertas recomendadas
+        $totalOfertasRecomendadas = $ofertasRecomendadas->count();
+
+        //  Enviar todo a la vista
         return view('users.perfil', [
-            'estudiante' => $estudiante,
-            'postulaciones' => $postulaciones,
-            'ofertasRecomendadas' => $ofertasRecomendadas, // ← enviado a la vista
+            'estudiante'               => $estudiante,
+            'postulaciones'            => $postulaciones,
+            'ofertasRecomendadas'      => $ofertasRecomendadas,
+            'totalPostulaciones'       => $totalPostulaciones,       // NUEVO
+            'postulacionesEnAvance'    => $postulacionesEnAvance,    // NUEVO
+            'totalOfertasRecomendadas' => $totalOfertasRecomendadas, // NUEVO
         ]);
     }
+
 
     /**
      * FORMULARIO PARA EDITAR PERFIL
