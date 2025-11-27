@@ -78,6 +78,13 @@ Route::middleware('auth.custom')->group(function () {
 
             Route::post('/ofertas', [EmpresaController::class, 'storeOferta'])
                 ->name('empresas.ofertas.store');
+            Route::put('/ofertas/{id}', [EmpresaController::class, 'updateOferta'])
+                ->name('empresas.ofertas.update');
+            Route::get('/ofertas/{id}/editar', [EmpresaController::class, 'editarOferta'])
+                ->name('empresas.ofertas.editar');
+            // LISTADO GENERAL DE OFERTAS DE LA EMPRESA
+            Route::get('/ofertas', [EmpresaController::class, 'misOfertas'])
+                ->name('empresas.ofertas.index');
         });
 
 

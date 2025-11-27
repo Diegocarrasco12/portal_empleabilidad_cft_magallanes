@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\AreaEmpleo;
+
 
 class OfertaTrabajo extends Model
 {
@@ -44,7 +46,10 @@ class OfertaTrabajo extends Model
     {
         return $this->belongsTo(Empresa::class, 'empresa_id');
     }
-
+        public function area()
+    {
+        return $this->belongsTo(AreaEmpleo::class, 'area_id');
+    }
     public function postulaciones()
     {
         return $this->hasMany(Postulacion::class, 'oferta_id');
