@@ -10,7 +10,7 @@
                 {{-- Bloque Izquierdo --}}
                 <div class="empresa-info">
 
-                    @if($empresa->logo)
+                    @if ($empresa->logo)
                         <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo empresa" class="empresa-logo" />
                     @else
                         <img src="{{ asset('img/otros/default-logo.png') }}" class="empresa-logo">
@@ -106,26 +106,22 @@
             <div class="postulaciones-grid">
 
                 @foreach ($postulaciones as $post)
-
                     <article class="postulante-card">
-                        <img src="{{ $post->estudiante->foto ? asset('storage/'.$post->estudiante->foto) : asset('img/otros/no-user.png') }}"
-                             alt="Foto postulante">
+                        <img src="{{ $post->estudiante->avatar ? asset('storage/' . $post->estudiante->avatar) : asset('img/otros/no-user.png') }}"
+                            alt="Foto postulante">
 
                         <div class="postulante-info">
-
-                            <h4>{{ $post->estudiante->usuario->nombre }}</h4>
+                            <h4>{{ $post->estudiante->usuario->nombre }} {{ $post->estudiante->usuario->apellido }}</h4>
 
                             <p>{{ $post->oferta->titulo }}</p>
 
                             <p>📅 {{ \Carbon\Carbon::parse($post->fecha_postulacion)->format('d-m-Y') }}</p>
 
-                            {{-- Ruta aún NO creada — se deja desactivada temporalmente --}}
-                            <a href="#" class="btn-secondary">
-                                Ver Perfil Completo
+                            <a href="{{ route('empresas.postulante', $post->estudiante_id) }}" class="btn-perfil">
+                                Ver perfil completo
                             </a>
                         </div>
                     </article>
-
                 @endforeach
 
                 @if ($postulaciones->count() == 0)

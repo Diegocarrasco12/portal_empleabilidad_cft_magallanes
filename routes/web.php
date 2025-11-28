@@ -65,7 +65,7 @@ Route::middleware('auth.custom')->group(function () {
         ->group(function () {
             Route::get('/postulaciones', [EmpresaController::class, 'verPostulaciones'])
                 ->name('empresas.postulaciones.index');
-            Route::get('/empresas/postulante/{id}', [EmpresaController::class, 'verPostulante'])
+            Route::get('/postulante/{id}', [EmpresaController::class, 'verPostulante'])
                 ->name('empresas.postulante');
             Route::get('/perfil', [EmpresaController::class, 'perfil'])
                 ->name('empresas.perfil');
