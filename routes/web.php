@@ -63,7 +63,10 @@ Route::middleware('auth.custom')->group(function () {
     Route::middleware('role:empresa')
         ->prefix('empresas')
         ->group(function () {
-
+            Route::get('/postulaciones', [EmpresaController::class, 'verPostulaciones'])
+                ->name('empresas.postulaciones.index');
+            Route::get('/empresas/postulante/{id}', [EmpresaController::class, 'verPostulante'])
+                ->name('empresas.postulante');
             Route::get('/perfil', [EmpresaController::class, 'perfil'])
                 ->name('empresas.perfil');
 
@@ -82,6 +85,8 @@ Route::middleware('auth.custom')->group(function () {
                 ->name('empresas.ofertas.update');
             Route::get('/ofertas/{id}/editar', [EmpresaController::class, 'editarOferta'])
                 ->name('empresas.ofertas.editar');
+            Route::delete('/ofertas/{id}', [EmpresaController::class, 'destroyOferta'])
+                ->name('empresas.ofertas.destroy');
             // LISTADO GENERAL DE OFERTAS DE LA EMPRESA
             Route::get('/ofertas', [EmpresaController::class, 'misOfertas'])
                 ->name('empresas.ofertas.index');

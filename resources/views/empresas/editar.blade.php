@@ -1,5 +1,276 @@
 @extends('layouts.app')
 
+@push('styles')
+    <style>
+        /* ====== Base y breadcrumb ====== */
+        .company-edit {
+            padding: 1.25rem 0 2rem;
+        }
+
+        .breadcrumb ul {
+            list-style: none;
+            display: flex;
+            gap: .5rem;
+            padding: 0;
+            margin: 0 0 .75rem;
+            align-items: center;
+            color: #6b7280;
+            font-size: .92rem;
+        }
+
+        .breadcrumb li a {
+            color: #6b7280;
+            text-decoration: none;
+        }
+
+        .breadcrumb li a:hover {
+            color: #374151;
+            text-decoration: underline;
+        }
+
+        .breadcrumb li + li::before {
+            content: '›';
+            opacity: .6;
+            margin: 0 .35rem 0 .15rem;
+        }
+
+        .breadcrumb .current {
+            color: #111827;
+            font-weight: 600;
+        }
+
+        /* ====== Encabezado ====== */
+        .page-header h1 {
+            margin: 0 0 .25rem;
+            font-size: 1.5rem;
+        }
+
+        .page-header .muted {
+            color: #6b7280;
+            margin: 0 0 1rem;
+        }
+
+        /* ====== Tarjetas ====== */
+        .card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+        }
+
+        .card > h2 {
+            margin: 0 0 1rem;
+            font-size: 1.05rem;
+        }
+
+        /* ====== Grid ====== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        /* ====== Campos ====== */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: .4rem;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            padding: .65rem .75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: .95rem;
+            background: #fff;
+        }
+
+        .field textarea {
+            resize: vertical;
+        }
+
+        .hint {
+            color: #6b7280;
+            font-size: .8rem;
+        }
+
+        /* ====== Logo / avatar ====== */
+        .avatar-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar-preview {
+            width: 72px;
+            height: 72px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #f3f4f6;
+        }
+
+        .avatar-actions input[type="file"] {
+            padding: .55rem;
+            border: 1px dashed #d1d5db;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        /* ====== Acciones ====== */
+        .form-actions {
+            display: flex;
+            gap: .75rem;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .4rem;
+            border-radius: 10px;
+            padding: .8rem 1.25rem;
+            font-weight: 700;
+            line-height: 1;
+            border: 1px solid transparent;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background .2s, color .2s, border-color .2s, box-shadow .2s, transform .06s;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            background: #c91e25;
+            color: #fff;
+            border-color: #c91e25;
+        }
+
+        .btn-primary:hover {
+            background: #b01920;
+            border-color: #b01920;
+        }
+
+        .btn-primary:focus {
+            outline: 0;
+            box-shadow: 0 0 0 4px rgba(201, 30, 37, .18);
+        }
+
+        .btn-outline {
+            background: #fff;
+            color: #111827;
+            border-color: #d1d5db;
+        }
+
+        .btn-outline:hover {
+            background: #f9fafb;
+            border-color: #cbd5e1;
+        }
+
+        .btn-outline:focus {
+            outline: 0;
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, .15);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #c91e25;
+            border-color: transparent;
+        }
+
+        .btn-ghost:hover {
+            background: #fff1f2;
+        }
+
+        .btn-ghost:focus {
+            outline: 0;
+            box-shadow: 0 0 0 4px rgba(201, 30, 37, .15);
+        }
+
+        /* ====== Responsive ====== */
+        @media (max-width: 1024px) {
+            .grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                align-items: stretch;
+                gap: .5rem;
+                margin-top: 1rem;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .company-edit {
+                padding: .75rem 0 1.25rem;
+            }
+
+            .card {
+                padding: .9rem;
+                border-radius: 12px;
+            }
+
+            .page-header h1 {
+                font-size: 1.25rem;
+            }
+
+            .page-header .muted {
+                font-size: .9rem;
+            }
+
+            .breadcrumb ul {
+                flex-wrap: wrap;
+                row-gap: .25rem;
+            }
+
+            .avatar-row {
+                align-items: flex-start;
+                gap: .75rem;
+            }
+
+            .avatar-preview {
+                width: 60px;
+                height: 60px;
+                border-radius: 8px;
+            }
+
+            .field input,
+            .field select,
+            .field textarea {
+                font-size: 16px;
+            }
+        }
+    </style>
+@endpush
+
+
 @section('content')
     <main class="container company-edit">
 
@@ -14,8 +285,7 @@
         {{-- Encabezado --}}
         <header class="page-header">
             <h1>Editar Perfil</h1>
-            <p class="muted">Actualiza la información de tu empresa para publicar ofertas y recibir mejores postulaciones.
-            </p>
+            <p class="muted">Actualiza la información de tu empresa para publicar ofertas y recibir mejores postulaciones.</p>
         </header>
 
         <form action="{{ route('empresas.perfil.update') }}" method="POST" enctype="multipart/form-data">
@@ -70,21 +340,11 @@
                                 <label for="rubro">Rubro / Área *</label>
                                 <select id="rubro" name="rubro_id">
                                     <option value="">Selecciona</option>
-                                    <option value="1"
-                                        {{ old('rubro_id', $empresa->rubro_id ?? '') == 1 ? 'selected' : '' }}>Construcción
-                                    </option>
-                                    <option value="2"
-                                        {{ old('rubro_id', $empresa->rubro_id ?? '') == 2 ? 'selected' : '' }}>Industrial
-                                    </option>
-                                    <option value="3"
-                                        {{ old('rubro_id', $empresa->rubro_id ?? '') == 3 ? 'selected' : '' }}>Salud
-                                    </option>
-                                    <option value="4"
-                                        {{ old('rubro_id', $empresa->rubro_id ?? '') == 4 ? 'selected' : '' }}>Educación
-                                    </option>
-                                    <option value="5"
-                                        {{ old('rubro_id', $empresa->rubro_id ?? '') == 5 ? 'selected' : '' }}>Servicios
-                                    </option>
+                                    <option value="1" {{ old('rubro_id', $empresa->rubro_id ?? '') == 1 ? 'selected' : '' }}>Construcción</option>
+                                    <option value="2" {{ old('rubro_id', $empresa->rubro_id ?? '') == 2 ? 'selected' : '' }}>Industrial</option>
+                                    <option value="3" {{ old('rubro_id', $empresa->rubro_id ?? '') == 3 ? 'selected' : '' }}>Salud</option>
+                                    <option value="4" {{ old('rubro_id', $empresa->rubro_id ?? '') == 4 ? 'selected' : '' }}>Educación</option>
+                                    <option value="5" {{ old('rubro_id', $empresa->rubro_id ?? '') == 5 ? 'selected' : '' }}>Servicios</option>
                                 </select>
                             </div>
 
@@ -92,21 +352,11 @@
                                 <label for="tamano">Tamaño empresa</label>
                                 <select id="tamano" name="tamano_id">
                                     <option value="">Seleccione</option>
-                                    <option value="1"
-                                        {{ old('tamano_id', $empresa->tamano_id ?? '') == 1 ? 'selected' : '' }}>1-10
-                                    </option>
-                                    <option value="2"
-                                        {{ old('tamano_id', $empresa->tamano_id ?? '') == 2 ? 'selected' : '' }}>11-50
-                                    </option>
-                                    <option value="3"
-                                        {{ old('tamano_id', $empresa->tamano_id ?? '') == 3 ? 'selected' : '' }}>51-200
-                                    </option>
-                                    <option value="4"
-                                        {{ old('tamano_id', $empresa->tamano_id ?? '') == 4 ? 'selected' : '' }}>201-500
-                                    </option>
-                                    <option value="5"
-                                        {{ old('tamano_id', $empresa->tamano_id ?? '') == 5 ? 'selected' : '' }}>500+
-                                    </option>
+                                    <option value="1" {{ old('tamano_id', $empresa->tamano_id ?? '') == 1 ? 'selected' : '' }}>1-10</option>
+                                    <option value="2" {{ old('tamano_id', $empresa->tamano_id ?? '') == 2 ? 'selected' : '' }}>11-50</option>
+                                    <option value="3" {{ old('tamano_id', $empresa->tamano_id ?? '') == 3 ? 'selected' : '' }}>51-200</option>
+                                    <option value="4" {{ old('tamano_id', $empresa->tamano_id ?? '') == 4 ? 'selected' : '' }}>201-500</option>
+                                    <option value="5" {{ old('tamano_id', $empresa->tamano_id ?? '') == 5 ? 'selected' : '' }}>500+</option>
                                 </select>
                             </div>
                         </div>
@@ -197,7 +447,6 @@
                 <h2>Representante (opcional)</h2>
 
                 <div class="grid-3">
-
                     <div class="field">
                         <label for="nombre_representante">Nombre</label>
                         <input id="nombre_representante" name="nombre_representante" type="text"
@@ -215,7 +464,6 @@
                         <input id="correo_representante" name="correo_representante" type="email"
                             value="{{ old('correo_representante', $empresa->correo_representante ?? '') }}">
                     </div>
-
                 </div>
             </section>
 
@@ -229,278 +477,4 @@
         </form>
 
     </main>
-@endsection
-
-
-@push('styles')
-    <style>
-        /* ====== Base y breadcrumb ====== */
-        .company-edit {
-            padding: 1.25rem 0 2rem;
-        }
-
-        .breadcrumb ul {
-            list-style: none;
-            display: flex;
-            gap: .5rem;
-            padding: 0;
-            margin: 0 0 .75rem;
-            align-items: center;
-            color: #6b7280;
-            font-size: .92rem;
-        }
-
-        .breadcrumb li a {
-            color: #6b7280;
-            text-decoration: none;
-        }
-
-        .breadcrumb li a:hover {
-            color: #374151;
-            text-decoration: underline;
-        }
-
-        .breadcrumb li+li::before {
-            content: '›';
-            opacity: .6;
-            margin: 0 .35rem 0 .15rem;
-        }
-
-        .breadcrumb .current {
-            color: #111827;
-            font-weight: 600;
-        }
-
-        /* ====== Encabezado ====== */
-        .page-header h1 {
-            margin: 0 0 .25rem;
-            font-size: 1.5rem;
-        }
-
-        .page-header .muted {
-            color: #6b7280;
-            margin: 0 0 1rem;
-        }
-
-        /* ====== Tarjetas ====== */
-        .card {
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
-        }
-
-        .card>h2 {
-            margin: 0 0 1rem;
-            font-size: 1.05rem;
-        }
-
-        /* ====== Grid ====== */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-        }
-
-        /* ====== Campos ====== */
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: .4rem;
-        }
-
-        .field input,
-        .field select,
-        .field textarea {
-            padding: .65rem .75rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: .95rem;
-            background: #fff;
-        }
-
-        .field textarea {
-            resize: vertical;
-        }
-
-        .hint {
-            color: #6b7280;
-            font-size: .8rem;
-        }
-
-        /* ====== Logo / avatar ====== */
-        .avatar-row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .avatar-preview {
-            width: 72px;
-            height: 72px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: #f3f4f6;
-        }
-
-        .avatar-actions input[type="file"] {
-            padding: .55rem;
-            border: 1px dashed #d1d5db;
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        /* ====== Acciones ====== */
-        .form-actions {
-            display: flex;
-            gap: .75rem;
-            justify-content: flex-end;
-            align-items: center;
-            margin-top: 1rem;
-        }
-
-        /* ====== Botones ====== (coherentes con users.editar) */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: .4rem;
-            border-radius: 10px;
-            padding: .8rem 1.25rem;
-            font-weight: 700;
-            line-height: 1;
-            border: 1px solid transparent;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background .2s, color .2s, border-color .2s, box-shadow .2s, transform .06s;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-        }
-
-        .btn:active {
-            transform: translateY(1px);
-        }
-
-        .btn-primary {
-            background: #c91e25;
-            color: #fff;
-            border-color: #c91e25;
-        }
-
-        .btn-primary:hover {
-            background: #b01920;
-            border-color: #b01920;
-        }
-
-        .btn-primary:focus {
-            outline: 0;
-            box-shadow: 0 0 0 4px rgba(201, 30, 37, .18);
-        }
-
-        .btn-outline {
-            background: #fff;
-            color: #111827;
-            border-color: #d1d5db;
-        }
-
-        .btn-outline:hover {
-            background: #f9fafb;
-            border-color: #cbd5e1;
-        }
-
-        .btn-outline:focus {
-            outline: 0;
-            box-shadow: 0 0 0 4px rgba(2, 132, 199, .15);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: #c91e25;
-            border-color: transparent;
-        }
-
-        .btn-ghost:hover {
-            background: #fff1f2;
-        }
-
-        .btn-ghost:focus {
-            outline: 0;
-            box-shadow: 0 0 0 4px rgba(201, 30, 37, .15);
-        }
-
-        /* ====== Responsive ====== */
-        @media (max-width: 1024px) {
-            .grid-3 {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-
-            .grid-2,
-            .grid-3 {
-                grid-template-columns: 1fr;
-            }
-
-            .form-actions {
-                flex-direction: column;
-                align-items: stretch;
-                gap: .5rem;
-                margin-top: 1rem;
-            }
-
-            .form-actions .btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .company-edit {
-                padding: .75rem 0 1.25rem;
-            }
-
-            .card {
-                padding: .9rem;
-                border-radius: 12px;
-            }
-
-            .page-header h1 {
-                font-size: 1.25rem;
-            }
-
-            .page-header .muted {
-                font-size: .9rem;
-            }
-
-            .breadcrumb ul {
-                flex-wrap: wrap;
-                row-gap: .25rem;
-            }
-
-            .avatar-row {
-                align-items: flex-start;
-                gap: .75rem;
-            }
-
-            .avatar-preview {
-                width: 60px;
-                height: 60px;
-                border-radius: 8px;
-            }
-
-            .field input,
-            .field select,
-            .field textarea {
-                font-size: 16px;
-            }
-        }
-    </style>
-@endpush
 @endsection

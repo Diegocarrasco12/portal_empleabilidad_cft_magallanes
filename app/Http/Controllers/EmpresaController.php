@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
 use App\Models\OfertaTrabajo;
-
+use Illuminate\Support\Facades\Storage;
+use App\Models\Estudiante;
+use App\Models\Postulacion;
 
 class EmpresaController extends Controller
 {
@@ -17,13 +19,47 @@ class EmpresaController extends Controller
     {
         $usuarioId = session('usuario_id');
 
-        // Búsqueda simple (mock inicial con BD real)
+        // Obtener empresa del usuario
         $empresa = Empresa::where('usuario_id', $usuarioId)->first();
 
-        return view('empresas.perfil', [
-            'empresa' => $empresa,
-        ]);
+        if (!$empresa) {
+            return redirect()->route('empresas.editar')
+                ->with('error', 'Debe completar su perfil de empresa.');
+        }
+
+        // === Ofertas activas (máximo 4) ===
+        $ofertas = OfertaTrabajo::where('empresa_id', $empresa->id)
+            ->where('estado', 1)
+            ->orderBy('creado_en', 'desc')
+            ->take(4)
+            ->get();
+
+        $totalOfertas = OfertaTrabajo::where('empresa_id', $empresa->id)
+            ->where('estado', 1)
+            ->count();
+
+        // === Postulaciones recientes ===
+        $postulaciones = \App\Models\Postulacion::with(['estudiante.usuario', 'oferta'])
+            ->whereHas('oferta', function ($q) use ($empresa) {
+                $q->where('empresa_id', $empresa->id);
+            })
+            ->orderBy('fecha_postulacion', 'desc')
+            ->take(3)
+            ->get();
+
+        $totalPostulaciones = \App\Models\Postulacion::whereHas('oferta', function ($q) use ($empresa) {
+            $q->where('empresa_id', $empresa->id);
+        })->count();
+
+        return view('empresas.perfil', compact(
+            'empresa',
+            'ofertas',
+            'totalOfertas',
+            'postulaciones',
+            'totalPostulaciones'
+        ));
     }
+
 
     /**
      * Formulario para editar el perfil de la empresa.
@@ -279,5 +315,67 @@ class EmpresaController extends Controller
             'empresa' => $empresa,
             'ofertas' => $ofertas,
         ]);
+    }
+    /**
+     * Elimina una oferta laboral perteneciente a la empresa.
+     */
+    public function destroyOferta($id)
+    {
+        $usuarioId = session('usuario_id');
+
+        // Obtener empresa del usuario
+        $empresa = Empresa::where('usuario_id', $usuarioId)->first();
+
+        if (!$empresa) {
+            return redirect()->route('empresas.perfil')
+                ->with('error', 'Debe completar su perfil antes de realizar esta acción.');
+        }
+
+        // Validar que la oferta pertenezca a esta empresa
+        $oferta = OfertaTrabajo::where('empresa_id', $empresa->id)
+            ->where('id', $id)
+            ->firstOrFail();
+
+        // Eliminar archivo adjunto si existe
+        if ($oferta->ruta_archivo && Storage::disk('public')->exists($oferta->ruta_archivo)) {
+            Storage::disk('public')->delete($oferta->ruta_archivo);
+        }
+
+        // Eliminar oferta
+        $oferta->delete();
+
+        return redirect()
+            ->route('empresas.ofertas.index')
+            ->with('ok', 'La oferta fue eliminada correctamente.');
+    }
+    public function verPostulaciones()
+    {
+        $usuarioId = session('usuario_id');
+        $empresa = Empresa::where('usuario_id', $usuarioId)->first();
+
+        if (!$empresa) {
+            return redirect()->route('empresas.perfil')
+                ->with('error', 'Debe completar su perfil de empresa.');
+        }
+
+        $postulaciones = \App\Models\Postulacion::with(['estudiante.usuario', 'oferta'])
+            ->whereHas('oferta', function ($q) use ($empresa) {
+                $q->where('empresa_id', $empresa->id);
+            })
+            ->orderBy('fecha_postulacion', 'desc')
+            ->get();
+
+        return view('empresas.postulaciones.index', compact('empresa', 'postulaciones'));
+    }
+    public function verPostulante($id)
+    {
+        $estudiante = Estudiante::with('usuario')->findOrFail($id);
+
+        // Postulaciones del estudiante a esta empresa
+        $postulaciones = Postulacion::with('oferta')
+            ->where('estudiante_id', $id)
+            ->get();
+
+        return view('empresas.postulaciones.ver', compact('estudiante', 'postulaciones'));
     }
 }

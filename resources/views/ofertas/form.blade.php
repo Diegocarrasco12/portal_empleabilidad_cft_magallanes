@@ -274,25 +274,6 @@ Mantiene diseño institucional del módulo Empresa / Empleabilidad
 
             </div>
 
-            {{-- Archivo --}}
-            <div class="field mt-3">
-                <label for="ruta_archivo">Adjuntar documento (opcional)</label>
-                <input
-                    id="ruta_archivo"
-                    name="ruta_archivo"
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                >
-
-                @if($editando && $oferta->ruta_archivo)
-                    <small class="hint">
-                        Documento actual: 
-                        <a href="{{ asset('storage/'.$oferta->ruta_archivo) }}" target="_blank">
-                            Ver archivo
-                        </a>
-                    </small>
-                @endif
-            </div>
         </section>
 
 

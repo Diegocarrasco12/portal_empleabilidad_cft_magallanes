@@ -18,6 +18,8 @@
 
     <!-- Hoja de estilos principal (landing) -->
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}" />
+    <!-- Estilos base para todos los formularios institucionales -->
+    <link rel="stylesheet" href="{{ asset('css/forms-base.css') }}">
 
     {{-- Estilos compartidos (componentes/header admin, dashboard, etc.) --}}
     {{-- Cárgalo siempre o, si prefieres, sólo para rutas admin: --}}

@@ -1,0 +1,161 @@
+/* ===========================
+   CONTENEDOR GENERAL
+   =========================== */
+.container-mis-ofertas {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* ===========================
+   TITULOS
+   =========================== */
+.header-section {
+    margin-bottom: 25px;
+}
+
+.titulo-section {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #1b1b1b;
+}
+
+.subtitulo-section {
+    font-size: 16px;
+    color: #555;
+}
+
+/* ===========================
+   GRID DE TARJETAS
+   =========================== */
+.ofertas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 25px;
+}
+
+/* ===========================
+   TARJETA
+   =========================== */
+.oferta-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e6e6e6;
+}
+
+/* ===========================
+   LOGO
+   =========================== */
+.oferta-logo img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+/* ===========================
+   HEADER OFERTA
+   =========================== */
+.oferta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.oferta-titulo {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1b1b1b;
+    margin: 0;
+}
+
+/* BADGES ESTADOS */
+.badge-estado {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.badge-gray { background: #e9ecef; color: #555; }
+.badge-green { background: #d4f8d3; color: #1f8720; }
+.badge-red { background: #ffe0e0; color: #c62828; }
+
+/* ===========================
+   DATOS
+   =========================== */
+.oferta-datos {
+    margin-top: 10px;
+    margin-bottom: 12px;
+}
+
+.dato-item {
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.dato-item i {
+    margin-right: 6px;
+}
+
+/* ===========================
+   DESCRIPCIÓN
+   =========================== */
+.oferta-descripcion {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 18px;
+    line-height: 1.4;
+}
+
+/* ===========================
+   BOTONERA
+   =========================== */
+.oferta-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-detalle,
+.btn-empresa,
+.btn-retirar {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-detalle {
+    background: #e9ecef;
+    color: #333;
+}
+
+.btn-empresa {
+    background: #c62828;   /* rojo institucional */
+    color: #fff;
+}
+
+.btn-empresa:hover {
+    background: #b71c1c;   /* rojo más oscuro */
+}
+
+
+.btn-retirar {
+    background: #ffdddd;
+    color: #c62828;
+    border: none;
+    cursor: pointer;
+}
+
+.no-ofertas {
+    font-size: 18px;
+    color: #555;
+}

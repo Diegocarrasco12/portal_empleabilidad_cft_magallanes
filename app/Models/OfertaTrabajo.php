@@ -9,7 +9,7 @@ use App\Models\AreaEmpleo;
 class OfertaTrabajo extends Model
 {
     protected $table = 'ofertas_trabajo';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'empresa_id',
@@ -54,4 +54,23 @@ class OfertaTrabajo extends Model
     {
         return $this->hasMany(Postulacion::class, 'oferta_id');
     }
+    public function getFechaPublicacionAttribute()
+{
+    /* ================================
+   ACCESSOR PROFESIONAL
+   ================================ */
+    // 1) Caso ideal: creado_en tiene valor
+    if (!empty($this->creado_en)) {
+        return \Carbon\Carbon::parse($this->creado_en);
+    }
+
+    // 2) Segundo fallback: actualizado_en
+    if (!empty($this->actualizado_en)) {
+        return \Carbon\Carbon::parse($this->actualizado_en);
+    }
+
+    // 3) Último fallback: fecha actual
+    return now();
+}
+
 }

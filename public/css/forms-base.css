@@ -1,0 +1,201 @@
+/* ============================================================================
+   FORMULARIOS BASE – CFT MAGALLANES
+   Estilo institucional general para:
+   - Editar Perfil (estudiantes, empresas)
+   - Crear / editar ofertas laborales
+   - Formularios de registro y actualización
+   ============================================================================ */
+
+/* --------------------------
+   RESET BÁSICO / NORMALIZACIÓN
+--------------------------- */
+form, input, select, textarea, button {
+    font-family: "Inter", sans-serif;
+}
+
+input, select, textarea {
+    border: 1px solid #d7d7d7;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 15px;
+    width: 100%;
+    background-color: #fff;
+    transition: border-color 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #3b82f6; /* azul institucional suave */
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.15);
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #333;
+    font-size: 14px;
+}
+
+/* --------------------------
+   TARJETAS (CARDS)
+--------------------------- */
+
+.card {
+    background: #ffffff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    margin-bottom: 28px;
+    border: 1px solid #f1f1f1;
+}
+
+.card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #222;
+}
+
+/* --------------------------
+   CAMPOS Y FILAS
+--------------------------- */
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+.error {
+    color: #d32f2f;
+    font-size: 13px;
+}
+
+.hint {
+    font-size: 13px;
+    color: #666;
+}
+
+/* --------------------------
+   SISTEMA DE COLUMNAS (GRID)
+--------------------------- */
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+/* Ajuste responsive */
+@media (max-width: 900px) {
+    .grid-2,
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------
+   BOTONES
+--------------------------- */
+
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s ease;
+}
+
+.btn-primary {
+    background: #c62828; /* rojo institucional */
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #b71c1c; /* rojo más oscuro */
+}
+
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background: #d4d4d4;
+}
+
+.btn-light {
+    background: #f3f4f6;
+    color: #333;
+}
+
+.btn-light:hover {
+    background: #e5e6e8;
+}
+
+/* --------------------------
+   CONTENEDOR DE ACCIONES DE FORMULARIO
+--------------------------- */
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+/* Responsive: centrar botones */
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* --------------------------
+   ESTILO DE TEXTAREAS GRANDES
+--------------------------- */
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* --------------------------
+   ESPACIADOS GENERALES
+--------------------------- */
+
+.mt-2 { margin-top: 12px; }
+.mt-3 { margin-top: 20px; }
+.mb-2 { margin-bottom: 12px; }
+.mb-3 { margin-bottom: 20px; }
+
+/* --------------------------
+   TITULARES DE SECCIÓN (opcional)
+--------------------------- */
+
+section.card > h3 + p {
+    font-size: 14px;
+    color: #666;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
