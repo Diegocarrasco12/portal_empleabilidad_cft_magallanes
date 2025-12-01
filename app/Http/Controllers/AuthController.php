@@ -16,16 +16,8 @@ class AuthController extends Controller
     ============================================================ */
     public function showLogin(Request $request)
     {
-        // Guardar la URL previa si realmente corresponde
-        if (!session('url.intended')) {
-
-            $prev = url()->previous();
-
-            // Evitar capturar / y /login como "intended"
-            if ($prev !== url('/') && $prev !== url('/login')) {
-                session(['url.intended' => $prev]);
-            }
-        }
+        // SIEMPRE limpiar intended previo
+        session()->forget('url.intended');
 
         return view('auth.login');
     }
@@ -36,6 +28,8 @@ class AuthController extends Controller
     ============================================================ */
     public function login(Request $request)
     {
+        session()->forget('url.intended');
+
         $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
@@ -65,20 +59,6 @@ class AuthController extends Controller
 
 
         // ============================================================
-        // REDIRECCIÓN INTELIGENTE (si existe url.intended válida)
-        // ============================================================
-        $intended = session('url.intended');
-
-        if (
-            $intended &&
-            $intended !== url('/') &&
-            $intended !== url('/login')
-        ) {
-            session()->forget('url.intended');
-            return redirect($intended);
-        }
-
-        // ============================================================
         // REDIRECCIÓN POR ROL
         // ============================================================
         $destino = match ((int)$usuario->rol_id) {
@@ -97,6 +77,7 @@ class AuthController extends Controller
     public function logout()
     {
         Session::flush();
+        session()->forget('url.intended');
         return redirect('/login');
     }
 
