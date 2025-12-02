@@ -34,6 +34,12 @@
                     <img src="{{ asset('img/otros/Fuentes-de-tráfico.jpg') }}" alt="Gráfico actividad" class="chart-img" />
 
                     <a href="{{ route('empresas.crear') }}" class="btn btn-publicar">Publicar Nueva Oferta</a>
+
+                    <a href="{{ route('empresas.ofertas.index') }}" class="btn btn-outline-secondary"
+                        style="margin-top:10px; display:block; text-align:center;">
+                        Ver todas mis ofertas publicadas
+                    </a>
+
                 </div>
 
             </div>

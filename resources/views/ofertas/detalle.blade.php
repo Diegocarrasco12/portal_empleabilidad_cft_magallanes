@@ -3,19 +3,6 @@
 @section('content')
     <main class="job-detail container py-5" style="padding-top: 4rem !important; padding-bottom: 4rem !important;">
 
-
-        {{-- =========================================================
-        MENSAJES DE ESTADO (ÉXITO / ERROR)
-    ========================================================== --}}
-        @if (session('success'))
-            <div class="alert alert-success mb-3">{{ session('success') }}</div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger mb-3">{{ session('error') }}</div>
-        @endif
-
-
         {{-- =========================================================
         CONTENEDOR PRINCIPAL – ESTILO TRABAJANDO.COM
         Layout en 2 columnas:

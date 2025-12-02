@@ -64,7 +64,7 @@
                                         {{ $estudiante->estado_carrera == 'Estudiante' ? 'selected' : '' }}>Estudiante
                                     </option>
                                     <option value="Titulad@"
-                                        {{ $estudiante->estado_carrera == 'Titulad@' ? 'selected' : '' }}>Titulad@</option>
+                                        {{ $estudiante->estado_carrera == 'Titulad@' ? 'selected' : '' }}>Titulado</option>
                                 </select>
 
                             </div>
