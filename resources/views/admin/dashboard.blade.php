@@ -1,38 +1,42 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('content')
+@section('admin-content')
     <section class="container admin-dashboard">
 
         {{-- KPIs superiores --}}
         <div class="kpi-grid">
+            {{-- Empresas --}}
             <article class="kpi-card">
                 <div class="kpi-icon">🏛️</div>
                 <div class="kpi-numbers">
-                    <h3>42</h3>
+                    <h3>{{ $totalEmpresas }}</h3>
                     <p>Empresas</p>
                 </div>
             </article>
 
+            {{-- Ofertas --}}
             <article class="kpi-card">
                 <div class="kpi-icon">📦</div>
                 <div class="kpi-numbers">
-                    <h3>128</h3>
+                    <h3>{{ $totalOfertas }}</h3>
                     <p>Ofertas</p>
                 </div>
             </article>
 
+            {{-- Postulaciones --}}
             <article class="kpi-card">
                 <div class="kpi-icon">👤</div>
                 <div class="kpi-numbers">
-                    <h3>856</h3>
+                    <h3>{{ $totalPostulaciones }}</h3>
                     <p>Postulaciones</p>
                 </div>
             </article>
 
+            {{-- Tasa Promedio --}}
             <article class="kpi-card">
                 <div class="kpi-icon">📈</div>
                 <div class="kpi-numbers">
-                    <h3>72%</h3>
+                    <h3>{{ $tasaPromedio }}%</h3>
                     <p>Tasa Promedio Postulaciones</p>
                 </div>
             </article>
@@ -54,13 +58,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for ($i = 0; $i < 6; $i++)
+                            @forelse($ultimasEmpresas as $empresa)
                                 <tr>
-                                    <td>Magallanes Logística SPA</td>
-                                    <td>magonlogistica@ejemplo.cl</td>
+                                    <td>{{ $empresa->nombre_comercial }}</td>
+                                    <td>{{ $empresa->correo_contacto }}</td>
                                     <td><span class="badge badge-success">Activo</span></td>
                                 </tr>
-                            @endfor
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center">No hay empresas registradas.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                     <a href="#" class="panel-link">Ver todas</a>
@@ -83,15 +91,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for ($i = 0; $i < 6; $i++)
+                            @forelse($ultimosPostulantes as $postulante)
                                 <tr>
-                                    <td>Jorge González R.</td>
-                                    <td><a href="mailto:jorge@ejemplo.cl">jorge@ejemplo.cl</a></td>
-                                    <td>12</td>
-                                    <td>Téc. Enfermería</td>
+                                    <td>{{ $postulante->nombre }} {{ $postulante->apellido }}</td>
+                                    <td><a href="mailto:{{ $postulante->email }}">{{ $postulante->email }}</a></td>
+                                    <td>–</td>
+                                    <td>–</td>
                                     <td><span class="badge badge-success">Activo</span></td>
                                 </tr>
-                            @endfor
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">No existen postulantes aún.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                     <a href="#" class="panel-link">Ver todos</a>
@@ -106,7 +118,7 @@
                     <h4>Total Ofertas Creadas Por Mes</h4>
                 </header>
                 <div class="panel-body chart-placeholder">
-                    <img src="{{ asset('img/otros/Fuentes-de-tráfico.jpg') }}" alt="Gráfico líneas" />
+                    <canvas id="chartOfertas"></canvas>
                 </div>
             </article>
 
@@ -115,7 +127,7 @@
                     <h4>Postulaciones por área</h4>
                 </header>
                 <div class="panel-body chart-placeholder">
-                    <img src="{{ asset('img/otros/grf3.png') }}" alt="Gráfico torta" />
+                    <canvas id="chartAreas"></canvas>
                 </div>
             </article>
 
@@ -124,11 +136,68 @@
                     <h4>Carreras con más postulaciones</h4>
                 </header>
                 <div class="panel-body chart-placeholder">
-                    <img src="{{ asset('img/otros/grf.png') }}" alt="Gráfico barras" />
+                    <canvas id="chartCarreras"></canvas>
                 </div>
             </article>
         </div>
 
 
     </section>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // === 1) OFERTAS POR MES ===
+    const ofertasCtx = document.getElementById('chartOfertas');
+
+    new Chart(ofertasCtx, {
+        type: 'line',
+        data: {
+            labels: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+            datasets: [{
+                label: 'Ofertas creadas',
+                data: @json($ofertasMesArray),
+                borderColor: '#B1202C',
+                backgroundColor: 'rgba(177, 32, 44, 0.2)',
+                borderWidth: 3,
+                tension: 0.3
+            }]
+        }
+    });
+
+    // === 2) POSTULACIONES POR ÁREA ===
+    const areaCtx = document.getElementById('chartAreas');
+
+    new Chart(areaCtx, {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode(array_keys($postPorArea)) !!},
+            datasets: [{
+                label: 'Postulaciones',
+                data: {!! json_encode(array_values($postPorArea)) !!},
+                backgroundColor: '#1B355E'
+            }]
+        }
+    });
+
+    // === 3) TOP CARRERAS ===
+    const carreraCtx = document.getElementById('chartCarreras');
+
+    new Chart(carreraCtx, {
+        type: 'pie',
+        data: {
+            labels: {!! json_encode(array_keys($topCarreras)) !!},
+            datasets: [{
+                data: {!! json_encode(array_values($topCarreras)) !!},
+                backgroundColor: [
+                    '#B1202C',
+                    '#1B355E',
+                    '#5C677D',
+                    '#CCCCCC',
+                    '#FFCE56'
+                ]
+            }]
+        }
+    });
+</script>
 @endsection
+

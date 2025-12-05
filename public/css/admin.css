@@ -1,44 +1,35 @@
-/* ====== Header Admin ====== */
-.admin-topbar {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-.admin-meta {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.1;
-}
-.admin-welcome {
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-.admin-role {
-    font-size: 0.78rem;
-    color: #666;
-}
-.admin-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-.icon-btn {
-    background: #f3f4f6;
-    border: none;
-    padding: 0.4rem;
-    border-radius: 8px;
-    cursor: pointer;
-}
-.icon-btn:hover {
-    background: #e5e7eb;
+/* =========================================
+   LAYOUT GENERAL ADMIN
+   ========================================= */
+
+/* Contenedor que envuelve sidebar + contenido */
+.admin-layout {
+    display: grid;
+    grid-template-columns: 350px minmax(0, 1fr); /* sidebar fijo + contenido flexible */
+    gap: 1.2rem;
+    padding: 0;
+    align-items: start; /* hace que el sidebar se estire a la altura del contenido */
 }
 
-/* Resaltar "Admin" activo en el menú */
+/* Columna de contenido */
+.admin-content {
+    width: 100%;
+    padding: 0; 
+}
+
+/* Resaltar "Admin" activo en el menú principal de arriba */
 .main-nav a.is-active {
     font-weight: 600;
 }
+.main-nav {
+    gap: 2rem;
+}
+
+.main-nav li:last-child,
+.main-nav a:last-child {
+    margin-right: 1rem;
+}
+
 .main-nav a.is-active::after {
     content: "";
     display: block;
@@ -48,12 +39,16 @@
     margin-top: 4px;
 }
 
-/* ====== Dashboard ====== */
+/* =========================================
+   DASHBOARD CONTENIDO (tarjetas derechas)
+   ========================================= */
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 1.25rem;
 }
+
 .admin-dashboard {
     padding-block: 1.25rem;
     padding-top: 16px;
@@ -68,20 +63,24 @@
 }
 .kpi-card {
     display: flex;
-    flex-direction: column; /* ícono y texto verticales */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     background: #fff;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    padding: 1.25rem 1rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-    min-height: 120px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1.8rem 1.4rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    min-height: 145px;
+    transition: all .2s ease;
 }
+
 .kpi-card:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
 }
+
 .kpi-icon {
     font-size: 1.8rem;
     margin-bottom: 0.4rem;
@@ -111,19 +110,31 @@
 
 .panel {
     background: #fff;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: all .2s ease;
 }
+
+.panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+}
+
 .panel-header {
-    padding: 0.9rem 1rem;
-    border-bottom: 1px solid #eee;
+    padding: 0 0 0.8rem 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #f1f1f1;
 }
+
 .panel-header h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
     margin: 0;
-    font-size: 1rem;
+    color: #333;
 }
+
 .panel-body {
     padding: 1rem;
 }
@@ -134,6 +145,7 @@
     color: #c91e25;
 }
 
+/* Tablas */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -227,13 +239,67 @@
     margin-right: 0.5rem;
 }
 
-/* =========================
-   Responsive
-   ========================= */
+/* =========================================
+   SIDEBAR ADMIN (COLUMNA IZQUIERDA)
+   ========================================= */
+
+/* Tarjeta del sidebar: MISMO estilo que las paneles */
+.admin-sidebar {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 1.5rem 1.25rem; /* un poco más espacioso */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Título */
+.admin-sidebar__title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+/* Navegación */
+.admin-sidebar__nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-sidebar__link {
+    display: block;
+    padding: 8px 6px;
+    margin-bottom: 6px;
+    font-size: 0.92rem;
+    color: #be1e2d;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.admin-sidebar__link:hover {
+    background: #f5f5f5;
+}
+
+/* Activo */
+.admin-sidebar__link.active {
+    font-weight: 600;
+    background: #ffe5e7;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+/* Tablets: ajusto grids de tarjetas */
 @media (max-width: 1024px) {
     .kpi-grid {
         grid-template-columns: repeat(2, 1fr);
-    } /* 2x2 layout */
+    }
     .grid-3 {
         grid-template-columns: 1fr;
     }
@@ -242,13 +308,29 @@
     }
 }
 
-/* Carrusel horizontal para secciones inferiores */
+/* Mobile (sidebar arriba, contenido abajo) */
 @media (max-width: 768px) {
-    .container {
-        padding: 0 12px;
+
+    .admin-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem 0.75rem;
     }
 
-    /* Convierto los grids de paneles en carrusel */
+    .admin-sidebar {
+        height: auto;         
+        margin-bottom: 0.5rem;
+    }
+
+    .admin-content {
+        padding-right: 0;
+    }
+
+    .container {
+        padding: 0 0.75rem 1.25rem;
+    }
+
+    /* Convierto los grids de paneles en carrusel horizontal */
     .grid-2,
     .grid-3 {
         display: flex;
@@ -279,7 +361,7 @@
     }
 }
 
-/* Scrollbar estético */
+/* Scrollbar estético para carruseles */
 .kpi-grid::-webkit-scrollbar,
 .grid-2::-webkit-scrollbar,
 .grid-3::-webkit-scrollbar {
@@ -291,18 +373,147 @@
     background: #e5e7eb;
     border-radius: 999px;
 }
-/* === Cinturón de seguridad (admin) === */
-html, body { overflow-x: hidden; width: 100%; }
+
+/* Cinturón de seguridad */
+html,
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+.admin-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.kpi-grid {
+    margin-bottom: 1.5rem;
+    gap: 1.4rem;
+}
+
+.grid-2, .grid-3 {
+    gap: 1.4rem;
+}
+/* =========================================
+   FIX: Adaptar contenido admin a notebooks
+   ========================================= */
+
+.admin-content .container {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Ajuste visual en pantallas medianas (notebook/tablet landscape) */
+@media (max-width: 1440px) and (min-width: 1025px) {
+    .admin-layout {
+        grid-template-columns: 300px 1fr; /* Sidebar un poco más pequeño */
+        gap: 1rem;
+    }
+
+    .kpi-card {
+        padding: 1.5rem 1rem;
+    }
+}
+/* --- FIX FINAL RESPONSIVE --- */
+
+/* En pantallas medianas y grandes: tarjetas adaptables */
+@media (min-width: 769px) {
+    .grid-2 {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .grid-2 .panel {
+        flex: 1 1 450px;
+        max-width: 100%;
+    }
+}
+
+/* En móviles: volver al slider horizontal original */
+@media (max-width: 768px) {
+    .grid-2 {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap; /* 🔥 este evita que baje una debajo de otra */
+    }
+
+    .grid-2 .panel {
+        flex: 0 0 320px;
+        scroll-snap-align: center;
+    }
+}
+/* --- Ajuste final mobile: scroll limpio alineado --- */
+@media (max-width: 768px) {
+
+    .grid-2 {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        padding-inline: 0; /* 🔥 elimina el margen visual de las tarjetas */
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .grid-2 .panel {
+        flex: 0 0 92%; /* 🔥 ocupa casi toda la pantalla sin salirse */
+        scroll-snap-align: start;
+        margin-left: 12px; /* solo primera tarjeta queda alineada bonito */
+        margin-right: 12px;
+    }
+
+    /* Estética scroll */
+    .grid-2::-webkit-scrollbar {
+        height: 5px;
+    }
+    .grid-2::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 20px;
+    }
+}
+/* 📌 FIX: Tablas responsive SOLO en mobile */
 
 @media (max-width: 768px) {
-  .admin-dashboard { overflow-x: hidden; }
 
-  /* Los carruseles de paneles scrollean dentro; el documento no */
-  .grid-2,
-  .grid-3 {
-    padding: 0 12px 8px;
-    margin: 0;            /* evita ensanche por márgenes negativos */
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+    .panel-body {
+        overflow-x: auto;           
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .panel-body .table {
+        width: max-content;         
+        min-width: 450px;           
+    }
 }
+@media (max-width: 768px) {
+    .panel-body::-webkit-scrollbar {
+        height: 6px;
+    }
+    .panel-body::-webkit-scrollbar-thumb {
+        background: #d6d6d6;
+        border-radius: 10px;
+    }
+}
+.chart-placeholder {
+    width: 100%;
+    height: 260px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.chart-placeholder canvas {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+}
+
+
+

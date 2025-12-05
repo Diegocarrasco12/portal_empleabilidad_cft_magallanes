@@ -53,10 +53,22 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth.custom')->group(function () {
 
     /* ------------------------- ADMIN (rol: admin) ------------------------- */
-    Route::middleware('role:admin')->group(function () {
-        Route::get('/admin', [AdminController::class, 'dashboard'])
-            ->name('admin.dashboard');
-    });
+    Route::middleware('role:admin')
+        ->prefix('admin')
+        ->group(function () {
+
+            // DASHBOARD ADMIN
+            Route::get('/', [AdminController::class, 'dashboard'])
+                ->name('admin.dashboard');
+
+            // Aquí después agregaremos:
+            // /admin/usuarios
+            // /admin/empresas
+            // /admin/ofertas
+            // /admin/postulantes
+            // /admin/postulaciones
+
+        });
 
 
     /* ------------------------- EMPRESAS (rol: empresa) ------------------------- */
