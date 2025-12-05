@@ -1,0 +1,285 @@
+/* CONTENEDOR GENERAL */
+.admin-container {
+    width: 90%;
+    max-width: 1300px;
+    margin: 25px auto;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+
+/* TÍTULO */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.panel-header .title {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* BUSCADOR + BOTÓN */
+.actions-top {
+    display: flex;
+    gap: 12px;
+}
+
+.input-search {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 230px;
+    transition: 0.3s;
+}
+
+.input-search:focus {
+    outline: none;
+    border-color: #750000;
+}
+
+/* BOTÓN PRINCIPAL */
+.btn-create {
+    background: #c91e25;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: .2s;
+}
+
+.btn-create:hover {
+    background: #a11219;
+}
+
+/* TABLA */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.modern-table th {
+    background: #f5f6ff;
+    font-weight: 600;
+    padding: 12px;
+    text-align: left;
+}
+
+.modern-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+/* ALTERNAR COLOR FILAS */
+.modern-table tbody tr:hover {
+    background: #fafafa;
+}
+
+/* BADGES */
+.badge-green {
+    background: #d4f5dd;
+    color: #0d7a20;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-red {
+    background: #ffd6d6;
+    color: #8b0f0f;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ACCIONES */
+.row-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.row-actions .icon {
+    cursor: pointer;
+    font-size: 18px;
+    transition: .2s;
+}
+
+.row-actions .edit:hover {
+    color: #2660ff;
+}
+
+.row-actions .delete:hover {
+    color: #c91e25;
+}
+/* ==========================================
+   LAYOUT CON SIDEBAR (vistas admin con tabla)
+   ========================================== */
+
+/* Grid con sidebar a la izquierda y contenido a la derecha */
+.admin-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 24px;
+    max-width: 1400px;
+    margin: 20px auto 30px;
+    padding: 0 20px;
+    align-items: flex-start;
+}
+
+/* Columna derecha (contenido) */
+.admin-content {
+    width: 100%;
+}
+
+/* --- Sidebar: mismo estilo que el del dashboard --- */
+
+.admin-sidebar {
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 12px;
+    padding: 18px 14px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-sidebar__title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.admin-sidebar__nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-sidebar__link {
+    display: block;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    font-size: 0.92rem;
+    color: #333;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.admin-sidebar__link:hover {
+    background: #f5f5f5;
+}
+
+/* Activo en rojo suave, igual que dashboard */
+.admin-sidebar__link.active {
+    font-weight: 600;
+    background: #ffe5e7;
+    color: #b1202c;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+/* Tablets / notebooks más pequeños */
+@media (max-width: 1024px) {
+    .admin-layout {
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 16px;
+        padding: 0 12px;
+    }
+}
+
+/* Móvil: sidebar arriba y contenido abajo */
+@media (max-width: 768px) {
+
+    .admin-layout {
+        display: block;
+        padding: 0 10px 20px;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        margin: 10px 0 14px;
+    }
+
+    .admin-container {
+        width: 100%;
+        margin: 0 auto 20px;
+        padding: 16px;
+    }
+
+    /* Scroll horizontal solo para la tabla, no para toda la pantalla */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .modern-table {
+        min-width: 650px;
+    }
+}
+/* ========== RESPONSIVE FIX PARA MOBILE ========== */
+@media (max-width: 768px) {
+
+    /* Sidebar arriba y contenido debajo */
+    .admin-layout {
+        display: block;
+        padding: 0 10px;
+    }
+
+    /* Sidebar ancho completo */
+    .admin-sidebar {
+        width: 100%;
+        margin-bottom: 16px;
+    }
+
+    /* FIX: Ajustar tarjeta que está demasiado grande */
+    .admin-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    /* Input buscador responsivo */
+    .actions-top {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .input-search {
+        width: 100%;
+    }
+
+    .btn-create {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Tabla scrollable pero sin romper layout */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        display: block;
+    }
+
+    .modern-table {
+        min-width: 650px;
+    }
+}

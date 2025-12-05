@@ -8,7 +8,8 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\PostulacionController;
 use App\Http\Controllers\OfertaController;
-
+use App\Http\Controllers\AdminEstudianteController;
+use App\Http\Controllers\AdminEmpresaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,13 +62,30 @@ Route::middleware('auth.custom')->group(function () {
             Route::get('/', [AdminController::class, 'dashboard'])
                 ->name('admin.dashboard');
 
-            // Aquí después agregaremos:
-            // /admin/usuarios
-            // /admin/empresas
-            // /admin/ofertas
-            // /admin/postulantes
-            // /admin/postulaciones
+            /* ===============================
+              MÓDULO ADMIN: GESTIÓN ESTUDIANTES
+              =============================== */
 
+            Route::get('/estudiantes', [AdminEstudianteController::class, 'index'])
+                ->name('admin.estudiantes.index');
+
+            Route::get('/estudiantes/crear', [AdminEstudianteController::class, 'create'])
+                ->name('admin.estudiantes.create');
+
+            Route::post('/estudiantes', [AdminEstudianteController::class, 'store'])
+                ->name('admin.estudiantes.store');
+
+            Route::get('/estudiantes/{id}/editar', [AdminEstudianteController::class, 'edit'])
+                ->name('admin.estudiantes.edit');
+
+            Route::put('/estudiantes/{id}', [AdminEstudianteController::class, 'update'])
+                ->name('admin.estudiantes.update');
+
+            Route::delete('/estudiantes/{id}', [AdminEstudianteController::class, 'destroy'])
+                ->name('admin.estudiantes.destroy');
+
+            Route::patch('/estudiantes/{id}/restaurar', [AdminEstudianteController::class, 'restore'])
+                ->name('admin.estudiantes.restore');
         });
 
 

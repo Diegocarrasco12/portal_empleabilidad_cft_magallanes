@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Usuario extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'usuarios';
     protected $primaryKey = 'id';
 
@@ -50,4 +53,5 @@ class Usuario extends Model
     {
         return $this->hasOne(Estudiante::class, 'usuario_id');
     }
+    
 }
