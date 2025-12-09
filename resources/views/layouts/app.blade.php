@@ -124,134 +124,160 @@
             }
         });
     </script>
-    @if (session('ok') || session('error'))
-        <div id="modalPostulacion" class="modal-fondo">
+    {{-- ===========================
+ MODAL GLOBAL DE ALERTAS (SOPORTA success, info, warning, error)
+=========================== --}}
+
+    @php
+        $alertType = null;
+        $alertMessage = null;
+
+        if (session('success')) {
+            $alertType = 'success';
+            $alertMessage = session('success');
+        } elseif (session('info')) {
+            $alertType = 'info';
+            $alertMessage = session('info');
+        } elseif (session('warning')) {
+            $alertType = 'warning';
+            $alertMessage = session('warning');
+        } elseif (session('error')) {
+            $alertType = 'error';
+            $alertMessage = session('error');
+        }
+    @endphp
+
+    @if ($alertType && $alertMessage)
+        <div id="modalAlerta" class="modal-fondo">
             <div class="modal-contenido">
+
                 <div class="modal-icono">
-                    @if (session('ok'))
-                        <span class="icono-exito">✔</span>
-                    @else
-                        <span class="icono-error">✖</span>
+                    @if ($alertType === 'success')
+                        <span style="color:#28a745;font-size:48px;">✔</span>
+                    @elseif ($alertType === 'info')
+                        <span style="color:#0d6efd;font-size:48px;">ℹ</span>
+                    @elseif ($alertType === 'warning')
+                        <span style="color:#ffc107;font-size:48px;">⚠</span>
+                    @elseif ($alertType === 'error')
+                        <span style="color:#dc3545;font-size:48px;">✖</span>
                     @endif
                 </div>
 
-                <h3 class="modal-titulo">
-                    {{ session('ok') ?? session('error') }}
-                </h3>
+                <h3 class="modal-titulo">{{ $alertMessage }}</h3>
 
-                <button onclick="cerrarModalPostulacion()" class="modal-boton">Aceptar</button>
+                <button onclick="cerrarModalAlerta()" class="modal-boton">Aceptar</button>
             </div>
         </div>
-
-        <style>
-            .modal-fondo {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.45);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 999999;
-                animation: fadeIn .3s ease;
-            }
-
-            .modal-contenido {
-                background: white;
-                padding: 30px 40px;
-                border-radius: 14px;
-                text-align: center;
-                max-width: 400px;
-                width: 90%;
-                animation: popUp .3s ease;
-                box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
-            }
-
-            .modal-icono span {
-                font-size: 48px;
-                display: block;
-                margin-bottom: 10px;
-            }
-
-            .icono-exito {
-                color: #28a745;
-            }
-
-            .icono-error {
-                color: #dc3545;
-            }
-
-            .modal-titulo {
-                font-size: 1.3rem;
-                font-weight: 600;
-                margin-bottom: 20px;
-            }
-
-            .modal-boton {
-                background: #c91e25;
-                border: none;
-                color: white;
-                padding: 10px 22px;
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 1rem;
-                font-weight: 600;
-            }
-
-            .modal-boton:hover {
-                background: #a8171f;
-            }
-
-            /* Animaciones */
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
-
-                to {
-                    opacity: 1;
-                }
-            }
-
-            @keyframes popUp {
-                from {
-                    transform: scale(.7);
-                    opacity: 0;
-                }
-
-                to {
-                    transform: scale(1);
-                    opacity: 1;
-                }
-            }
-        </style>
-
-        <script>
-            function cerrarModalPostulacion() {
-                const modal = document.getElementById('modalPostulacion');
-                if (modal) modal.remove();
-            }
-
-            // Autocerrar después de 4 segundos
-            setTimeout(cerrarModalPostulacion, 4000);
-
-            // FIX DEFINITIVO: cerrar modal cuando vuelves atrás (Chrome, Edge, Firefox, Safari)
-            window.addEventListener("pageshow", function(event) {
-                const nav = performance.getEntriesByType("navigation")[0];
-                const isBack = nav && nav.type === "back_forward";
-
-                if (event.persisted || isBack) {
-                    cerrarModalPostulacion();
-                }
-            });
-        </script>
-
-
     @endif
 
+    <script>
+        function cerrarModalAlerta() {
+            const modal = document.getElementById('modalAlerta');
+            if (modal) modal.remove();
+        }
 
+        setTimeout(cerrarModalAlerta, 4000);
+    </script>
+
+    <style>
+        .modal-fondo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            animation: fadeIn .3s ease;
+        }
+
+        .modal-contenido {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 14px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: popUp .3s ease;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-icono span {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .icono-exito {
+            color: #28a745;
+        }
+
+        .icono-error {
+            color: #dc3545;
+        }
+
+        .modal-titulo {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .modal-boton {
+            background: #c91e25;
+            border: none;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .modal-boton:hover {
+            background: #a8171f;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popUp {
+            from {
+                transform: scale(.7);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <script>
+        function cerrarModalAlerta() {
+            const modal = document.getElementById('modalAlerta');
+            if (modal) modal.remove();
+        }
+
+        // Autocerrar después de 4 segundos
+        setTimeout(cerrarModalAlerta, 4000);
+
+        // FIX para navegación atrás (Chrome/Firefox/Edge)
+        window.addEventListener("pageshow", function(event) {
+            if (event.persisted) cerrarModalAlerta();
+        });
+    </script>
 
 </body>
 

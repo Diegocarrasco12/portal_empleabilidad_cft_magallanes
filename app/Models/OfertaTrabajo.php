@@ -5,11 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\AreaEmpleo;
 
-
 class OfertaTrabajo extends Model
 {
     protected $table = 'ofertas_trabajo';
     public $timestamps = true;
+
+    /** ============================
+     *  Estados del Workflow de Ofertas
+     *  ============================ */
+    const ESTADO_PENDIENTE   = 0;
+    const ESTADO_APROBADA    = 1;
+    const ESTADO_RECHAZADA   = 2;
+    const ESTADO_REENVIADA   = 3;
+
 
     protected $fillable = [
         'empresa_id',
@@ -38,6 +46,9 @@ class OfertaTrabajo extends Model
         'creado_en',
         'actualizado_en',
     ];
+    protected $casts = [
+        'estado' => 'integer',
+    ];
 
     const CREATED_AT = 'creado_en';
     const UPDATED_AT = 'actualizado_en';
@@ -46,31 +57,43 @@ class OfertaTrabajo extends Model
     {
         return $this->belongsTo(Empresa::class, 'empresa_id');
     }
-        public function area()
+
+    public function area()
     {
         return $this->belongsTo(AreaEmpleo::class, 'area_id');
     }
+
     public function postulaciones()
     {
         return $this->hasMany(Postulacion::class, 'oferta_id');
     }
+
+    /** ============================
+     *  Accessor fecha publicación
+     *  ============================ */
     public function getFechaPublicacionAttribute()
-{
-    /* ================================
-   ACCESSOR PROFESIONAL
-   ================================ */
-    // 1) Caso ideal: creado_en tiene valor
-    if (!empty($this->creado_en)) {
-        return \Carbon\Carbon::parse($this->creado_en);
+    {
+        if (!empty($this->creado_en)) {
+            return \Carbon\Carbon::parse($this->creado_en);
+        }
+
+        if (!empty($this->actualizado_en)) {
+            return \Carbon\Carbon::parse($this->actualizado_en);
+        }
+
+        return now();
     }
 
-    // 2) Segundo fallback: actualizado_en
-    if (!empty($this->actualizado_en)) {
-        return \Carbon\Carbon::parse($this->actualizado_en);
+    /** ============================
+     *  Accessor legible para admin
+     *  ============================ */
+    public function getEstadoNombreAttribute()
+    {
+        return match ((int)$this->estado) {
+            self::ESTADO_APROBADA    => 'Aprobada',
+            self::ESTADO_RECHAZADA   => 'Rechazada',
+            self::ESTADO_REENVIADA   => 'Reenviada',
+            default                  => 'Pendiente',
+        };
     }
-
-    // 3) Último fallback: fecha actual
-    return now();
-}
-
 }

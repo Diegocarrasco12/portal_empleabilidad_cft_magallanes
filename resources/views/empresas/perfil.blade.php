@@ -1,6 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
+    @if (session()->has('empresa_alerta'))
+        <div id="empresaAlertaModal" class="modal-overlay visible">
+            <div class="modal-box">
+                <h3>Notificación</h3>
+
+                <p style="margin-top:12px; font-size: 1rem; line-height:1.5;">
+                    {{ session('empresa_alerta') }}
+                </p>
+
+                <div class="modal-actions" style="margin-top:18px;">
+                    <button class="btn-confirm">Entendido</button>
+                    Entendido
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <main class="empresa-dashboard container">
 
         {{-- === Header Empresa === --}}
@@ -142,4 +160,64 @@
         </section>
 
     </main>
+    @push('styles')
+        <style>
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, .45);
+                display: none;
+                /* oculto por defecto */
+                justify-content: center;
+                align-items: center;
+                z-index: 99999;
+            }
+
+            .modal-overlay.visible {
+                display: flex;
+                /* solo aparece si trae la clase visible */
+            }
+
+            .modal-box {
+                background: white;
+                width: 90%;
+                max-width: 420px;
+                padding: 25px;
+                border-radius: 14px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, .15);
+                text-align: center;
+            }
+
+            .modal-actions {
+                margin-top: 18px;
+                display: flex;
+                justify-content: center;
+            }
+
+            .btn-confirm {
+                background: #C91E25;
+                color: white;
+                padding: 10px 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+                border: none;
+            }
+        </style>
+    @endpush
+    @push('scripts')
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const modal = document.getElementById('empresaAlertaModal');
+                if (!modal) return;
+
+                modal.querySelector('.btn-confirm')?.addEventListener('click', () => {
+                    modal.classList.remove('visible');
+                });
+            });
+        </script>
+    @endpush
 @endsection

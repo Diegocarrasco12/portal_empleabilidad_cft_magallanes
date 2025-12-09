@@ -10,6 +10,8 @@ use App\Http\Controllers\PostulacionController;
 use App\Http\Controllers\OfertaController;
 use App\Http\Controllers\AdminEstudianteController;
 use App\Http\Controllers\AdminEmpresaController;
+use App\Http\Controllers\AdminOfertaApprovalController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +112,24 @@ Route::middleware('auth.custom')->group(function () {
 
             Route::patch('/empresas/{id}/restaurar', [AdminEmpresaController::class, 'restore'])
                 ->name('admin.empresas.restore');
+
+            /* ===============================
+              MÓDULO ADMIN: VALIDACIÓN OFERTAS
+            =============================== */
+
+            Route::get('/ofertas', [AdminOfertaApprovalController::class, 'index'])
+                ->name('admin.ofertas.index');
+
+            Route::get('/ofertas/{id}', [AdminOfertaApprovalController::class, 'show'])
+                ->name('admin.ofertas.show');
+
+            Route::patch('/ofertas/{id}/aprobar', [AdminOfertaApprovalController::class, 'approve'])
+                ->name('admin.ofertas.approve');
+
+            Route::patch('/ofertas/{id}/rechazar', [AdminOfertaApprovalController::class, 'reject'])
+                ->name('admin.ofertas.reject');
+            Route::patch('/ofertas/{id}/resubmit', [AdminOfertaApprovalController::class, 'resubmit'])
+                ->name('admin.ofertas.resubmit');
         });
 
 
@@ -142,9 +162,18 @@ Route::middleware('auth.custom')->group(function () {
                 ->name('empresas.ofertas.editar');
             Route::delete('/ofertas/{id}', [EmpresaController::class, 'destroyOferta'])
                 ->name('empresas.ofertas.destroy');
-            // LISTADO GENERAL DE OFERTAS DE LA EMPRESA
             Route::get('/ofertas', [EmpresaController::class, 'misOfertas'])
                 ->name('empresas.ofertas.index');
+            Route::post('/ofertas/{id}/enviar', [EmpresaController::class, 'enviarRevision'])
+                ->name('empresas.ofertas.enviarRevision');
+
+            Route::post('/ofertas/{id}/pausar', [EmpresaController::class, 'pausar'])
+                ->name('empresas.ofertas.pausar');
+            Route::post('/ofertas/{id}/reactivar', [EmpresaController::class, 'reactivar'])
+                ->name('empresas.ofertas.reactivar');
+
+            Route::post('/ofertas/{id}/cerrar', [EmpresaController::class, 'cerrar'])
+                ->name('empresas.ofertas.cerrar');
         });
 
 

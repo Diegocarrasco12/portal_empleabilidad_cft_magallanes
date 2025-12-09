@@ -29,13 +29,13 @@ class EmpresaController extends Controller
 
         // === Ofertas activas (máximo 4) ===
         $ofertas = OfertaTrabajo::where('empresa_id', $empresa->id)
-            ->where('estado', 1)
+            ->where('estado', \App\Models\OfertaTrabajo::ESTADO_APROBADA)
             ->orderBy('creado_en', 'desc')
             ->take(4)
             ->get();
 
         $totalOfertas = OfertaTrabajo::where('empresa_id', $empresa->id)
-            ->where('estado', 1)
+            ->where('estado', \App\Models\OfertaTrabajo::ESTADO_APROBADA)
             ->count();
 
         // === Postulaciones recientes ===
@@ -184,7 +184,7 @@ class EmpresaController extends Controller
             'correo_contacto'    => $request->correo_contacto,
             'telefono_contacto'  => $request->telefono_contacto,
             'fecha_cierre'       => $request->fecha_cierre,
-            'estado' => $request->has('borrador') ? 0 : 1,
+            'estado' => \App\Models\OfertaTrabajo::ESTADO_PENDIENTE,
         ]);
 
         /* -----------------------------
@@ -377,5 +377,18 @@ class EmpresaController extends Controller
             ->get();
 
         return view('empresas.postulaciones.ver', compact('estudiante', 'postulaciones'));
+    }
+
+    public function enviarRevision($id)
+    {
+        $oferta = OfertaTrabajo::findOrFail($id);
+
+        // Cambiar estado a "pendiente" nuevamente (volver al flujo administrativo)
+        $oferta->estado = OfertaTrabajo::ESTADO_PENDIENTE;
+        $oferta->save();
+
+        return redirect()
+            ->route('empresas.ofertas.index')
+            ->with('empresa_alerta', 'Tu oferta fue enviada a revisión nuevamente. Te avisaremos cuando sea aprobada.');
     }
 }

@@ -20,20 +20,21 @@
 
             @forelse ($ofertas as $oferta)
                 @php
-                    // Badge de estado
-                    $estadoTexto = [
-                        0 => 'Borrador',
-                        1 => 'Publicada',
-                        2 => 'Cerrada',
-                    ][$oferta->estado ?? 1];
+                    $estadoTexto =
+                        [
+                            \App\Models\OfertaTrabajo::ESTADO_PENDIENTE => 'Pendiente revisión',
+                            \App\Models\OfertaTrabajo::ESTADO_APROBADA => 'Publicada',
+                            \App\Models\OfertaTrabajo::ESTADO_RECHAZADA => 'Rechazada',
+                            \App\Models\OfertaTrabajo::ESTADO_REENVIADA => 'Reenviada',
+                        ][$oferta->estado] ?? 'Pendiente revisión';
 
-                    $estadoClase = [
-                        'Borrador' => 'badge-gray',
+                    $estadoClase = match ($estadoTexto) {
                         'Publicada' => 'badge-green',
-                        'Cerrada' => 'badge-red',
-                    ][$estadoTexto];
+                        'Rechazada' => 'badge-red',
+                        'Reenviada' => 'badge-blue',
+                        default => 'badge-gray',
+                    };
                 @endphp
-
                 <div class="oferta-card">
 
                     {{-- Logo --}}
@@ -85,25 +86,29 @@
                     {{-- Botonera --}}
                     <div class="oferta-actions">
 
-                        <a href="{{ route('ofertas.detalle', $oferta->id) }}" class="btn-detalle">
-                            Ver detalle
-                        </a>
+                        @if ($oferta->estado == \App\Models\OfertaTrabajo::ESTADO_PENDIENTE)
+                            <span class="info-msg">⏳ En revisión — No puedes editar</span>
+                        @elseif ($oferta->estado == \App\Models\OfertaTrabajo::ESTADO_APROBADA)
+                            <a href="{{ route('empresas.ofertas.editar', $oferta->id) }}" class="btn-empresa">Editar</a>
+                        @elseif ($oferta->estado == \App\Models\OfertaTrabajo::ESTADO_RECHAZADA)
+                            <span class="info-msg error">❌ Rechazada — revisa el motivo y corrige</span>
+                            <a href="{{ route('empresas.ofertas.editar', $oferta->id) }}" class="btn-empresa">Editar</a>
 
-                        <a href="{{ route('empresas.ofertas.editar', $oferta->id) }}" class="btn-empresa">
-                            Editar
-                        </a>
-                        <form action="{{ route('empresas.ofertas.destroy', $oferta->id) }}" method="POST"
-                            class="form-eliminar-oferta">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn-retirar"
-                                onclick="return confirm('¿Seguro que deseas eliminar esta oferta?')">
-                                Eliminar
-                            </button>
-                        </form>
+                            <form action="{{ route('empresas.ofertas.enviarRevision', $oferta->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn-publicar">Reenviar para revisión</button>
+                            </form>
 
+                            <form action="{{ route('empresas.ofertas.destroy', $oferta->id) }}" method="POST">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn-retirar">Eliminar</button>
+                            </form>
+                        @elseif($oferta->estado == \App\Models\OfertaTrabajo::ESTADO_REENVIADA)
+                            <span class="info-msg">📤 Enviada nuevamente — esperando revisión</span>
+                        @endif
 
                     </div>
+
 
                 </div>
 
