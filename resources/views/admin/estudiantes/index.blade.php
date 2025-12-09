@@ -8,7 +8,15 @@
             <h2 class="title">Estudiantes Registrados</h2>
 
             <div class="actions-top">
-                <input type="text" placeholder="🔍 Buscar estudiante..." class="input-search">
+                <form method="GET" action="{{ route('admin.estudiantes.index') }}" style="display:flex; gap:10px;">
+                    <input type="text" name="search" placeholder="🔍 Buscar estudiante..." value="{{ $search }}"
+                        class="input-search">
+                </form>
+                @if ($search)
+                    <a href="{{ route('admin.estudiantes.index') }}" class="btn-reset-filters">
+                        ✖ Quitar filtros
+                    </a>
+                @endif
 
                 <a href="{{ route('admin.estudiantes.create') }}" class="btn-create">
                     + Nuevo Estudiante

@@ -86,7 +86,32 @@ Route::middleware('auth.custom')->group(function () {
 
             Route::patch('/estudiantes/{id}/restaurar', [AdminEstudianteController::class, 'restore'])
                 ->name('admin.estudiantes.restore');
+            /* ===============================
+              MÓDULO ADMIN: GESTIÓN EMPRESAS
+             =============================== */
+
+            Route::get('/empresas', [AdminEmpresaController::class, 'index'])
+                ->name('admin.empresas.index');
+
+            Route::get('/empresas/crear', [AdminEmpresaController::class, 'create'])
+                ->name('admin.empresas.create');
+
+            Route::post('/empresas', [AdminEmpresaController::class, 'store'])
+                ->name('admin.empresas.store');
+
+            Route::get('/empresas/{id}/editar', [AdminEmpresaController::class, 'edit'])
+                ->name('admin.empresas.edit');
+
+            Route::put('/empresas/{id}', [AdminEmpresaController::class, 'update'])
+                ->name('admin.empresas.update');
+
+            Route::delete('/empresas/{id}', [AdminEmpresaController::class, 'destroy'])
+                ->name('admin.empresas.destroy');
+
+            Route::patch('/empresas/{id}/restaurar', [AdminEmpresaController::class, 'restore'])
+                ->name('admin.empresas.restore');
         });
+
 
 
     /* ------------------------- EMPRESAS (rol: empresa) ------------------------- */

@@ -7,16 +7,26 @@ use Illuminate\Http\Request;
 
 class AdminEstudianteController extends Controller
 {
-    public function index()
-    {
-        $estudiantes = Usuario::where('rol_id', 3)->withTrashed()->get();
-        return view('admin.estudiantes.index', compact('estudiantes'));
+    public function index(Request $request)
+{
+    $search = $request->input('search');
+
+    $query = Usuario::where('rol_id', 3)->withTrashed();
+
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('nombre', 'LIKE', "%$search%")
+                ->orWhere('apellido', 'LIKE', "%$search%")
+                ->orWhere('email', 'LIKE', "%$search%")
+                ->orWhere('rut', 'LIKE', "%$search%");
+        });
     }
 
-    public function create()
-    {
-        return view('admin.estudiantes.create');
-    }
+    $estudiantes = $query->orderBy('id', 'desc')->paginate(10);
+
+    return view('admin.estudiantes.index', compact('estudiantes', 'search'));
+}
+
 
     public function store(Request $request)
 {
