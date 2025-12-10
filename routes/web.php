@@ -11,6 +11,7 @@ use App\Http\Controllers\OfertaController;
 use App\Http\Controllers\AdminEstudianteController;
 use App\Http\Controllers\AdminEmpresaController;
 use App\Http\Controllers\AdminOfertaApprovalController;
+use App\Http\Controllers\AdminPostulanteController;
 
 
 /*
@@ -130,9 +131,23 @@ Route::middleware('auth.custom')->group(function () {
                 ->name('admin.ofertas.reject');
             Route::patch('/ofertas/{id}/resubmit', [AdminOfertaApprovalController::class, 'resubmit'])
                 ->name('admin.ofertas.resubmit');
+
+            /* ===============================
+              MÓDULO ADMIN: POSTULANTES
+            =============================== */
+
+            Route::get('/postulantes', [AdminPostulanteController::class, 'index'])
+                ->name('admin.postulantes.index');
+
+            Route::get('/postulantes/{id}', [AdminPostulanteController::class, 'show'])
+                ->name('admin.postulantes.show');
+            /* ===============================
+               MÓDULO ADMIN: POSTULACIONES
+            =============================== */
+
+            Route::get('/postulaciones', [\App\Http\Controllers\AdminPostulacionesController::class, 'index'])
+                ->name('admin.postulaciones.index');
         });
-
-
 
     /* ------------------------- EMPRESAS (rol: empresa) ------------------------- */
     Route::middleware('role:empresa')

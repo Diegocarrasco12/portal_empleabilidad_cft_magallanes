@@ -189,6 +189,59 @@
     background: #ffe5e7;
     color: #b1202c;
 }
+.pagination-custom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin: 30px auto 10px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.pagination-custom a {
+    padding: 6px 12px;
+    background: #c91e25;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.pagination-custom a:hover {
+    background: #9f1219;
+}
+
+.pagination-custom .disabled {
+    color: #aaa;
+}
+
+.pagination-custom .pages {
+    font-weight: 600;
+}
+/* Alineación vertical correcta de la celda Estado */
+.modern-table td:last-child {
+    vertical-align: middle;
+    text-align: center; 
+}
+
+/* Uniformar tamaño y apariencia de los badges */
+.badge-info,
+.badge-green,
+.badge-red {
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+}
+/* Centrar la columna de estado */
+.modern-table td:nth-child(7) {
+    text-align: center;
+}
+
 
 /* ==========================================
    RESPONSIVE
@@ -299,5 +352,14 @@
     color: white;
     border-color: #d9534f;
 }
+.badge-info {
+    background: #dce9ff;
+    color: #1f50b5;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
 
 }

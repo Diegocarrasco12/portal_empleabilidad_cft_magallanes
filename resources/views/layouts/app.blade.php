@@ -30,6 +30,7 @@
     @if (request()->routeIs('admin.estudiantes.*') ||
             request()->routeIs('admin.empresas.*') ||
             request()->routeIs('admin.ofertas.*') ||
+            request()->routeIs('admin.postulantes.*') ||
             request()->routeIs('admin.postulaciones.*'))
         <link rel="stylesheet" href="{{ asset('css/panel-admin.css') }}">
     @endif
@@ -38,7 +39,8 @@
     @if (request()->is('empresas/*'))
         <link rel="stylesheet" href="{{ asset('css/empresa.css') }}">
     @endif
-
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     {{-- Punto de extensión para estilos específicos de cada vista --}}
     @stack('styles')
