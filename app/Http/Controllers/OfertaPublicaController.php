@@ -36,7 +36,30 @@ class OfertaPublicaController extends Controller
         if ($request->filled('j')) {
             $query->where('jornada_id', $request->j);
         }
+        // 🔍 Filtro por Área (múltiples áreas posibles)
+        if ($request->filled('area')) {
+            $query->whereIn('area_id', (array) $request->area);
+        }
+        // 🔍 Filtro por Tipo de Contrato (múltiples)
+        if ($request->filled('type')) {
+            $query->whereIn('tipo_contrato_id', (array) $request->type);
+        }
+        // 💰 Filtro por Rango Salarial
+        if ($request->filled('smin')) {
+            $query->where('sueldo_min', '>=', $request->smin);
+        }
 
+        if ($request->filled('smax')) {
+            $query->where('sueldo_max', '<=', $request->smax);
+        }
+        // 🗓️ Filtro por Fecha de Publicación
+        if ($request->filled('age')) {
+            $days = (int) $request->age;
+
+            if ($days > 0) {
+                $query->where('creado_en', '>=', now()->subDays($days));
+            }
+        }
         // Filtro de búsqueda por texto (q)
         if ($request->filled('q')) {
             $search = trim($request->q);

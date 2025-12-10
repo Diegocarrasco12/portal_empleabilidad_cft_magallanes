@@ -66,19 +66,26 @@
 
                     <div class="filter-block">
                         <h3>Área</h3>
-                        <label class="check"><input type="checkbox" name="area[]" value="salud"> Salud</label>
-                        <label class="check"><input type="checkbox" name="area[]" value="industrial"> Industrial</label>
-                        <label class="check"><input type="checkbox" name="area[]" value="administracion">
-                            Administración</label>
-                        <label class="check"><input type="checkbox" name="area[]" value="educacion"> Educación</label>
+
+                        @foreach ($areas as $area)
+                            <label class="check">
+                                <input type="checkbox" name="area[]" value="{{ $area->id }}"
+                                    {{ request()->filled('area') && in_array($area->id, (array) request('area')) ? 'checked' : '' }}>
+                                {{ $area->nombre }}
+                            </label>
+                        @endforeach
                     </div>
 
                     <div class="filter-block">
                         <h3>Tipo de contrato</h3>
-                        <label class="check"><input type="checkbox" name="type[]" value="indefinido"> Indefinido</label>
-                        <label class="check"><input type="checkbox" name="type[]" value="plazo"> Plazo fijo</label>
-                        <label class="check"><input type="checkbox" name="type[]" value="honorarios"> Honorarios</label>
-                        <label class="check"><input type="checkbox" name="type[]" value="practica"> Práctica</label>
+
+                        @foreach ($tiposContrato as $tc)
+                            <label class="check">
+                                <input type="checkbox" name="type[]" value="{{ $tc->id }}"
+                                    {{ request()->filled('type') && in_array($tc->id, (array) request('type')) ? 'checked' : '' }}>
+                                {{ $tc->nombre }}
+                            </label>
+                        @endforeach
                     </div>
 
                     <div class="filter-block">
@@ -613,6 +620,7 @@
                 flex-direction: row;
                 justify-content: space-between;
             }
+
         }
     </style>
 @endpush
