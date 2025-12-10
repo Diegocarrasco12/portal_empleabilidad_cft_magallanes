@@ -117,7 +117,12 @@ class EmpresaController extends Controller
      */
     public function crearOferta()
     {
-        return view('empresas.crear_oferta');
+        return view('empresas.crear_oferta', [
+            'areas'         => \App\Models\AreaEmpleo::orderBy('nombre')->get(),
+            'tiposContrato' => \App\Models\TipoContrato::orderBy('nombre')->get(),
+            'modalidades'   => \App\Models\Modalidad::orderBy('nombre')->get(),
+            'jornadas'      => \App\Models\Jornada::orderBy('nombre')->get(),
+        ]);
     }
 
     /**
@@ -273,7 +278,6 @@ class EmpresaController extends Controller
     {
         $usuarioId = session('usuario_id');
 
-        // Obtener empresa del usuario
         $empresa = Empresa::where('usuario_id', $usuarioId)->first();
 
         if (!$empresa) {
@@ -281,14 +285,17 @@ class EmpresaController extends Controller
                 ->with('error', 'Debe completar su perfil de empresa antes de editar ofertas.');
         }
 
-        // Obtener oferta que pertenece a esta empresa
         $oferta = OfertaTrabajo::where('empresa_id', $empresa->id)
             ->where('id', $id)
             ->firstOrFail();
 
         return view('empresas.ofertas.editar_oferta', [
-            'empresa' => $empresa,
-            'oferta'  => $oferta,
+            'empresa'       => $empresa,
+            'oferta'        => $oferta,
+            'areas'         => \App\Models\AreaEmpleo::orderBy('nombre')->get(),
+            'tiposContrato' => \App\Models\TipoContrato::orderBy('nombre')->get(),
+            'modalidades'   => \App\Models\Modalidad::orderBy('nombre')->get(),
+            'jornadas'      => \App\Models\Jornada::orderBy('nombre')->get(),
         ]);
     }
 

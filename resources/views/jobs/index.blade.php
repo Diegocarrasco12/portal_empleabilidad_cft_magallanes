@@ -5,7 +5,7 @@
 
         {{-- Barra superior de búsqueda --}}
         <section class="jobs-hero" role="search" aria-label="Buscador de empleos">
-            <form class="jobs-search" action="{{ route('jobs.index') }}" method="GET" novalidate>
+            <form class="jobs-search" action="{{ route('empleos.index') }}" method="GET" novalidate>
                 <div class="input-wrap">
                     <img src="{{ asset('img/iconos/search.svg') }}" alt="" aria-hidden="true">
                     <input id="search-q" type="text" name="q" value="{{ request('q') }}"
@@ -18,11 +18,14 @@
                         placeholder="Ciudad o región" aria-label="Buscar por ciudad o región">
                 </div>
 
-                <select name="j" class="select">
+                <select name="j" id="jornada" class="form-select">
                     <option value="">Jornada</option>
-                    <option value="full" @selected(request('j') === 'full')>Tiempo completo</option>
-                    <option value="part" @selected(request('j') === 'part')>Part-time</option>
-                    <option value="practice" @selected(request('j') === 'practice')>Práctica</option>
+
+                    @foreach ($jornadas as $j)
+                        <option value="{{ $j->id }}" {{ request('j') == $j->id ? 'selected' : '' }}>
+                            {{ $j->nombre }}
+                        </option>
+                    @endforeach
                 </select>
 
                 <button class="btn btn-primary">Buscar</button>
@@ -41,7 +44,7 @@
                     @if (request('j'))
                         <span class="chip">Jornada: {{ request('j') }}</span>
                     @endif
-                    <a href="{{ route('jobs.index') }}" class="chip-clear">Limpiar filtros</a>
+                    <a href="{{ route('empleos.index') }}" class="chip-clear">Limpiar filtros</a>
                 </div>
             @endif
         </section>
@@ -55,7 +58,7 @@
                     <button class="icon-btn" id="closeFilters" aria-label="Cerrar filtros">✕</button>
                 </div>
 
-                <form class="filters-form" action="{{ route('jobs.index') }}" method="GET">
+                <form class="filters-form" action="{{ route('empleos.index') }}" method="GET">
                     {{-- Mantener query actual al aplicar filtros --}}
                     <input type="hidden" name="q" value="{{ request('q') }}">
                     <input type="hidden" name="l" value="{{ request('l') }}">
@@ -108,7 +111,11 @@
             {{-- Resultados --}}
             <div class="results">
                 <div class="results-head">
-                    <p class="muted">Mostrando <strong>128</strong> empleos (mock)</p>
+                    <p class="muted">
+                        Mostrando
+                        <strong>{{ $ofertas->total() }}</strong>
+                        {{ Str::plural('empleo', $ofertas->total()) }}
+                    </p>
                     <select class="select small">
                         <option value="relevance">Ordenar: Relevancia</option>
                         <option value="date">Más recientes</option>
@@ -116,37 +123,78 @@
                     </select>
                 </div>
 
-                {{-- Tarjetas de ofertas (mock) --}}
-                @for ($i = 0; $i < 8; $i++)
+                {{-- Tarjetas de ofertas --}}
+                @forelse ($ofertas as $oferta)
                     <article class="job-card">
+                        {{-- Logo empresa --}}
                         <div class="job-logo">
-                            <img src="{{ asset('img/empresas/empresa (1).png') }}" alt="Logo empresa">
+                            @php
+                                $empresa = $oferta->empresa;
+                                $logo =
+                                    $empresa && $empresa->ruta_logo
+                                        ? asset($empresa->ruta_logo)
+                                        : asset('img/empresas/empresa (1).png'); // fallback temporal
+                            @endphp
+                            <img src="{{ $logo }}" alt="Logo {{ $empresa->nombre_comercial ?? 'Empresa' }}">
                         </div>
 
+                        {{-- Información principal --}}
                         <div class="job-main">
-                            <h3 class="job-title"><a href="#">Técnico en Mantenimiento Industrial</a></h3>
-                            <p class="job-company">Magallanes Logística SPA</p>
+                            <h3 class="job-title">
+                                <a href="{{ route('ofertas.detalle', $oferta->id) }}">
+                                    {{ $oferta->titulo }}
+                                </a>
+                            </h3>
+
+                            <p class="job-company">
+                                {{ $empresa->nombre_comercial ?? ($empresa->razon_social ?? 'Empresa sin nombre') }}
+                            </p>
+
                             <ul class="job-meta">
-                                <li>📍 Punta Arenas</li>
-                                <li>⏱ Tiempo completo</li>
-                                <li>💸 $900.000 – $1.200.000</li>
+                                <li>📍 {{ $oferta->ciudad ?? 'Punta Arenas' }}</li>
+                                <li>⏱ {{ $oferta->jornada->nombre ?? 'Jornada no definida' }}</li>
+
+                                @if ($oferta->mostrar_sueldo && $oferta->sueldo_min && $oferta->sueldo_max)
+                                    <li>
+                                        💸 ${{ number_format($oferta->sueldo_min, 0, ',', '.') }}
+                                        – ${{ number_format($oferta->sueldo_max, 0, ',', '.') }}
+                                    </li>
+                                @endif
                             </ul>
+
                             <div class="job-tags">
-                                <span class="tag">Industrial</span>
-                                <span class="tag">Mecánica</span>
-                                <span class="tag">Turnos</span>
+                                @if ($oferta->area)
+                                    <span class="tag">{{ $oferta->area->nombre }}</span>
+                                @endif
+                                @if ($oferta->tipoContrato)
+                                    <span class="tag">{{ $oferta->tipoContrato->nombre }}</span>
+                                @endif
+                                @if ($oferta->modalidad)
+                                    <span class="tag">{{ $oferta->modalidad->nombre }}</span>
+                                @endif
                             </div>
                         </div>
 
+                        {{-- Columna derecha: fecha + acciones --}}
                         <div class="job-cta">
-                            <p class="job-date">Publicada hace 2 días</p>
+                            <p class="job-date">
+                                Publicada {{ $oferta->fecha_publicacion->diffForHumans() }}
+                            </p>
+
                             <div class="cta-actions">
-                                <button class="btn btn-light">Guardar</button>
-                                <a href="#" class="btn btn-primary">Postular</a>
+                                {{-- Guardar (aún sin lógica, solo visual) --}}
+                                <button class="btn btn-light" type="button">Guardar</button>
+
+                                {{-- Postular / Ver detalle --}}
+                                <a href="{{ route('ofertas.detalle', $oferta->id) }}" class="btn btn-primary">
+                                    Postular
+                                </a>
                             </div>
                         </div>
                     </article>
-                @endfor
+                @empty
+                    <p class="muted">Por ahora no hay ofertas vigentes publicadas.</p>
+                @endforelse
 
                 {{-- Paginación (mock) --}}
                 <nav class="pagination" aria-label="Paginación">

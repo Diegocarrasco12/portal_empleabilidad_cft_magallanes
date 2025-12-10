@@ -22,7 +22,7 @@
         <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
             <ul>
                 <li><a href="{{ url('/') }}">Inicio</a></li>
-                <li><a href="{{ route('jobs.index') }}">Ofertas</a></li>
+                <li><a href="{{ route('empleos.index') }}">Ofertas</a></li>
 
                 {{-- Visitante sin sesión --}}
                 @if (!$isLogged)

@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminEstudianteController;
 use App\Http\Controllers\AdminEmpresaController;
 use App\Http\Controllers\AdminOfertaApprovalController;
 use App\Http\Controllers\AdminPostulanteController;
+use App\Http\Controllers\OfertaPublicaController;
 
 
 /*
@@ -33,6 +34,10 @@ use App\Http\Controllers\AdminPostulanteController;
 ============================================================ */
 
 Route::view('/', 'landing')->name('home');
+
+Route::get('/empleos', [OfertaPublicaController::class, 'index'])
+    ->name('empleos.index');
+
 Route::get('/ofertas/{id}', [OfertaController::class, 'show'])
     ->name('ofertas.detalle');
 
@@ -224,12 +229,11 @@ Route::middleware('auth.custom')->group(function () {
 
 
 
-/* ============================================================
-   4) BUSCADOR DE EMPLEOS (PÚBLICO – mock)
-============================================================ */
-Route::get('/empleos', function () {
-    return view('jobs.index');
-})->name('jobs.index');
+// DESACTIVADO: ruta mock antigua
+// Route::get('/empleos', function () {
+//     return view('jobs.index');
+// })->name('jobs.index');
+
 
 
 

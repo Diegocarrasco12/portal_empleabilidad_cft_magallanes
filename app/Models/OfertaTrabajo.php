@@ -3,7 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\AreaEmpleo;
+use App\Models\Empresa;
+use App\Models\TipoContrato;
+use App\Models\Modalidad;
+use App\Models\Jornada;
+use App\Models\Postulacion;
+use App\Models\OfertaFavorita;
 
 class OfertaTrabajo extends Model
 {
@@ -47,8 +54,10 @@ class OfertaTrabajo extends Model
         'actualizado_en',
     ];
     protected $casts = [
-        'estado' => 'integer',
+        'estado'       => 'integer',
+        'fecha_cierre' => 'date',
     ];
+
 
     const CREATED_AT = 'creado_en';
     const UPDATED_AT = 'actualizado_en';
@@ -67,6 +76,30 @@ class OfertaTrabajo extends Model
     {
         return $this->hasMany(Postulacion::class, 'oferta_id');
     }
+    public function tipoContrato()
+    {
+        // Tabla real: tipos_contrato, PK: id
+        return $this->belongsTo(TipoContrato::class, 'tipo_contrato_id');
+    }
+
+    public function modalidad()
+    {
+        // Tabla real: modalidades, PK: id
+        return $this->belongsTo(Modalidad::class, 'modalidad_id');
+    }
+
+    public function jornada()
+    {
+        // Tabla real: jornadas, PK: id
+        return $this->belongsTo(Jornada::class, 'jornada_id');
+    }
+
+    public function favoritos()
+    {
+        // Tabla real: ofertas_favoritas, FK: oferta_id
+        return $this->hasMany(OfertaFavorita::class, 'oferta_id');
+    }
+
 
     /** ============================
      *  Accessor fecha publicación
@@ -95,5 +128,21 @@ class OfertaTrabajo extends Model
             self::ESTADO_REENVIADA   => 'Reenviada',
             default                  => 'Pendiente',
         };
+    }
+    /** ============================
+     *  Scope: Ofertas vigentes (públicas)
+     *  ============================ */
+    public function scopeVigentes(Builder $query): Builder
+    {
+        return $query
+            ->where('estado', self::ESTADO_APROBADA)
+            ->where(function ($q) {
+                $q->whereNull('fecha_cierre')
+                    ->orWhere('fecha_cierre', '>=', now()->toDateString());
+            });
+    }
+    public function esFavorita($estudianteId)
+    {
+        return $this->favoritos()->where('estudiante_id', $estudianteId)->exists();
     }
 }
