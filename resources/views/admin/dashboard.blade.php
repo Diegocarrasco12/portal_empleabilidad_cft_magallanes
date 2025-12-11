@@ -71,7 +71,7 @@
                             @endforelse
                         </tbody>
                     </table>
-                    <a href="#" class="panel-link">Ver todas</a>
+                    <a href="{{ route('admin.empresas.index') }}" class="panel-link">Ver todas</a>
                 </div>
             </article>
 
@@ -106,7 +106,7 @@
                             @endforelse
                         </tbody>
                     </table>
-                    <a href="#" class="panel-link">Ver todos</a>
+                    <a href="{{ route('admin.estudiantes.index') }}" class="panel-link">Ver todos</a>
                 </div>
             </article>
         </div>

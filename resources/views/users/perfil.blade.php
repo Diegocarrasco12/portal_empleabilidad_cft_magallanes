@@ -179,6 +179,11 @@
                         </article>
                     @endforeach
                 </div>
+                <div class="recommended-footer">
+                    <a href="{{ route('empleos.index') }}" class="btn-view-all">
+                        Ver todas las ofertas →
+                    </a>
+                </div>
             @endif
         </section>
 
@@ -195,7 +200,7 @@
         <style>
             /* === Layout general === */
             .perfil-user {
-                padding: 1.25rem 0 2rem;
+                padding: 1.25rem 0 5rem;
                 position: relative;
             }
 
@@ -339,6 +344,28 @@
                 font-weight: 800;
                 color: #c91e25;
                 margin: .5rem 0 1rem;
+            }
+
+            .recommended-footer {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 1rem;
+            }
+
+            .btn-view-all {
+                background: #c91e25;
+                color: white;
+                padding: .65rem 1.2rem;
+                border-radius: 8px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: .2s;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            }
+
+            .btn-view-all:hover {
+                background: #a71820;
             }
 
             /* === Responsive === */

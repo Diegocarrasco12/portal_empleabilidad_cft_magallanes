@@ -2,139 +2,156 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="container user-apps">
 
-        {{-- HEADER --}}
-        <header class="apps-header">
-            <h1 class="section-title">Mis Postulaciones</h1>
+    {{-- WRAPPER para asegurar separación correcta del footer --}}
+    <div class="apps-page-wrapper">
 
-            <p class="muted">
-                Revisa el estado de tus postulaciones y accede a los detalles de cada oferta.
-            </p>
+        <div class="container user-apps">
 
-            {{-- Filtros (aún no funcionales) --}}
-            <form class="apps-filters" method="GET">
-                <div class="field">
-                    <label for="f_estado">Estado</label>
-                    <select id="f_estado" name="estado">
-                        <option value="">Todos</option>
-                        <option value="postulado">Postulado</option>
-                        <option value="en_revision">En revisión</option>
-                        <option value="seleccionado">Seleccionado</option>
-                        <option value="descartado">Descartado</option>
-                    </select>
-                </div>
+            {{-- HEADER --}}
+            <header class="apps-header">
+                <h1 class="section-title">Mis Postulaciones</h1>
 
-                <div class="field">
-                    <label for="f_fecha">Ordenar por</label>
-                    <select id="f_fecha" name="orden">
-                        <option value="recientes">Más recientes</option>
-                        <option value="antiguas">Más antiguas</option>
-                    </select>
-                </div>
-
-                <div class="field field-search">
-                    <label for="f_q">Buscar</label>
-                    <input id="f_q" type="text" name="q" placeholder="Puesto, empresa, ubicación…">
-                </div>
-
-                <div class="field field-actions">
-                    <button class="btn btn-primary" type="submit">Aplicar filtros</button>
-                </div>
-            </form>
-        </header>
-
-        {{-- ===========================
-            LISTA DE POSTULACIONES
-        ============================ --}}
-        <section class="apps-list">
-
-            @if ($postulaciones->isEmpty())
-                <p style="text-align:center; color:#6b7280; margin-top:1rem;">
-                    Aún no has postulado a ninguna oferta. Explora las vacantes disponibles.
+                <p class="muted">
+                    Revisa el estado de tus postulaciones y accede a los detalles de cada oferta.
                 </p>
-            @endif
 
-            @foreach ($postulaciones as $postulacion)
-                @php
-                    $oferta = $postulacion->oferta;
-                    $empresa = $oferta?->empresa;
+                {{-- Filtros (aún no funcionales) --}}
+                <form class="apps-filters" method="GET">
+                    <div class="field">
+                        <label for="f_estado">Estado</label>
+                        <select id="f_estado" name="estado">
+                            <option value="">Todos</option>
+                            <option value="postulado">Postulado</option>
+                            <option value="en_revision">En revisión</option>
+                            <option value="seleccionado">Seleccionado</option>
+                            <option value="descartado">Descartado</option>
+                        </select>
+                    </div>
 
-                    $titulo = $oferta->titulo ?? 'Oferta sin título';
-                    $empresaNombre = $empresa->nombre_comercial ?? 'Empresa no registrada';
-                    $ciudad = $oferta->ciudad ?? 'Ubicación no registrada';
+                    <div class="field">
+                        <label for="f_fecha">Ordenar por</label>
+                        <select id="f_fecha" name="orden">
+                            <option value="recientes">Más recientes</option>
+                            <option value="antiguas">Más antiguas</option>
+                        </select>
+                    </div>
 
-                    // Badge dinámico
-                    $estado = $postulacion->estado_postulacion;
-                    $badgeClass = match ($estado) {
-                        'seleccionado' => 'seleccionada',
-                        'descartado' => 'rechazada',
-                        default => 'en-proceso',
-                    };
+                    <div class="field field-search">
+                        <label for="f_q">Buscar</label>
+                        <input id="f_q" type="text" name="q" placeholder="Puesto, empresa, ubicación…">
+                    </div>
 
-                    $fecha = $postulacion->fecha_postulacion
-                        ? \Carbon\Carbon::parse($postulacion->fecha_postulacion)->format('d M Y')
-                        : 'Fecha no registrada';
-                @endphp
+                    <div class="field field-actions">
+                        <button class="btn btn-primary" type="submit">Aplicar filtros</button>
+                    </div>
+                </form>
+            </header>
 
-                <article class="app-card">
+            {{-- ===========================
+                LISTA DE POSTULACIONES
+            ============================ --}}
+            <section class="apps-list">
 
-                    {{-- ENCABEZADO --}}
-                    <div class="app-card-head">
+                @if ($postulaciones->isEmpty())
+                    <p style="text-align:center; color:#6b7280; margin-top:1rem;">
+                        Aún no has postulado a ninguna oferta. Explora las vacantes disponibles.
+                    </p>
+                @endif
 
-                        <img class="company-logo" src="{{ asset('img/empresas/empresa (1).png') }}" alt="Logo empresa">
+                @foreach ($postulaciones as $postulacion)
+                    @php
+                        $oferta = $postulacion->oferta;
+                        $empresa = $oferta?->empresa;
 
-                        <div class="job-meta">
-                            <h3 class="job-title">{{ $titulo }}</h3>
-                            <p class="company">{{ $empresaNombre }}</p>
-                            <p class="location">📍 {{ $ciudad }}</p>
+                        $titulo = $oferta->titulo ?? 'Oferta sin título';
+                        $empresaNombre = $empresa->nombre_comercial ?? 'Empresa no registrada';
+                        $ciudad = $oferta->ciudad ?? 'Ubicación no registrada';
+
+                        $estado = $postulacion->estado_postulacion;
+                        $badgeClass = match ($estado) {
+                            'seleccionado' => 'seleccionada',
+                            'descartado' => 'rechazada',
+                            default => 'en-proceso',
+                        };
+
+                        $fecha = $postulacion->fecha_postulacion
+                            ? \Carbon\Carbon::parse($postulacion->fecha_postulacion)->format('d M Y')
+                            : 'Fecha no registrada';
+                    @endphp
+
+                    <article class="app-card">
+
+                        {{-- ENCABEZADO --}}
+                        <div class="app-card-head">
+
+                            <img class="company-logo"
+                                 src="{{ asset('img/empresas/empresa (1).png') }}"
+                                 alt="Logo empresa">
+
+                            <div class="job-meta">
+                                <h3 class="job-title">{{ $titulo }}</h3>
+                                <p class="company">{{ $empresaNombre }}</p>
+                                <p class="location">📍 {{ $ciudad }}</p>
+                            </div>
+
+                            <span class="badge status {{ $badgeClass }}">
+                                {{ ucfirst(str_replace('_', ' ', $estado)) }}
+                            </span>
                         </div>
 
-                        <span class="badge status {{ $badgeClass }}">
-                            {{ ucfirst(str_replace('_', ' ', $estado)) }}
-                        </span>
-                    </div>
+                        {{-- CUERPO --}}
+                        <div class="app-card-body">
+                            <ul class="meta-inline">
+                                <li>📅 Postulado: {{ $fecha }}</li>
+                                <li>🧭 Etapa: {{ ucfirst(str_replace('_', ' ', $estado)) }}</li>
+                            </ul>
 
-                    {{-- CUERPO --}}
-                    <div class="app-card-body">
-                        <ul class="meta-inline">
-                            <li>📅 Postulado: {{ $fecha }}</li>
-                            <li>🧭 Etapa: {{ ucfirst(str_replace('_', ' ', $estado)) }}</li>
-                        </ul>
+                            <p class="excerpt">
+                                {{ Str::limit($oferta->descripcion ?? 'Sin descripción disponible.', 140) }}
+                            </p>
+                        </div>
 
-                        <p class="excerpt">
-                            {{ Str::limit($oferta->descripcion ?? 'Sin descripción disponible.', 140) }}
-                        </p>
-                    </div>
+                        {{-- ACCIONES --}}
+                        <div class="app-card-actions">
+                            <a class="btn btn-light btn-ver-detalle" href="#" data-id="{{ $postulacion->id }}">
+                                Ver detalle
+                            </a>
+                            <a class="btn btn-light" href="#">
+                                Ver empresa
+                            </a>
+                            <a class="btn btn-danger" href="#" style="opacity:.5; pointer-events:none;">
+                                Retirar postulación
+                            </a>
+                        </div>
 
-                    {{-- ACCIONES --}}
-                    <div class="app-card-actions">
-                        <a class="btn btn-light btn-ver-detalle" href="#" data-id="{{ $postulacion->id }}">
-                            Ver detalle
-                        </a>
-                        <a class="btn btn-light" href="#">
-                            Ver empresa
-                        </a>
-                        <a class="btn btn-danger" href="#" style="opacity:.5; pointer-events:none;">
-                            Retirar postulación
-                        </a>
-                    </div>
-                </article>
-            @endforeach
+                    </article>
+                @endforeach
 
-        </section>
+            </section>
 
-    </main>
+            {{-- 👇 El modal-container SIEMPRE dentro del wrapper para evitar solapamiento con footer --}}
+            <div id="modal-container"></div>
+
+        </div> {{-- /container --}}
+    </div> {{-- /apps-page-wrapper --}}
 @endsection
 
 
+
 {{-- ===========================
-    ESTILOS LOCALES
+        ESTILOS LOCALES
 =========================== --}}
 @push('styles')
 <style>
+
+    /* Wrapper que genera espacio REAL antes del footer */
+    .apps-page-wrapper {
+        padding-bottom: 6rem; /* evita que el footer tape contenido */
+    }
+
     .user-apps {
-        padding: 1.25rem 0 2rem;
+        padding: 1.25rem 0 0;
     }
 
     .apps-header .muted {
@@ -142,7 +159,9 @@
         margin-bottom: .75rem;
     }
 
-    /* --- FORMULARIO DE FILTROS --- */
+    /* --------------------------
+            FORMULARIO FILTROS
+    --------------------------- */
     .apps-filters {
         background: #ffffff;
         padding: 1.2rem;
@@ -184,15 +203,6 @@
         box-shadow: 0 0 0 2px rgba(201, 30, 37, .18);
     }
 
-    .apps-filters select:hover,
-    .apps-filters input:hover {
-        background: #ffffff;
-    }
-
-    .field-search input {
-        width: 100%;
-    }
-
     .field-actions button {
         width: 100%;
         padding: .65rem;
@@ -220,6 +230,9 @@
         }
     }
 
+    /* --------------------------
+            TARJETAS
+    --------------------------- */
     .apps-list {
         display: grid;
         gap: 1rem;
@@ -322,16 +335,14 @@
             grid-template-columns: 1fr;
         }
     }
+
 </style>
 @endpush
 
 
-{{-- AQUI VA EL CONTENEDOR DEL MODAL --}}
-<div id="modal-container"></div>
-
 
 {{-- ===========================
-    SCRIPTS LOCALES
+        SCRIPTS
 =========================== --}}
 @push('scripts')
 <script>
