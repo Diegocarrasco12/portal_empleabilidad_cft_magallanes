@@ -33,7 +33,7 @@ use App\Http\Controllers\OfertaPublicaController;
    1) RUTA PRINCIPAL / LANDING (Pública)
 ============================================================ */
 
-Route::view('/', 'landing')->name('home');
+Route::get('/', [OfertaPublicaController::class, 'landing'])->name('home');
 
 Route::get('/empleos', [OfertaPublicaController::class, 'index'])
     ->name('empleos.index');

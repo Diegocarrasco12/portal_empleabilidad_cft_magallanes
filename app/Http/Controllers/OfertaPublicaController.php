@@ -136,4 +136,34 @@ class OfertaPublicaController extends Controller
             ],
         ]);
     }
+    /**
+     * Landing pública del sitio
+     *
+     * Carga:
+     * - 4 ofertas destacadas (vigentes, aprobadas, más recientes)
+     * - Empresas destacadas (ordenadas por cantidad de ofertas vigentes)
+     */
+    public function landing()
+    {
+        // ⭐ 1) OFERTAS DESTACADAS (4 más recientes aprobadas y vigentes)
+        $featuredJobs = OfertaTrabajo::with('empresa')
+            ->vigentes()
+            ->orderBy('creado_en', 'desc')
+            ->limit(4)
+            ->get();
+
+        // ⭐ 2) EMPRESAS DESTACADAS (ranking por cantidad de ofertas vigentes)
+        $topCompanies = \App\Models\Empresa::withCount(['ofertas as ofertas_activas_count' => function ($q) {
+            $q->vigentes(); // Usa el scope del modelo OfertaTrabajo
+        }])
+            ->orderBy('ofertas_activas_count', 'desc')
+            ->limit(6)
+            ->get();
+
+        // Enviar a la vista landing.blade.php
+        return view('landing', [
+            'featuredJobs' => $featuredJobs,
+            'topCompanies' => $topCompanies,
+        ]);
+    }
 }

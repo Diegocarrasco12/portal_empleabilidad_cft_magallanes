@@ -2,10 +2,10 @@
 
 @section('content')
     <!--
-                                                            Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
-                                                            principales descritas en el diseño de referencia: hero, trabajos
-                                                            destacados, empresas destacadas, testimonios y llamada a la acción.
-                                                          -->
+                                                                        Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
+                                                                        principales descritas en el diseño de referencia: hero, trabajos
+                                                                        destacados, empresas destacadas, testimonios y llamada a la acción.
+                                                                      -->
 
     <!-- Sección Hero -->
     <section class="hero">
@@ -15,8 +15,8 @@
                 <p>
                     Conecta con empresas que buscan talento técnico en Magallanes.
                 </p>
-                <form class="search-form" action="{{ url('/buscar') }}" method="GET">
-                    <input type="text" name="q" placeholder="Busca tu práctica o empleo..."
+                <form class="search-form" action="{{ route('empleos.index') }}" method="GET">
+                    <input type="text" name="q" placeholder="Busca tu práctica o empleo..." value="{{ request('q') }}"
                         aria-label="Buscar práctica o empleo" />
                     <button type="submit" class="btn-search">Buscar</button>
                 </form>
@@ -29,28 +29,38 @@
         <div class="container">
             <h2>Trabajos destacados</h2>
 
-            @php
-                // Logos de empresas (ubicados en public/img/otros)
-                $jobLogos = ['td (1).png', 'td (2).png', 'td (3).png', 'td (4).png'];
-            @endphp
-
             <div class="jobs-grid">
-                @for ($i = 0; $i < 4; $i++)
-                    @php $logo = $jobLogos[$i % count($jobLogos)]; @endphp
 
+                @forelse ($featuredJobs as $job)
                     <article class="job-card">
-                        <!-- Contenedor del logo -->
+
+                        <!-- Logo de la empresa -->
                         <div class="logo-wrapper">
-                            <img src="{{ asset('img/otros/' . rawurlencode($logo)) }}" alt="Logo empresa">
+                            @if ($job->empresa && $job->empresa->ruta_logo)
+                                <img src="{{ asset($job->empresa->ruta_logo) }}"
+                                    alt="{{ $job->empresa->nombre_comercial }}">
+                            @else
+                                <img src="{{ asset('img/otros/default-logo.png') }}" alt="Sin logo">
+                            @endif
                         </div>
 
                         <!-- Contenido del trabajo -->
-                        <h3>Asistente<br>Laboratorio Clínico</h3>
-                        <p class="company">Clínica Regional del Sur</p>
-                        <p class="location">Punta Arenas</p>
-                        <a href="#" class="details-link">Ver Detalles</a>
+                        <h3>{{ $job->titulo }}</h3>
+
+                        <p class="company">
+                            {{ $job->empresa?->nombre_comercial ?? 'Empresa no especificada' }}
+                        </p>
+
+                        <p class="location">
+                            {{ $job->ciudad ?? 'Ubicación no especificada' }}
+                        </p>
+
+                        <a href="{{ route('ofertas.detalle', $job->id) }}" class="details-link">Ver Detalles</a>
                     </article>
-                @endfor
+                @empty
+                    <p>No hay ofertas destacadas disponibles.</p>
+                @endforelse
+
             </div>
         </div>
     </section>
@@ -65,22 +75,21 @@
                 tú
             </p>
             <div class="companies-row">
-                <div class="company-item">
-                    <img src="{{ asset('img/empresas/empresa%20(1).png') }}" alt="Empresa 1" loading="lazy" width="200"
-                        height="80">
-                </div>
-                <div class="company-item">
-                    <img src="{{ asset('img/empresas/empresa%20(2).png') }}" alt="Empresa 2" loading="lazy" width="200"
-                        height="80">
-                </div>
-                <div class="company-item">
-                    <img src="{{ asset('img/empresas/empresa%20(3).png') }}" alt="Empresa 3" loading="lazy" width="200"
-                        height="80">
-                </div>
-                <div class="company-item">
-                    <img src="{{ asset('img/empresas/empresa%20(4).png') }}" alt="Empresa 4" loading="lazy" width="200"
-                        height="80">
-                </div>
+
+                @forelse ($topCompanies as $company)
+                    <div class="company-item">
+                        @if ($company->ruta_logo)
+                            <img src="{{ asset($company->ruta_logo) }}" alt="{{ $company->nombre_comercial }}"
+                                loading="lazy" width="200" height="80">
+                        @else
+                            <img src="{{ asset('img/otros/default-logo.png') }}" alt="{{ $company->nombre_comercial }}"
+                                loading="lazy" width="200" height="80">
+                        @endif
+                    </div>
+                @empty
+                    <p>No hay empresas destacadas aún.</p>
+                @endforelse
+
             </div>
         </div>
         </div>
