@@ -26,6 +26,7 @@
                 <tbody>
                     @forelse ($postulaciones as $post)
                         <tr>
+
                             {{-- ID --}}
                             <td>{{ $post->id }}</td>
 
@@ -43,7 +44,9 @@
 
                             {{-- EMPRESA --}}
                             <td>
-                                {{ optional($post->oferta?->empresa)->nombre ?? ($post->oferta?->nombre_contacto ?? 'No disponible') }}
+                                {{ optional($post->oferta?->empresa)->razon_social 
+                                    ?? $post->oferta?->nombre_contacto 
+                                    ?? 'No disponible' }}
                             </td>
 
                             {{-- FECHA --}}
@@ -51,24 +54,27 @@
                                 @php
                                     $fecha = $post->fecha_postulacion ?? $post->creado_en;
                                 @endphp
-
                                 {{ $fecha ? \Carbon\Carbon::parse($fecha)->format('d-m-Y') : 'Sin registro' }}
                             </td>
 
-                            {{-- ESTADO (BADGES ESTILO PANEL) --}}
+                            {{-- ESTADO --}}
                             <td>
                                 @php $estado = strtolower($post->estado_postulacion); @endphp
 
                                 @if ($estado === 'pendiente')
                                     <span class="badge-info">Pendiente</span>
+
                                 @elseif($estado === 'aceptado')
                                     <span class="badge-green">Aceptado</span>
+
                                 @elseif($estado === 'rechazado')
                                     <span class="badge-red">Rechazado</span>
+
                                 @else
                                     <span class="badge-info">{{ ucfirst($post->estado_postulacion) }}</span>
                                 @endif
                             </td>
+
                         </tr>
                     @empty
                         <tr>
@@ -81,11 +87,35 @@
             </table>
         </div>
 
-        {{-- PAGINACIÓN --}}
-        <div class="pagination-wrapper">
-            {{ $postulaciones->links('pagination::simple-default') }}
-        </div>
+        {{-- PAGINACIÓN ESTANDARIZADA --}}
+        @if ($postulaciones->hasPages())
+            <div class="pagination-admin">
 
+                {{-- Botón Anterior --}}
+                @if ($postulaciones->onFirstPage())
+                    <span class="pag-btn disabled">Anterior</span>
+                @else
+                    <a href="{{ $postulaciones->previousPageUrl() }}" class="pag-btn">Anterior</a>
+                @endif
+
+                {{-- Números --}}
+                @foreach ($postulaciones->links()->elements[0] ?? [] as $page => $url)
+                    @if ($page == $postulaciones->currentPage())
+                        <span class="pag-number active">{{ $page }}</span>
+                    @else
+                        <a href="{{ $url }}" class="pag-number">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                {{-- Botón Siguiente --}}
+                @if ($postulaciones->hasMorePages())
+                    <a href="{{ $postulaciones->nextPageUrl() }}" class="pag-btn">Siguiente</a>
+                @else
+                    <span class="pag-btn disabled">Siguiente</span>
+                @endif
+
+            </div>
+        @endif
 
     </div>
 @endsection

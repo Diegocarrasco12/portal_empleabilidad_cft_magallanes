@@ -113,7 +113,7 @@ class OfertaPublicaController extends Controller
         }
 
         // Paginación real con queryString para filtros futuros
-        $ofertas = $query->paginate(15)->withQueryString();
+        $ofertas = $query->paginate(6)->withQueryString();
 
         return view('jobs.index', [
             'ofertas'       => $ofertas,

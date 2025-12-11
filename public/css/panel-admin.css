@@ -182,42 +182,11 @@
 .admin-sidebar__link:hover {
     background: #f5f5f5;
 }
-
-/* Activo en rojo suave, igual que dashboard */
 .admin-sidebar__link.active {
-    font-weight: 600;
     background: #ffe5e7;
-    color: #b1202c;
-}
-.pagination-custom {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 14px;
-    margin: 30px auto 10px;
-    font-size: 14px;
-    width: 100%;
-}
-
-.pagination-custom a {
-    padding: 6px 12px;
-    background: #c91e25;
-    color: white;
-    border-radius: 6px;
-    text-decoration: none;
+    color: #c91e25;
     font-weight: 600;
-}
-
-.pagination-custom a:hover {
-    background: #9f1219;
-}
-
-.pagination-custom .disabled {
-    color: #aaa;
-}
-
-.pagination-custom .pages {
-    font-weight: 600;
+    border-left: 4px solid #c91e25;
 }
 /* Alineación vertical correcta de la celda Estado */
 .modern-table td:last-child {
@@ -240,6 +209,88 @@
 /* Centrar la columna de estado */
 .modern-table td:nth-child(7) {
     text-align: center;
+}
+/* ============================================
+   PAGINACIÓN ADMIN — ESTILO UNIFICADO ROJO
+   ============================================ */
+
+.pagination-admin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 25px 0 5px;
+}
+
+.pag-btn,
+.pag-number {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: .2s;
+    border: 1px solid #c91e25;
+    color: #c91e25;
+    background: white;
+}
+
+.pag-btn:hover,
+.pag-number:hover {
+    background: #c91e25;
+    color: white;
+}
+
+.pag-number.active {
+    background: #c91e25;
+    color: white;
+    cursor: default;
+}
+
+.pag-btn.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+/* ==========================================
+   FILTROS DE ESTADO (Ofertas)
+   ========================================== */
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+.btn-status {
+    background: #f4f4f4;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #333;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+}
+
+.btn-status:hover {
+    background: #e3e3e3;
+}
+
+.btn-status.active {
+    background: #c91e25;
+    color: white;
+    border-color: #c91e25;
+}
+
+.btn-status .count {
+    background: rgba(255,255,255,0.35);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 12px;
 }
 
 
@@ -360,6 +411,31 @@
     font-size: 12px;
     font-weight: 600;
 }
+    /* ===== Fix header ofertas en mobile ===== */
+    .panel-header {
+        flex-direction: column;        /* Título arriba, botones abajo */
+        align-items: flex-start;       /* Alineado a la izquierda */
+        gap: 10px;                     /* Separación entre título y botones */
+    }
+
+    .panel-header .title {
+        margin-bottom: 0;
+    }
+
+    .actions-top {
+        width: 100%;                   /* Que tome todo el ancho */
+        justify-content: flex-start;   /* Botones alineados al inicio */
+        flex-wrap: wrap;               /* Que puedan hacer salto de línea */
+        gap: 8px;
+    }
+
+    /* Si los filtros están dentro de .actions-top en un div extra: */
+    .actions-top > .btn,
+    .actions-top a.btn {
+        /* Opcional: que se repartan mejor en 2 columnas en mobile */
+        flex: 1 1 calc(50% - 6px);
+        text-align: center;
+    }
 
 
 }

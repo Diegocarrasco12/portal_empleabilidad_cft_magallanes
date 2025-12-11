@@ -13,7 +13,10 @@ form, input, select, textarea, button {
     font-family: "Inter", sans-serif;
 }
 
-input, select, textarea {
+/* Inputs comunes (texto, email, number, password, etc.) + selects + textareas */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
     border: 1px solid #d7d7d7;
     border-radius: 8px;
     padding: 10px 12px;
@@ -21,6 +24,14 @@ input, select, textarea {
     width: 100%;
     background-color: #fff;
     transition: border-color 0.2s ease;
+}
+
+/* Checkboxes corregidos */
+input[type="checkbox"] {
+    width: auto;
+    padding: 0;
+    margin: 0 6px 0 0;
+    transform: scale(1.1); /* opcional para que se vea más bonito */
 }
 
 input:focus,

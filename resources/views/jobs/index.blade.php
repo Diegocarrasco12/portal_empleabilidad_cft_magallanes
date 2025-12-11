@@ -128,8 +128,16 @@
                         <input type="hidden" name="q" value="{{ request('q') }}">
                         <input type="hidden" name="l" value="{{ request('l') }}">
                         <input type="hidden" name="j" value="{{ request('j') }}">
-                        <input type="hidden" name="area" value="{{ request('area') }}">
-                        <input type="hidden" name="type" value="{{ request('type') }}">
+                        @if (request()->filled('area'))
+                            @foreach (request('area') as $areaSelected)
+                                <input type="hidden" name="area[]" value="{{ $areaSelected }}">
+                            @endforeach
+                        @endif
+                        @if (request()->filled('type'))
+                            @foreach (request('type') as $typeSelected)
+                                <input type="hidden" name="type[]" value="{{ $typeSelected }}">
+                            @endforeach
+                        @endif
                         <input type="hidden" name="smin" value="{{ request('smin') }}">
                         <input type="hidden" name="smax" value="{{ request('smax') }}">
                         <input type="hidden" name="age" value="{{ request('age') }}">
@@ -221,14 +229,34 @@
                     <p class="muted">Por ahora no hay ofertas vigentes publicadas.</p>
                 @endforelse
 
-                {{-- Paginación (mock) --}}
-                <nav class="pagination" aria-label="Paginación">
-                    <a href="#" class="page">&laquo;</a>
-                    <a href="#" class="page is-active">1</a>
-                    <a href="#" class="page">2</a>
-                    <a href="#" class="page">3</a>
-                    <a href="#" class="page">&raquo;</a>
-                </nav>
+                {{-- Paginación --}}
+                @if ($ofertas->hasPages())
+                    <div class="simple-pagination">
+
+                        {{-- Anterior --}}
+                        @if ($ofertas->onFirstPage())
+                            <span class="sp-btn disabled">Anterior</span>
+                        @else
+                            <a href="{{ $ofertas->previousPageUrl() }}" class="sp-btn">Anterior</a>
+                        @endif
+
+                        {{-- Números --}}
+                        @foreach ($ofertas->links()->paginator->getUrlRange(1, $ofertas->lastPage()) as $page => $url)
+                            @if ($page == $ofertas->currentPage())
+                                <span class="sp-page active">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}" class="sp-page">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        {{-- Siguiente --}}
+                        @if ($ofertas->hasMorePages())
+                            <a href="{{ $ofertas->nextPageUrl() }}" class="sp-btn">Siguiente</a>
+                        @else
+                            <span class="sp-btn disabled">Siguiente</span>
+                        @endif
+                    </div>
+                @endif
             </div>
         </section>
     </main>
@@ -344,6 +372,7 @@
             display: grid;
             grid-template-columns: 300px 1fr;
             gap: 1rem;
+            align-items: start;
         }
 
         .filters {
@@ -353,7 +382,6 @@
             padding: 1rem;
             position: sticky;
             top: 1rem;
-            height: max-content;
         }
 
         .filters-head {
@@ -401,6 +429,7 @@
         .results {
             display: grid;
             gap: .6rem;
+            padding-bottom: 2.5rem;
         }
 
         .results-head {
@@ -575,6 +604,52 @@
 
         .filters .btn-apply:hover {
             background: #a8181e;
+        }
+
+        /* ====== Fix: separación real antes de la paginación ====== */
+        .results {
+            gap: 1.5rem !important;
+            /* más espacio entre elementos */
+            padding-bottom: 3rem !important;
+        }
+
+        /* ====== Paginación simple ====== */
+        .simple-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: .45rem;
+            margin-top: 2rem;
+        }
+
+        .sp-btn,
+        .sp-page {
+            padding: .45rem .8rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: .95rem;
+            color: #374151;
+            background: #fff;
+            transition: 0.15s;
+        }
+
+        .sp-btn:hover,
+        .sp-page:hover {
+            border-color: #c91e25;
+            color: #c91e25;
+        }
+
+        .sp-page.active {
+            background: #c91e25;
+            color: #fff;
+            border-color: #c91e25;
+            font-weight: 600;
+        }
+
+        .sp-btn.disabled {
+            opacity: .4;
+            pointer-events: none;
         }
 
         /* ====== Responsive ====== */

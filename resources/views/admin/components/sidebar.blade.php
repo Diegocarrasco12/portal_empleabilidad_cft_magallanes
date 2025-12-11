@@ -8,10 +8,12 @@
 
             {{-- Dashboard --}}
             <li>
-                <a href="{{ url('admin') }}" class="admin-sidebar__link {{ request()->is('admin') ? 'active' : '' }}">
+                <a href="{{ url('admin') }}"
+                    class="admin-sidebar__link {{ request()->is('admin') ? 'active' : '' }}">
                     🏠 Dashboard
                 </a>
             </li>
+
             {{-- Estudiantes --}}
             <li>
                 <a href="{{ url('admin/estudiantes') }}"
@@ -19,6 +21,7 @@
                     🎓 Estudiantes
                 </a>
             </li>
+
             {{-- Empresas --}}
             <li>
                 <a href="{{ url('admin/empresas') }}"

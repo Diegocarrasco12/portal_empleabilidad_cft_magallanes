@@ -1,105 +1,150 @@
 @extends('layouts.admin')
 
 @section('admin-content')
-<div class="admin-container">
+    <div class="admin-container">
 
-    <h1 class="mb-3">Validación de ofertas</h1>
+        <!-- ENCABEZADO -->
+        <div class="panel-header">
+            <h2 class="title">Validación de Ofertas</h2>
 
-    {{-- Filtros por estado --}}
-    <div class="card mb-3">
-        <div class="card-body d-flex gap-2 flex-wrap">
-            @php
-                $tabs = [
-                    'pending'     => 'Pendientes',
-                    'approved'    => 'Aprobadas',
-                    'rejected'    => 'Rechazadas',
-                    'resubmitted' => 'Reenviadas',
-                    'all'         => 'Todas',
-                ];
-            @endphp
+            <div class="actions-top">
+                {{-- No usamos buscador aquí, solo filtros por estado --}}
 
-            @foreach($tabs as $key => $label)
+                {{-- Botones de Tabs --}}
                 @php
-                    $isActive = $estadoFiltro === $key;
+                    $tabs = [
+                        'pending' => 'Pendientes',
+                        'approved' => 'Aprobadas',
+                        'rejected' => 'Rechazadas',
+                        'resubmitted' => 'Reenviadas',
+                        'all' => 'Todas',
+                    ];
                 @endphp
-                <a href="{{ route('admin.ofertas.index', ['estado' => $key]) }}"
-                   class="btn btn-sm {{ $isActive ? 'btn-primary' : 'btn-light' }}">
-                    {{ $label }}
-                    @if(in_array($key, ['pending','approved','rejected','resubmitted']))
-                        <span class="badge bg-secondary">
-                            {{ $stats[$key] ?? 0 }}
-                        </span>
+
+                <div class="filter-tabs">
+                    @foreach ($tabs as $key => $label)
+                        <a href="{{ route('admin.ofertas.index', ['estado' => $key]) }}"
+                            class="btn-status {{ $estadoFiltro === $key ? 'active' : '' }}">
+
+                            {{ $label }}
+
+                            @if (in_array($key, ['pending', 'approved', 'rejected', 'resubmitted']))
+                                <span class="count">{{ $stats[$key] ?? 0 }}</span>
+                            @endif
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA -->
+        <div class="table-wrapper">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Oferta</th>
+                        <th>Empresa</th>
+                        <th>Ciudad</th>
+                        <th>Fecha creación</th>
+                        <th>Estado</th>
+                        <th style="text-align:right;">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($ofertas as $oferta)
+                        <tr>
+
+                            <!-- OFERTA -->
+                            <td>
+                                <strong>{{ $oferta->titulo }}</strong><br>
+                                <small style="color:#666;">
+                                    {{ $oferta->area->nombre ?? 'Sin área' }}
+                                </small>
+                            </td>
+
+                            <!-- EMPRESA -->
+                            <td>{{ $oferta->empresa->razon_social ?? 'Empresa sin nombre' }}</td>
+
+                            <!-- CIUDAD -->
+                            <td>{{ $oferta->ciudad ?? '-' }}</td>
+
+                            <!-- FECHA -->
+                            <td>{{ optional($oferta->fecha_publicacion)->format('d-m-Y') }}</td>
+
+                            <!-- ESTADO -->
+                            <td>
+                                @php
+                                    $estado = $oferta->estado_nombre;
+                                    $labelMap = [
+                                        'Pendiente' => 'Pendiente',
+                                        'Aprobada' => 'Aprobada',
+                                        'Rechazada' => 'Rechazada',
+                                        'Reenviada' => 'Reenviada',
+                                    ];
+
+                                    $classMap = [
+                                        'Aprobada' => 'badge-green',
+                                        'Rechazada' => 'badge-red',
+                                        'Reenviada' => 'badge-info',
+                                        'Pendiente' => 'badge-info',
+                                    ];
+                                @endphp
+
+                                <span class="badge {{ $classMap[$estado] ?? 'badge-info' }}">
+                                    {{ $labelMap[$estado] ?? 'Pendiente' }}
+                                </span>
+                            </td>
+
+                            <!-- ACCIONES -->
+                            <td style="text-align:right;">
+                                <a href="{{ route('admin.ofertas.show', $oferta->id) }}"
+                                    class="btn btn-sm btn-outline-primary">
+                                    Ver detalle
+                                </a>
+                            </td>
+                        </tr>
+
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-3">
+                                No hay ofertas registradas.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGINACIÓN -->
+        @if ($ofertas->hasPages())
+            <div class="pagination-admin">
+
+                {{-- Anterior --}}
+                @if ($ofertas->onFirstPage())
+                    <span class="pag-btn disabled">Anterior</span>
+                @else
+                    <a href="{{ $ofertas->previousPageUrl() }}" class="pag-btn">Anterior</a>
+                @endif
+
+                {{-- Números --}}
+                @foreach ($ofertas->links()->elements[0] ?? [] as $page => $url)
+                    @if ($page == $ofertas->currentPage())
+                        <span class="pag-number active">{{ $page }}</span>
+                    @else
+                        <a href="{{ $url }}" class="pag-number">{{ $page }}</a>
                     @endif
-                </a>
-            @endforeach
-        </div>
+                @endforeach
+
+                {{-- Siguiente --}}
+                @if ($ofertas->hasMorePages())
+                    <a href="{{ $ofertas->nextPageUrl() }}" class="pag-btn">Siguiente</a>
+                @else
+                    <span class="pag-btn disabled">Siguiente</span>
+                @endif
+
+            </div>
+        @endif
+
     </div>
-
-    {{-- Tabla de ofertas --}}
-    <div class="card">
-        <div class="card-body">
-            @if($ofertas->isEmpty())
-                <p>No hay ofertas para el filtro seleccionado.</p>
-            @else
-                <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead>
-                            <tr>
-                                <th>Oferta</th>
-                                <th>Empresa</th>
-                                <th>Ciudad</th>
-                                <th>Fecha creación</th>
-                                <th>Estado</th>
-                                <th class="text-end">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($ofertas as $oferta)
-                                <tr>
-                                    <td>
-                                        <strong>{{ $oferta->titulo }}</strong><br>
-                                        <small>{{ $oferta->area->nombre ?? 'Sin área' }}</small>
-                                    </td>
-                                    <td>{{ $oferta->empresa->razon_social ?? 'Empresa sin nombre' }}</td>
-                                    <td>{{ $oferta->ciudad ?? '-' }}</td>
-                                    <td>{{ optional($oferta->fecha_publicacion)->format('d-m-Y') }}</td>
-                                    <td>
-                                        @php
-                                            $estado = $oferta->estado_nombre;
-                                            $label  = [
-                                                'Pendiente'     => 'Pendiente',
-                                                'Aprobada'      => 'Aprobada',
-                                                'Rechazada'     => 'Rechazada',
-                                                'Reenviada'     => 'Reenviada',
-                                            ][$estado] ?? 'Pendiente';
-
-                                            $class = match($estado) {
-                                                'Aprobada'    => 'badge bg-success',
-                                                'Rechazada'    => 'badge bg-danger',
-                                                'Reenviada' => 'badge bg-warning text-dark',
-                                                default       => 'badge bg-secondary',
-                                            };
-                                        @endphp
-                                        <span class="{{ $class }}">{{ $label }}</span>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="{{ route('admin.ofertas.show', $oferta->id) }}"
-                                           class="btn btn-sm btn-outline-primary">
-                                            Ver detalle
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                {{-- Paginación --}}
-                <div class="mt-3">
-                    {{ $ofertas->links() }}
-                </div>
-            @endif
-        </div>
-    </div>
-</div>
 @endsection
