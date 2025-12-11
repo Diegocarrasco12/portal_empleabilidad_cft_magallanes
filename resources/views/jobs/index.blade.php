@@ -123,11 +123,29 @@
                         <strong>{{ $ofertas->total() }}</strong>
                         {{ Str::plural('empleo', $ofertas->total()) }}
                     </p>
-                    <select class="select small">
-                        <option value="relevance">Ordenar: Relevancia</option>
-                        <option value="date">Más recientes</option>
-                        <option value="salary">Mejor salario</option>
-                    </select>
+                    <form method="GET" action="{{ route('empleos.index') }}">
+                        {{-- filtros  --}}
+                        <input type="hidden" name="q" value="{{ request('q') }}">
+                        <input type="hidden" name="l" value="{{ request('l') }}">
+                        <input type="hidden" name="j" value="{{ request('j') }}">
+                        <input type="hidden" name="area" value="{{ request('area') }}">
+                        <input type="hidden" name="type" value="{{ request('type') }}">
+                        <input type="hidden" name="smin" value="{{ request('smin') }}">
+                        <input type="hidden" name="smax" value="{{ request('smax') }}">
+                        <input type="hidden" name="age" value="{{ request('age') }}">
+
+                        <select name="sort" class="select small" onchange="this.form.submit()">
+                            <option value="relevance" {{ request('sort') == 'relevance' ? 'selected' : '' }}>
+                                Ordenar: Relevancia
+                            </option>
+                            <option value="date" {{ request('sort') == 'date' ? 'selected' : '' }}>
+                                Más recientes
+                            </option>
+                            <option value="salary" {{ request('sort') == 'salary' ? 'selected' : '' }}>
+                                Mejor salario
+                            </option>
+                        </select>
+                    </form>
                 </div>
 
                 {{-- Tarjetas de ofertas --}}

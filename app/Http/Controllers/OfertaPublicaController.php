@@ -30,8 +30,7 @@ class OfertaPublicaController extends Controller
             'modalidad',
             'jornada',
         ])
-            ->vigentes()
-            ->orderBy('creado_en', 'desc');
+            ->vigentes();
         // 🔍 Filtro por Jornada
         if ($request->filled('j')) {
             $query->where('jornada_id', $request->j);
@@ -91,6 +90,27 @@ class OfertaPublicaController extends Controller
                     ->orWhereRaw("LOWER(REPLACE(region, 'áéíóúÁÉÍÓÚ', 'aeiouaeiou')) LIKE ?", ["%$loc%"]);
             });
         }
+        // ================================
+        // ORDENAMIENTO
+        // ================================
+        $sort = $request->get('sort', 'relevance');
+
+        switch ($sort) {
+            case 'date':
+                // Más recientes primero
+                $query->orderBy('creado_en', 'desc');
+                break;
+
+            case 'salary':
+                // Mejor salario máximo primero
+                $query->orderBy('sueldo_max', 'desc');
+                break;
+
+            default:
+                // Relevancia (criterio básico: coincidencia y luego recientes)
+                $query->orderBy('creado_en', 'desc');
+                break;
+        }
 
         // Paginación real con queryString para filtros futuros
         $ofertas = $query->paginate(15)->withQueryString();
@@ -112,7 +132,7 @@ class OfertaPublicaController extends Controller
                 'smin'  => $request->smin,
                 'smax'  => $request->smax,
                 'age'   => $request->age,
-                'orden' => $request->orden ?? 'reciente',
+                'sort' => $sort,
             ],
         ]);
     }

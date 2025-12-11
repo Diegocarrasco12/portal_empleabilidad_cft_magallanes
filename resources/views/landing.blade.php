@@ -205,7 +205,7 @@
             <p>
                 Ingresa al buscador de empleos y conecta con empresas de Magallanes.
             </p>
-            <a href="{{ route('jobs.index') }}" class="cta-button">Ir al buscador de empleos</a>
+            <a href="{{ route('empleos.index') }}" class="cta-button">Ir al buscador de empleos</a>
         </div>
     </section>
 @endsection
