@@ -2,10 +2,10 @@
 
 @section('content')
     <!--
-                                                                        Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
-                                                                        principales descritas en el diseño de referencia: hero, trabajos
-                                                                        destacados, empresas destacadas, testimonios y llamada a la acción.
-                                                                      -->
+                                                                                Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
+                                                                                principales descritas en el diseño de referencia: hero, trabajos
+                                                                                destacados, empresas destacadas, testimonios y llamada a la acción.
+                                                                              -->
 
     <!-- Sección Hero -->
     <section class="hero">
@@ -36,12 +36,8 @@
 
                         <!-- Logo de la empresa -->
                         <div class="logo-wrapper">
-                            @if ($job->empresa && $job->empresa->ruta_logo)
-                                <img src="{{ asset($job->empresa->ruta_logo) }}"
-                                    alt="{{ $job->empresa->nombre_comercial }}">
-                            @else
-                                <img src="{{ asset('img/otros/default-logo.png') }}" alt="Sin logo">
-                            @endif
+                            <img src="{{ $job->empresa && $job->empresa->ruta_logo ? asset($job->empresa->ruta_logo) : asset('img/iconos/logo.png') }}"
+                                alt="{{ $job->empresa->nombre_comercial ?? 'Empresa no especificada' }}">
                         </div>
 
                         <!-- Contenido del trabajo -->
@@ -75,16 +71,10 @@
                 tú
             </p>
             <div class="companies-row">
-
                 @forelse ($topCompanies as $company)
                     <div class="company-item">
-                        @if ($company->ruta_logo)
-                            <img src="{{ asset($company->ruta_logo) }}" alt="{{ $company->nombre_comercial }}"
-                                loading="lazy" width="200" height="80">
-                        @else
-                            <img src="{{ asset('img/otros/default-logo.png') }}" alt="{{ $company->nombre_comercial }}"
-                                loading="lazy" width="200" height="80">
-                        @endif
+                        <img src="{{ $company->ruta_logo ? asset($company->ruta_logo) : asset('img/iconos/logo.png') }}"
+                            alt="{{ $company->nombre_comercial }}" loading="lazy" width="200" height="80">
                     </div>
                 @empty
                     <p>No hay empresas destacadas aún.</p>
