@@ -13,6 +13,7 @@ use App\Http\Controllers\AdminEmpresaController;
 use App\Http\Controllers\AdminOfertaApprovalController;
 use App\Http\Controllers\AdminPostulanteController;
 use App\Http\Controllers\OfertaPublicaController;
+use App\Http\Controllers\RecursoController;
 
 
 /*
@@ -65,6 +66,32 @@ Route::middleware('auth.custom')->group(function () {
     Route::middleware('role:admin')
         ->prefix('admin')
         ->group(function () {
+
+            /* ===============================
+              MÓDULO ADMIN: RECURSOS EMPLEABILIDAD (BLOG)
+            =============================== */
+
+            Route::get('/recursos', [RecursoController::class, 'index'])
+                ->name('admin.recursos.index');
+
+            Route::get('/recursos/crear', [RecursoController::class, 'create'])
+                ->name('admin.recursos.create');
+
+            Route::post('/recursos', [RecursoController::class, 'store'])
+                ->name('admin.recursos.store');
+
+            Route::get('/recursos/{id}/editar', [RecursoController::class, 'edit'])
+                ->name('admin.recursos.edit');
+
+            Route::put('/recursos/{id}', [RecursoController::class, 'update'])
+                ->name('admin.recursos.update');
+
+            Route::delete('/recursos/{id}', [RecursoController::class, 'destroy'])
+                ->name('admin.recursos.destroy');
+
+            Route::post('/recursos/{id}/toggle', [RecursoController::class, 'toggleStatus'])
+                ->name('admin.recursos.toggle');
+
 
             // DASHBOARD ADMIN
             Route::get('/', [AdminController::class, 'dashboard'])
@@ -235,13 +262,14 @@ Route::middleware('auth.custom')->group(function () {
 // })->name('jobs.index');
 
 
-
-
 /* ============================================================
-   5) RECURSOS DE EMPLEABILIDAD (Controlador real)
+   5) RECURSOS DE EMPLEABILIDAD (PÚBLICO)
 ============================================================ */
-Route::get('/recursos-empleabilidad', [EmpleabilidadController::class, 'index'])
-    ->name('empleabilidad.index');
 
-Route::get('/recursos-empleabilidad/{slug}', [EmpleabilidadController::class, 'show'])
-    ->name('empleabilidad.show');
+use App\Http\Controllers\RecursoPublicoController;
+
+Route::get('/recursos-empleabilidad', [RecursoPublicoController::class, 'index'])
+    ->name('recursos.index');
+
+Route::get('/recursos-empleabilidad/{id}', [RecursoPublicoController::class, 'show'])
+    ->name('recursos.show');
