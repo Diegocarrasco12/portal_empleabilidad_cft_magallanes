@@ -2,10 +2,10 @@
 
 @section('content')
     <!--
-                                                                                    Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
-                                                                                    principales descritas en el diseño de referencia: hero, trabajos
-                                                                                    destacados, empresas destacadas, testimonios y llamada a la acción.
-                                                                                  -->
+                                                                                        Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
+                                                                                        principales descritas en el diseño de referencia: hero, trabajos
+                                                                                        destacados, empresas destacadas, testimonios y llamada a la acción.
+                                                                                      -->
 
     <!-- Sección Hero -->
     <section class="hero">
@@ -156,37 +156,41 @@
 
             <div class="cft-blog-grid">
 
-                {{-- BLOG 1 (estático + nuevo sistema) --}}
-                <article class="cft-blog-card">
-                    <a href="{{ route('recursos.show', 1) }}" class="cft-blog-media ratio ratio-16x9">
-                        <img src="{{ asset('img/otros/ent.png') }}" alt="Persona en entrevista laboral" loading="lazy">
-                    </a>
-                    <h3 class="cft-blog-title mt-3 mb-2">Cómo prepararte para una entrevista</h3>
-                    <a href="{{ route('recursos.show', 1) }}" class="btn btn-cft">LEER MÁS</a>
-                </article>
+                @forelse ($recursos as $recurso)
+                    <article class="cft-blog-card">
 
-                {{-- BLOG 2 --}}
-                <article class="cft-blog-card">
-                    <a href="{{ route('recursos.show', 2) }}" class="cft-blog-media ratio ratio-16x9">
-                        <img src="{{ asset('img/otros/cv.png') }}" alt="Currículum vitae sobre escritorio" loading="lazy">
-                    </a>
-                    <h3 class="cft-blog-title mt-3 mb-2">5 consejos para un CV exitoso</h3>
-                    <a href="{{ route('recursos.show', 2) }}" class="btn btn-cft">LEER MÁS</a>
-                </article>
+                        <a href="{{ route('recursos.show', $recurso->id) }}" class="cft-blog-media ratio ratio-16x9">
 
-                {{-- BLOG 3 --}}
-                <article class="cft-blog-card">
-                    <a href="{{ route('recursos.show', 3) }}" class="cft-blog-media ratio ratio-16x9">
-                        <img src="{{ asset('img/otros/sin-titulo-1.png') }}"
-                            alt="Vista de empresa y empleabilidad en Magallanes" loading="lazy">
-                    </a>
-                    <h3 class="cft-blog-title mt-3 mb-2">Tendencias laborales en Magallanes</h3>
-                    <a href="{{ route('recursos.show', 3) }}" class="btn btn-cft">LEER MÁS</a>
-                </article>
+                            @if ($recurso->imagen)
+                                <img src="{{ asset('storage/' . $recurso->imagen) }}" alt="{{ $recurso->titulo }}"
+                                    loading="lazy">
+                            @else
+                                <img src="{{ asset('img/otros/placeholder.png') }}" alt="Recurso sin imagen"
+                                    loading="lazy">
+                            @endif
 
-                {{-- CTA - Ver todos los recursos creados en el panel admin --}}
+                        </a>
+
+                        <h3 class="cft-blog-title mt-3 mb-2">
+                            {{ $recurso->titulo }}
+                        </h3>
+
+                        <a href="{{ route('recursos.show', $recurso->id) }}" class="btn btn-cft">
+                            LEER MÁS
+                        </a>
+
+                    </article>
+                @empty
+                    <p class="text-center">
+                        Aún no hay recursos de empleabilidad publicados.
+                    </p>
+                @endforelse
+
+                {{-- CTA --}}
                 <div class="cft-blog-cta">
-                    <a href="{{ route('recursos.index') }}" class="btn btn-cft">Ver todos los recursos</a>
+                    <a href="{{ route('recursos.index') }}" class="btn btn-cft">
+                        Ver todos los recursos
+                    </a>
                 </div>
 
             </div>

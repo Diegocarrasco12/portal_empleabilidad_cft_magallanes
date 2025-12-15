@@ -8,6 +8,8 @@ use App\Models\TipoContrato;
 use App\Models\Modalidad;
 use App\Models\Jornada;
 use Illuminate\Http\Request;
+use App\Models\Recurso;
+
 
 class OfertaPublicaController extends Controller
 {
@@ -145,25 +147,31 @@ class OfertaPublicaController extends Controller
      */
     public function landing()
     {
-        // ⭐ 1) OFERTAS DESTACADAS (4 más recientes aprobadas y vigentes)
+        // ⭐ 1) OFERTAS DESTACADAS
         $featuredJobs = OfertaTrabajo::with('empresa')
             ->vigentes()
             ->orderBy('creado_en', 'desc')
             ->limit(4)
             ->get();
 
-        // ⭐ 2) EMPRESAS DESTACADAS (ranking por cantidad de ofertas vigentes)
+        // ⭐ 2) EMPRESAS DESTACADAS
         $topCompanies = \App\Models\Empresa::withCount(['ofertas as ofertas_activas_count' => function ($q) {
-            $q->vigentes(); // Usa el scope del modelo OfertaTrabajo
+            $q->vigentes();
         }])
             ->orderBy('ofertas_activas_count', 'desc')
             ->limit(6)
             ->get();
 
-        // Enviar a la vista landing.blade.php
+        // ⭐ 3) RECURSOS DE EMPLEABILIDAD
+        $recursos = Recurso::where('estado', 1)
+            ->orderBy('creado_en', 'desc')
+            ->limit(3)
+            ->get();
+
         return view('landing', [
             'featuredJobs' => $featuredJobs,
             'topCompanies' => $topCompanies,
+            'recursos'     => $recursos,
         ]);
     }
 }

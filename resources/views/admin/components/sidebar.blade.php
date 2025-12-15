@@ -8,8 +8,7 @@
 
             {{-- Dashboard --}}
             <li>
-                <a href="{{ url('admin') }}"
-                    class="admin-sidebar__link {{ request()->is('admin') ? 'active' : '' }}">
+                <a href="{{ url('admin') }}" class="admin-sidebar__link {{ request()->is('admin') ? 'active' : '' }}">
                     🏠 Dashboard
                 </a>
             </li>
@@ -51,6 +50,13 @@
                 <a href="{{ url('admin/postulaciones') }}"
                     class="admin-sidebar__link {{ request()->is('admin/postulaciones*') ? 'active' : '' }}">
                     📝 Postulaciones
+                </a>
+            </li>
+            {{-- Recursos de Empleabilidad --}}
+            <li>
+                <a href="{{ url('admin/recursos') }}"
+                    class="admin-sidebar__link {{ request()->is('admin/recursos*') ? 'active' : '' }}">
+                    📚 Recursos
                 </a>
             </li>
 

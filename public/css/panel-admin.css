@@ -122,6 +122,23 @@
 .row-actions .delete:hover {
     color: #c91e25;
 }
+/* Estilo de los botones dentro del contenedor row-actions */
+.row-actions {
+    display: flex;
+    flex-direction: column;        /* Los botones estarán en columna */
+    gap: 10px;                     /* Espacio entre los botones */
+    align-items: center;           /* Alineación centrada */
+}
+
+.row-actions .btn {
+    width: 100%;                   /* Los botones toman todo el ancho disponible */
+    max-width: 140px;              /* Establece un tamaño máximo para los botones */
+    padding: 8px 14px;             /* Agrega algo de padding para que los botones se vean más grandes */
+    font-size: 14px;               /* Tamaño de texto adecuado */
+    border-radius: 8px;            /* Bordes redondeados */
+    text-align: center;            /* Alinea el texto dentro de los botones */
+}
+
 /* ==========================================
    LAYOUT CON SIDEBAR (vistas admin con tabla)
    ========================================== */
@@ -382,6 +399,7 @@
         -webkit-overflow-scrolling: touch;
         display: block;
     }
+
 
     .modern-table {
         min-width: 650px;

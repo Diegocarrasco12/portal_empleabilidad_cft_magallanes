@@ -491,22 +491,29 @@ img {
 .cft-blog-card {
     display: flex;
     flex-direction: column;
+    height: 100%;                     /* 🔑 fuerza misma altura */
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
 }
 
 /* Media con proporción fija */
 .cft-blog-media {
     overflow: hidden;
-    border-radius: 0.35rem;
+    border-radius: 10px;
     background: #fff;
+    height: 180px;                    /* 🔑 ALTURA FIJA */
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
+
 .cft-blog-media img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover;     
     display: block;
-    transition: transform 0.5s ease;
 }
+
 .cft-blog-media:hover img {
     transform: scale(1.04);
 }
@@ -519,6 +526,7 @@ img {
     font-weight: 600;
     margin: 0.85rem 0 0.75rem;
     min-height: 2.7em;
+    flex-grow: 1;
 }
 
 /* Links */
