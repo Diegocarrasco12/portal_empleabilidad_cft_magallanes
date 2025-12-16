@@ -45,77 +45,65 @@ Entorno recomendado: WSL 2 (Ubuntu) para desarrollo local
 
 La siguiente estructura muestra los directorios y archivos más relevantes del repositorio:
 
+📁 Estructura general del proyecto
+
+```text
 portal_empleabilidad_cft_magallanes/
-├─ app/
-│  ├─ Http/
-│  │  ├─ Controllers/      ← Controladores de negocio y panel de administración
-│  │  │  ├─ AuthController.php
-│  │  │  ├─ UsuarioController.php
-│  │  │  ├─ EmpresaController.php
-│  │  │  ├─ OfertaController.php
-│  │  │  ├─ PostulacionController.php
-│  │  │  ├─ EmpleabilidadController.php   # blog de recursos
-│  │  │  ├─ AdminController.php
-│  │  │  ├─ AdminEstudianteController.php
-│  │  │  ├─ AdminEmpresaController.php
-│  │  │  ├─ AdminOfertaApprovalController.php
-│  │  │  └─ … (otros controladores)
-│  │  └─ Middleware/
-│  │     ├─ AuthCustom.php
-│  │     └─ RoleMiddleware.php
-│  ├─ Models/              ← Modelos Eloquent
-│  │  ├─ Usuario.php
-│  │  ├─ Empresa.php
-│  │  ├─ OfertaTrabajo.php
-│  │  ├─ Postulacion.php
-│  │  └─ RecursoEmpleabilidad.php
-│  └─ …
-├─ database/
-│  └─ migrations/
-│     ├─ create_usuarios_table.php
-│     ├─ create_empresas_table.php
-│     ├─ create_ofertas_trabajo_table.php
-│     ├─ create_postulaciones_table.php
-│     ├─ create_recursos_empleabilidad_table.php
-│     └─ alter_usuarios_add_avatar_cv.php
-├─ public/
-│  ├─ css/                 ← Archivos CSS públicos
-│  ├─ img/                 ← Imágenes públicas
-│  ├─ js/                  ← JS mínimo para interacciones (opcional)
-│  ├─ index.php            ← Front controller de Laravel
-│  └─ …
-├─ resources/
-│  ├─ views/
-│  │  ├─ landing.blade.php
-│  │  ├─ users/            ← Vistas para postulantes
-│  │  │  ├─ perfil.blade.php
-│  │  │  ├─ editar.blade.php
-│  │  │  └─ postulaciones.blade.php
-│  │  ├─ empresas/         ← Vistas para empresas
-│  │  │  ├─ perfil.blade.php
-│  │  │  ├─ editar.blade.php
-│  │  │  └─ crear_oferta.blade.php
-│  │  ├─ jobs/             ← Buscador / listado de ofertas
-│  │  │  └─ index.blade.php
-│  │  ├─ admin/            ← Panel de administración
-│  │  │  └─ dashboard.blade.php
-│  │  ├─ auth/             ← Login/registro personalizados
-│  │  ├─ layouts/
-│  │  │  └─ app.blade.php
-│  │  └─ partials/         ← Header, footer y otros parciales
-│  └─ …
-├─ routes/
-│  ├─ web.php              ← Rutas web (agrupadas por rol)
-│  └─ console.php
-├─ storage/
-│  ├─ app/public/          ← Almacén de archivos subidos (avatars, CV, imágenes)
-│  ├─ framework/
-│  └─ logs/
-├─ .env.example
-├─ .gitignore              ← Ignora `vendor/`, `node_modules/`, `.env` y almacenamiento privado
-├─ composer.json
-├─ package.json
-└─ README.md
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── AuthController.php
+│   │   │   ├── UsuarioController.php
+│   │   │   ├── EmpresaController.php
+│   │   │   ├── OfertaController.php
+│   │   │   ├── PostulacionController.php
+│   │   │   ├── EmpleabilidadController.php
+│   │   │   ├── AdminController.php
+│   │   │   ├── AdminEstudianteController.php
+│   │   │   ├── AdminEmpresaController.php
+│   │   │   └── AdminOfertaApprovalController.php
+│   │   └── Middleware/
+│   │       ├── AuthCustom.php
+│   │       └── RoleMiddleware.php
+│   ├── Models/
+│   │   ├── Usuario.php
+│   │   ├── Empresa.php
+│   │   ├── OfertaTrabajo.php
+│   │   ├── Postulacion.php
+│   │   └── RecursoEmpleabilidad.php
+│   └── ...
+├── database/
+│   └── migrations/
+│       ├── create_usuarios_table.php
+│       ├── create_empresas_table.php
+│       ├── create_ofertas_trabajo_table.php
+│       ├── create_postulaciones_table.php
+│       ├── create_recursos_empleabilidad_table.php
+│       └── alter_usuarios_add_avatar_cv.php
+├── public/
+│   ├── css/
+│   ├── img/
+│   ├── js/
+│   └── index.php
+├── resources/
+│   ├── views/
+│   │   ├── landing.blade.php
+│   │   ├── users/
+│   │   ├── empresas/
+│   │   ├── jobs/
+│   │   ├── admin/
+│   │   ├── auth/
+│   │   ├── layouts/
+│   │   └── partials/
+├── routes/
+│   ├── web.php
+│   └── console.php
+├── storage/
+├── .env.example
+├── composer.json
+├── package.json
+└── README.md
+
 
 
 Nota: las carpetas vendor/ y node_modules/ existen localmente pero no se incluyen en el control de versiones.
