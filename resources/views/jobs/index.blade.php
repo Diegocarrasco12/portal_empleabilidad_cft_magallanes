@@ -32,7 +32,7 @@
                 <button type="button" class="btn btn-light filters-toggle" id="openFilters">Filtros</button>
             </form>
 
-            {{-- Chips con filtros activos (mock) --}}
+            {{-- Chips con filtros activos --}}
             @if (request()->hasAny(['q', 'l', 'j']))
                 <div class="chips">
                     @if (request('q'))
@@ -165,8 +165,8 @@
                                 $empresa = $oferta->empresa;
                                 $logo =
                                     $empresa && $empresa->ruta_logo
-                                        ? asset($empresa->ruta_logo)
-                                        : asset('img/empresas/empresa (1).png'); // fallback temporal
+                                        ? asset('storage/' . $empresa->ruta_logo)
+                                        : asset('img/empresas/empresa (1).png');
                             @endphp
                             <img src="{{ $logo }}" alt="Logo {{ $empresa->nombre_comercial ?? 'Empresa' }}">
                         </div>

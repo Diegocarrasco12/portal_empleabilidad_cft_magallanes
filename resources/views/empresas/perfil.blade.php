@@ -12,8 +12,6 @@
 
                 <div class="modal-actions" style="margin-top:18px;">
                     <button class="btn-confirm">Entendido</button>
-                    Entendido
-                    </button>
                 </div>
             </div>
         </div>
@@ -28,14 +26,15 @@
                 {{-- Bloque Izquierdo --}}
                 <div class="empresa-info">
 
-                    @if ($empresa->logo)
-                        <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo empresa" class="empresa-logo" />
+                    @if ($empresa->ruta_logo)
+                        <img src="{{ asset('storage/' . $empresa->ruta_logo) }}" alt="Logo empresa" class="empresa-logo" />
                     @else
-                        <img src="{{ asset('img/otros/default-logo.png') }}" class="empresa-logo">
+                        <img src="{{ asset('img/otros/default-logo.png') }}" alt="Logo por defecto" class="empresa-logo" />
                     @endif
 
                     <p class="empresa-descripcion">
-                        Hola, {{ $empresa->nombre }}, aquí puedes gestionar tus ofertas laborales
+                        Hola, {{ $empresa->nombre_comercial }},
+                        aquí puedes gestionar tus ofertas laborales
                         y revisar los candidatos interesados en tus vacantes.
                     </p>
 

@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php use Illuminate\Support\Facades\Storage; @endphp
 
 @section('content')
     <main class="container user-edit">
@@ -28,7 +29,7 @@
                         <label for="avatar">Foto de perfil</label>
                         <div class="avatar-row">
                             <img class="avatar-preview"
-                                src="{{ $estudiante->avatar ? asset('storage/' . $estudiante->avatar) : asset('img/testimonios/test (2).png') }}"
+                                src="{{ $estudiante->avatar ? Storage::url($estudiante->avatar) : asset('img/testimonios/test (2).png') }}"
                                 alt="Avatar actual">
                             <div class="avatar-actions">
                                 <input type="file" id="avatar" name="avatar" accept="image/*">
@@ -63,8 +64,9 @@
                                     <option value="Estudiante"
                                         {{ $estudiante->estado_carrera == 'Estudiante' ? 'selected' : '' }}>Estudiante
                                     </option>
-                                    <option value="Titulad@"
-                                        {{ $estudiante->estado_carrera == 'Titulad@' ? 'selected' : '' }}>Titulado</option>
+                                    <option value="Titulado(a)"
+                                        {{ $estudiante->estado_carrera == 'Titulad(a)' ? 'selected' : '' }}>Titulado/a
+                                    </option>
                                 </select>
 
                             </div>
@@ -130,8 +132,7 @@
                         <input id="cv" name="cv" type="file" accept="application/pdf">
                         @if ($estudiante->ruta_cv)
                             <p class="hint">
-                                CV actual: <a href="{{ asset('storage/' . $estudiante->ruta_cv) }}" target="_blank">Ver
-                                    PDF</a>
+                                CV actual: <a href="{{ Storage::url($estudiante->ruta_cv) }}" target="_blank">Ver PDF</a>
                             </p>
                         @endif
 

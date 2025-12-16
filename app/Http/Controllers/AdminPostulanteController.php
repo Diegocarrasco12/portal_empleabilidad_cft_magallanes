@@ -37,18 +37,29 @@ class AdminPostulanteController extends Controller
 
     public function show($id)
     {
-        $postulante = Usuario::with([
-            'estudiante',
-            'estudiante.postulaciones.oferta'
-        ])
-            ->where('rol_id', 3) // Solo postulantes
-            ->withTrashed()
+        $postulante = Usuario::withTrashed()
+            ->where('rol_id', 3)
             ->findOrFail($id);
 
-        $estudiante = $postulante->estudiante;
+        // Intentar cargar estudiante con postulaciones
+        $estudiante = $postulante->estudiante()
+            ->with('postulaciones.oferta')
+            ->first();
 
-        $postulaciones = $estudiante->postulaciones ?? collect();
+        // Si NO tiene registro en estudiantes
+        if (!$estudiante) {
+            return view('admin.postulantes.show', [
+                'postulante'   => $postulante,
+                'estudiante'   => null,
+                'postulaciones' => collect(),
+                'warning'      => 'Este usuario no tiene perfil de estudiante asociado.'
+            ]);
+        }
 
-        return view('admin.postulantes.show', compact('postulante', 'estudiante', 'postulaciones'));
+        return view('admin.postulantes.show', [
+            'postulante'   => $postulante,
+            'estudiante'   => $estudiante,
+            'postulaciones' => $estudiante->postulaciones
+        ]);
     }
 }

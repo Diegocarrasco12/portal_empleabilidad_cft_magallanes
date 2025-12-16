@@ -39,8 +39,8 @@
 
                     {{-- Logo --}}
                     <div class="oferta-logo">
-                        @if ($empresa->logo ?? false)
-                            <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo empresa">
+                        @if ($empresa->ruta_logo)
+                            <img src="{{ asset('storage/' . $empresa->ruta_logo) }}" alt="Logo empresa">
                         @else
                             <img src="{{ asset('img/logo-placeholder.png') }}" alt="Logo empresa">
                         @endif

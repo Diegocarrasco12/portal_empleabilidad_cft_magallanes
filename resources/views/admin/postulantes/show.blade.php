@@ -1,99 +1,111 @@
 @extends('layouts.admin')
 
 @section('admin-content')
-<main class="container postulante-perfil">
+    <main class="container postulante-perfil">
 
-    <a href="{{ route('admin.postulantes.index') }}" class="back-link">← Volver al listado</a>
+        <a href="{{ route('admin.postulantes.index') }}" class="back-link">← Volver al listado</a>
 
-    <h1 class="page-title">Perfil del Postulante</h1>
+        <h1 class="page-title">Perfil del Postulante</h1>
 
-    {{-- TARJETA PRINCIPAL --}}
-    <section class="card profile-card">
-        <div class="profile-header">
-            <img class="avatar"
-                 src="{{ $estudiante->avatar ? asset('storage/' . $estudiante->avatar) : asset('img/default-avatar.png') }}"
-                 alt="Foto postulante">
+        {{-- TARJETA PRINCIPAL --}}
+        <section class="card profile-card">
+            <div class="profile-header">
 
-            <div class="profile-info">
-                <h2 class="name">{{ $postulante->nombre }} {{ $postulante->apellido }}</h2>
+                {{-- AVATAR (null-safe) --}}
+                <img class="avatar"
+                     src="{{ optional($estudiante)->avatar
+                            ? asset('storage/' . $estudiante->avatar)
+                            : asset('img/default-avatar.png') }}"
+                     alt="Foto postulante">
 
-                <p class="meta">
-                    <strong>Correo:</strong> {{ $postulante->email }} <br>
-                    <strong>Teléfono:</strong> {{ $estudiante->telefono ?? 'No registrado' }} <br>
-                    <strong>Ciudad:</strong> {{ $estudiante->ciudad ?? 'No especificada' }} <br>
-                </p>
+                <div class="profile-info">
+                    <h2 class="name">
+                        {{ $postulante->nombre }} {{ $postulante->apellido }}
+                    </h2>
 
-                @if ($estudiante->ruta_cv)
-                    <a href="{{ asset('storage/' . $estudiante->ruta_cv) }}" class="btn btn-primary" target="_blank">
-                        📄 Ver / Descargar CV
-                    </a>
-                @else
-                    <span class="btn btn-outline disabled">CV no disponible</span>
-                @endif
+                    <p class="meta">
+                        <strong>Correo:</strong> {{ $postulante->email }} <br>
+                        <strong>Teléfono:</strong> {{ optional($estudiante)->telefono ?? 'No registrado' }} <br>
+                        <strong>Ciudad:</strong> {{ optional($estudiante)->ciudad ?? 'No especificada' }} <br>
+                    </p>
+
+                    {{-- CV --}}
+                    @if (optional($estudiante)->ruta_cv)
+                        <a href="{{ asset('storage/' . $estudiante->ruta_cv) }}"
+                           class="btn btn-primary"
+                           target="_blank">
+                            📄 Ver / Descargar CV
+                        </a>
+                    @else
+                        <span class="btn btn-outline disabled">CV no disponible</span>
+                    @endif
+                </div>
             </div>
-        </div>
 
-        <p class="profile-summary">
-            {{ $estudiante->resumen ?: 'El postulante no ha ingresado un resumen profesional.' }}
-        </p>
-    </section>
+            {{-- RESUMEN --}}
+            <p class="profile-summary">
+                {{ optional($estudiante)->resumen
+                    ?: 'El postulante no ha ingresado un resumen profesional.' }}
+            </p>
+        </section>
 
-    {{-- DETALLES PROFESIONALES --}}
-    <section class="card details-card">
-        <h3 class="section-title">Información Académica y Profesional</h3>
+        {{-- DETALLES PROFESIONALES --}}
+        <section class="card details-card">
+            <h3 class="section-title">Información Académica y Profesional</h3>
 
-        <ul class="details-list">
-            <li><strong>Estado de carrera:</strong> {{ $estudiante->estado_carrera ?? 'No indicado' }}</li>
-            <li><strong>Carrera / Título:</strong> {{ $estudiante->carrera ?? 'No registrado' }}</li>
-            <li><strong>Institución:</strong> {{ $estudiante->institucion ?? 'No registrado' }}</li>
-            <li><strong>Año de egreso:</strong> {{ $estudiante->anio_egreso ?? 'No especificado' }}</li>
-            <li>
-                <strong>LinkedIn:</strong>
-                @if ($estudiante->linkedin_url)
-                    <a href="{{ $estudiante->linkedin_url }}" target="_blank">{{ $estudiante->linkedin_url }}</a>
-                @else
-                    No registrado
-                @endif
-            </li>
-        </ul>
-    </section>
+            <ul class="details-list">
+                <li><strong>Estado de carrera:</strong> {{ optional($estudiante)->estado_carrera ?? 'No indicado' }}</li>
+                <li><strong>Carrera / Título:</strong> {{ optional($estudiante)->carrera ?? 'No registrado' }}</li>
+                <li><strong>Institución:</strong> {{ optional($estudiante)->institucion ?? 'No registrado' }}</li>
+                <li><strong>Año de egreso:</strong> {{ optional($estudiante)->anio_egreso ?? 'No especificado' }}</li>
+                <li>
+                    <strong>LinkedIn:</strong>
+                    @if (optional($estudiante)->linkedin_url)
+                        <a href="{{ $estudiante->linkedin_url }}" target="_blank">
+                            {{ $estudiante->linkedin_url }}
+                        </a>
+                    @else
+                        No registrado
+                    @endif
+                </li>
+            </ul>
+        </section>
 
-    {{-- HISTORIAL DE POSTULACIONES --}}
-    <section class="card postulaciones-card">
-        <h3 class="section-title">Postulaciones Realizadas</h3>
+        {{-- HISTORIAL DE POSTULACIONES --}}
+        <section class="card postulaciones-card">
+            <h3 class="section-title">Postulaciones Realizadas</h3>
 
-        @if ($postulaciones->isEmpty())
-            <p class="empty">El postulante no tiene postulaciones registradas.</p>
-        @else
-            <div class="postulaciones-list">
-                @foreach ($postulaciones as $post)
-                    @php
-                        // Usamos fecha_postulacion si existe; si no, caemos a creado_en
-                        $fechaBase = $post->fecha_postulacion ?? $post->creado_en;
-                    @endphp
+            @if ($postulaciones->isEmpty())
+                <p class="empty">El postulante no tiene postulaciones registradas.</p>
+            @else
+                <div class="postulaciones-list">
+                    @foreach ($postulaciones as $post)
+                        @php
+                            $fechaBase = $post->fecha_postulacion ?? $post->creado_en;
+                        @endphp
 
-                    <article class="post-item">
-                        <h4 class="post-title">
-                            {{ optional($post->oferta)->titulo ?? 'Oferta no disponible' }}
-                        </h4>
+                        <article class="post-item">
+                            <h4 class="post-title">
+                                {{ optional($post->oferta)->titulo ?? 'Oferta no disponible' }}
+                            </h4>
 
-                        <p class="post-date">
-                            Postulado el:
-                            @if ($fechaBase)
-                                {{ \Carbon\Carbon::parse($fechaBase)->format('d-m-Y') }}
-                            @else
-                                Fecha no registrada
-                            @endif
-                        </p>
-                    </article>
-                @endforeach
-            </div>
-        @endif
-    </section>
+                            <p class="post-date">
+                                Postulado el:
+                                @if ($fechaBase)
+                                    {{ \Carbon\Carbon::parse($fechaBase)->format('d-m-Y') }}
+                                @else
+                                    Fecha no registrada
+                                @endif
+                            </p>
+                        </article>
+                    @endforeach
+                </div>
+            @endif
+        </section>
 
-</main>
+    </main>
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/admin-postulante.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin-postulante.css') }}">
 @endpush

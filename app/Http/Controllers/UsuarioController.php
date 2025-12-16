@@ -6,6 +6,7 @@ use App\Models\Estudiante;
 use App\Models\Postulacion;
 use Illuminate\Http\Request;
 use App\Services\OfertaRecommendationService;
+use Illuminate\Support\Facades\Storage;
 
 class UsuarioController extends Controller
 {
@@ -138,16 +139,14 @@ class UsuarioController extends Controller
         // ===========================
         if ($request->hasFile('avatar')) {
 
-            // Borrar archivo anterior si existe
-            if ($estudiante->avatar && file_exists(storage_path('app/public/' . $estudiante->avatar))) {
-                unlink(storage_path('app/public/' . $estudiante->avatar));
+            // borrar avatar anterior
+            if ($estudiante->avatar && Storage::disk('public')->exists($estudiante->avatar)) {
+                Storage::disk('public')->delete($estudiante->avatar);
             }
 
-            // Guardar nuevo avatar
-            $avatarName = 'avatar_' . time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('public/avatars', $avatarName);
-
-            $estudiante->avatar = 'avatars/' . $avatarName;
+            // guardar nuevo avatar (MISMO patrón que Recursos)
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $estudiante->avatar = $path;
         }
 
         // ===========================
@@ -155,16 +154,14 @@ class UsuarioController extends Controller
         // ===========================
         if ($request->hasFile('cv')) {
 
-            // Borrar CV anterior si existe
-            if ($estudiante->ruta_cv && file_exists(storage_path('app/public/' . $estudiante->ruta_cv))) {
-                unlink(storage_path('app/public/' . $estudiante->ruta_cv));
+            // borrar CV anterior
+            if ($estudiante->ruta_cv && Storage::disk('public')->exists($estudiante->ruta_cv)) {
+                Storage::disk('public')->delete($estudiante->ruta_cv);
             }
 
-            // Guardar nuevo CV
-            $cvName = 'cv_' . time() . '.' . $request->cv->extension();
-            $request->cv->storeAs('public/cv', $cvName);
-
-            $estudiante->ruta_cv = 'cv/' . $cvName;
+            // guardar nuevo CV (MISMO patrón que Recursos)
+            $path = $request->file('cv')->store('cv', 'public');
+            $estudiante->ruta_cv = $path;
         }
 
         $estudiante->save();

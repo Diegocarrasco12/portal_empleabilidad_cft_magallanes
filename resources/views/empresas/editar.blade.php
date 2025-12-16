@@ -28,7 +28,7 @@
             text-decoration: underline;
         }
 
-        .breadcrumb li + li::before {
+        .breadcrumb li+li::before {
             content: '›';
             opacity: .6;
             margin: 0 .35rem 0 .15rem;
@@ -60,7 +60,7 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
         }
 
-        .card > h2 {
+        .card>h2 {
             margin: 0 0 1rem;
             font-size: 1.05rem;
         }
@@ -210,6 +210,7 @@
         }
 
         @media (max-width: 768px) {
+
             .grid-2,
             .grid-3 {
                 grid-template-columns: 1fr;
@@ -285,7 +286,8 @@
         {{-- Encabezado --}}
         <header class="page-header">
             <h1>Editar Perfil</h1>
-            <p class="muted">Actualiza la información de tu empresa para publicar ofertas y recibir mejores postulaciones.</p>
+            <p class="muted">Actualiza la información de tu empresa para publicar ofertas y recibir mejores postulaciones.
+            </p>
         </header>
 
         <form action="{{ route('empresas.perfil.update') }}" method="POST" enctype="multipart/form-data">
@@ -303,8 +305,10 @@
 
                         <div class="avatar-row">
                             <img class="avatar-preview"
-                                src="{{ $empresa && $empresa->ruta_logo ? asset('storage/' . $empresa->ruta_logo) : asset('img/placeholder-logo.png') }}"
-                                alt="Logo">
+                                src="{{ $empresa && $empresa->ruta_logo
+                                    ? asset('storage/' . $empresa->ruta_logo)
+                                    : asset('img/placeholder-logo.png') }}"
+                                alt="Logo empresa">
 
                             <div class="avatar-actions">
                                 <input type="file" id="logo" name="logo" accept="image/png,image/jpeg">
@@ -340,11 +344,21 @@
                                 <label for="rubro">Rubro / Área *</label>
                                 <select id="rubro" name="rubro_id">
                                     <option value="">Selecciona</option>
-                                    <option value="1" {{ old('rubro_id', $empresa->rubro_id ?? '') == 1 ? 'selected' : '' }}>Construcción</option>
-                                    <option value="2" {{ old('rubro_id', $empresa->rubro_id ?? '') == 2 ? 'selected' : '' }}>Industrial</option>
-                                    <option value="3" {{ old('rubro_id', $empresa->rubro_id ?? '') == 3 ? 'selected' : '' }}>Salud</option>
-                                    <option value="4" {{ old('rubro_id', $empresa->rubro_id ?? '') == 4 ? 'selected' : '' }}>Educación</option>
-                                    <option value="5" {{ old('rubro_id', $empresa->rubro_id ?? '') == 5 ? 'selected' : '' }}>Servicios</option>
+                                    <option value="1"
+                                        {{ old('rubro_id', $empresa->rubro_id ?? '') == 1 ? 'selected' : '' }}>Construcción
+                                    </option>
+                                    <option value="2"
+                                        {{ old('rubro_id', $empresa->rubro_id ?? '') == 2 ? 'selected' : '' }}>Industrial
+                                    </option>
+                                    <option value="3"
+                                        {{ old('rubro_id', $empresa->rubro_id ?? '') == 3 ? 'selected' : '' }}>Salud
+                                    </option>
+                                    <option value="4"
+                                        {{ old('rubro_id', $empresa->rubro_id ?? '') == 4 ? 'selected' : '' }}>Educación
+                                    </option>
+                                    <option value="5"
+                                        {{ old('rubro_id', $empresa->rubro_id ?? '') == 5 ? 'selected' : '' }}>Servicios
+                                    </option>
                                 </select>
                             </div>
 
@@ -352,11 +366,21 @@
                                 <label for="tamano">Tamaño empresa</label>
                                 <select id="tamano" name="tamano_id">
                                     <option value="">Seleccione</option>
-                                    <option value="1" {{ old('tamano_id', $empresa->tamano_id ?? '') == 1 ? 'selected' : '' }}>1-10</option>
-                                    <option value="2" {{ old('tamano_id', $empresa->tamano_id ?? '') == 2 ? 'selected' : '' }}>11-50</option>
-                                    <option value="3" {{ old('tamano_id', $empresa->tamano_id ?? '') == 3 ? 'selected' : '' }}>51-200</option>
-                                    <option value="4" {{ old('tamano_id', $empresa->tamano_id ?? '') == 4 ? 'selected' : '' }}>201-500</option>
-                                    <option value="5" {{ old('tamano_id', $empresa->tamano_id ?? '') == 5 ? 'selected' : '' }}>500+</option>
+                                    <option value="1"
+                                        {{ old('tamano_id', $empresa->tamano_id ?? '') == 1 ? 'selected' : '' }}>1-10
+                                    </option>
+                                    <option value="2"
+                                        {{ old('tamano_id', $empresa->tamano_id ?? '') == 2 ? 'selected' : '' }}>11-50
+                                    </option>
+                                    <option value="3"
+                                        {{ old('tamano_id', $empresa->tamano_id ?? '') == 3 ? 'selected' : '' }}>51-200
+                                    </option>
+                                    <option value="4"
+                                        {{ old('tamano_id', $empresa->tamano_id ?? '') == 4 ? 'selected' : '' }}>201-500
+                                    </option>
+                                    <option value="5"
+                                        {{ old('tamano_id', $empresa->tamano_id ?? '') == 5 ? 'selected' : '' }}>500+
+                                    </option>
                                 </select>
                             </div>
                         </div>

@@ -88,6 +88,7 @@ class EmpresaController extends Controller
             'rut'              => 'nullable|string|max:20',
             'correo_contacto'  => 'nullable|email|max:150',
             'telefono_contacto' => 'nullable|string|max:50',
+            'logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $empresa = Empresa::firstOrCreate(
@@ -107,6 +108,23 @@ class EmpresaController extends Controller
             'correo_contacto',
             'telefono_contacto',
         ]));
+        // ===========================
+        // MANEJO DE LOGO DE EMPRESA
+        // ===========================
+        if ($request->hasFile('logo')) {
+
+            // borrar logo anterior si existe
+            if ($empresa->ruta_logo && Storage::disk('public')->exists($empresa->ruta_logo)) {
+                Storage::disk('public')->delete($empresa->ruta_logo);
+            }
+
+            // guardar nuevo logo (MISMO patrón que Recursos / Estudiante)
+            $path = $request->file('logo')->store('empresas', 'public');
+            $empresa->ruta_logo = $path;
+
+            $empresa->save();
+        }
+
 
         return redirect()->route('empresas.perfil')
             ->with('ok', 'Perfil de empresa actualizado correctamente.');
@@ -236,6 +254,13 @@ class EmpresaController extends Controller
            Si hay archivo nuevo → reemplazar
         ------------------------------ */
         if ($request->hasFile('ruta_archivo')) {
+
+            // borrar archivo anterior si existe
+            if ($oferta->ruta_archivo && Storage::disk('public')->exists($oferta->ruta_archivo)) {
+                Storage::disk('public')->delete($oferta->ruta_archivo);
+            }
+
+            // guardar nuevo archivo
             $rutaArchivo = $request->file('ruta_archivo')->store('ofertas', 'public');
             $oferta->ruta_archivo = $rutaArchivo;
         }
@@ -376,14 +401,27 @@ class EmpresaController extends Controller
     }
     public function verPostulante($id)
     {
+        $usuarioId = session('usuario_id');
+
+        // Empresa logueada
+        $empresa = Empresa::where('usuario_id', $usuarioId)->firstOrFail();
+
+        // Estudiante
         $estudiante = Estudiante::with('usuario')->findOrFail($id);
 
-        // Postulaciones del estudiante a esta empresa
+        // SOLO postulaciones del estudiante a ofertas de ESTA empresa
         $postulaciones = Postulacion::with('oferta')
             ->where('estudiante_id', $id)
+            ->whereHas('oferta', function ($q) use ($empresa) {
+                $q->where('empresa_id', $empresa->id);
+            })
+            ->orderBy('fecha_postulacion', 'desc')
             ->get();
 
-        return view('empresas.postulaciones.ver', compact('estudiante', 'postulaciones'));
+        return view('empresas.postulaciones.ver', compact(
+            'estudiante',
+            'postulaciones'
+        ));
     }
 
     public function enviarRevision($id)

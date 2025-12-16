@@ -48,7 +48,7 @@ class AuthController extends Controller
         }
 
         // ============================================================
-        // SESIÓN MANUAL (LA CORRECTA)
+        // SESIÓN MANUAL
         // ============================================================
         session([
             'usuario_id'     => $usuario->id,
