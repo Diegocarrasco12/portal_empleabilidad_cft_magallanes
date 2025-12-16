@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\OfertaTrabajo;
 use Illuminate\Http\Request;
 use App\Services\AlertMessageService;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OfertaAprobadaEmpresaMail;
+use App\Mail\OfertaRechazadaEmpresaMail;
+use App\Mail\OfertaReenvioEmpresaMail;
+
+
 
 class AdminOfertaApprovalController extends Controller
 {
@@ -63,11 +69,26 @@ class AdminOfertaApprovalController extends Controller
     }
     public function approve($id)
     {
-        $oferta = OfertaTrabajo::findOrFail($id);
+        $oferta = OfertaTrabajo::with('empresa')->findOrFail($id);
 
         $oferta->estado = OfertaTrabajo::ESTADO_APROBADA;
         $oferta->revisada_en = now();
         $oferta->save();
+        // ================================
+        // CORREO A EMPRESA (OFERTA APROBADA)
+        // ================================
+        if ($oferta->empresa && $oferta->empresa->correo_contacto) {
+            Mail::to($oferta->empresa->correo_contacto)->send(
+                new OfertaAprobadaEmpresaMail(
+                    (
+                        $oferta->empresa?->razon_social
+                        ?? $oferta->empresa?->nombre_comercial
+                        ?? 'Empresa'
+                    ),
+                    $oferta->titulo
+                )
+            );
+        }
 
         $mensaje = AlertMessageService::mensaje('APROBADA');
 
@@ -78,12 +99,32 @@ class AdminOfertaApprovalController extends Controller
 
     public function reject(Request $request, $id)
     {
-        $oferta = OfertaTrabajo::findOrFail($id);
+        // 🔹 Cargar oferta CON empresa
+        $oferta = OfertaTrabajo::with('empresa')->findOrFail($id);
 
+        // 🔹 Motivo de rechazo
+        $motivo = $request->motivo_rechazo ?? 'Oferta rechazada por el administrador.';
+
+        // 🔹 Actualizar estado
         $oferta->estado = OfertaTrabajo::ESTADO_RECHAZADA;
-        $oferta->motivo_rechazo = $request->motivo_rechazo ?? 'Oferta rechazada.';
+        $oferta->motivo_rechazo = $motivo;
         $oferta->revisada_en = now();
         $oferta->save();
+
+        // ================================
+        // 📧 CORREO A EMPRESA (RECHAZO)
+        // ================================
+        if ($oferta->empresa && $oferta->empresa->correo_contacto) {
+            Mail::to($oferta->empresa->correo_contacto)->send(
+                new OfertaRechazadaEmpresaMail(
+                    $oferta->empresa->razon_social
+                        ?? $oferta->empresa->nombre_comercial
+                        ?? 'Empresa',
+                    $oferta->titulo,
+                    $motivo
+                )
+            );
+        }
 
         $mensaje = AlertMessageService::mensaje('RECHAZADA');
 
@@ -92,16 +133,37 @@ class AdminOfertaApprovalController extends Controller
             ->with($mensaje['type'], $mensaje['text']);
     }
 
+
     public function resubmit(Request $request, $id)
     {
-        $oferta = OfertaTrabajo::findOrFail($id);
+        // 🔹 Cargar oferta CON empresa
+        $oferta = OfertaTrabajo::with('empresa')->findOrFail($id);
 
+        // 🔹 Motivo de reenvío
+        $motivo = $request->motivo_rechazo ?? 'La oferta necesita correcciones.';
+
+        // 🔹 Actualizar estado
         $oferta->estado = OfertaTrabajo::ESTADO_REENVIADA;
-        $oferta->motivo_rechazo = $request->motivo_rechazo ?? 'La oferta necesita correcciones.'; // opcional
+        $oferta->motivo_rechazo = $motivo;
         $oferta->revisada_en = now();
         $oferta->save();
 
-        $mensaje = \App\Services\AlertMessageService::mensaje('REENVIADA');
+        // ================================
+        // 📧 CORREO A EMPRESA (REENVÍO)
+        // ================================
+        if ($oferta->empresa && $oferta->empresa->correo_contacto) {
+            Mail::to($oferta->empresa->correo_contacto)->send(
+                new OfertaReenvioEmpresaMail(
+                    $oferta->empresa->razon_social
+                        ?? $oferta->empresa->nombre_comercial
+                        ?? 'Empresa',
+                    $oferta->titulo,
+                    $motivo
+                )
+            );
+        }
+
+        $mensaje = AlertMessageService::mensaje('REENVIADA');
 
         return redirect()
             ->route('admin.ofertas.show', $id)

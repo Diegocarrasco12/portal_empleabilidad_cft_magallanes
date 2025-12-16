@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Estudiante;
 use App\Models\OfertaTrabajo;
 use App\Models\Postulacion;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PostulacionConfirmadaMail;
+use App\Mail\NuevaPostulacionEmpresaMail;
+use App\Models\Usuario;
+
 
 class PostulacionController extends Controller
 {
@@ -56,7 +61,7 @@ class PostulacionController extends Controller
         }
 
         // 6. Crear la nueva postulación
-        Postulacion::create([
+        $postulacion = Postulacion::create([
             'estudiante_id'      => $estudiante->id,
             'oferta_id'          => $id,
             'estado_postulacion' => 'pendiente',
@@ -64,7 +69,30 @@ class PostulacionController extends Controller
             'creado_en'          => now(),
             'actualizado_en'     => now(),
         ]);
+        // ============================================================
+        // 7. CORREOS AUTOMÁTICOS
+        // ============================================================
 
+        // Usuario estudiante
+        $usuarioEstudiante = Usuario::find($usuarioId);
+
+        // Correo al ESTUDIANTE
+        Mail::to($usuarioEstudiante->email)->send(
+            new PostulacionConfirmadaMail(
+                $usuarioEstudiante->nombre,
+                $oferta->titulo
+            )
+        );
+
+        // Correo a la EMPRESA
+        if ($oferta->empresa && $oferta->empresa->correo_contacto) {
+            Mail::to($oferta->empresa->correo_contacto)->send(
+                new NuevaPostulacionEmpresaMail(
+                    $usuarioEstudiante->nombre . ' ' . $usuarioEstudiante->apellido,
+                    $oferta->titulo
+                )
+            );
+        }
         // 7. Devolver mensaje
         return back()->with('success', '¡Tu postulación fue enviada exitosamente!');
     }

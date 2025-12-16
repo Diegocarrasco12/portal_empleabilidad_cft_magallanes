@@ -8,6 +8,9 @@ use App\Models\Estudiante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
+
 
 class AuthController extends Controller
 {
@@ -125,7 +128,14 @@ class AuthController extends Controller
                 'usuario_id' => $usuario->id,
             ]);
         }
+        // ============================================================
+        // CORREO DE BIENVENIDA
+        // ============================================================
+        Mail::to($usuario->email)->send(
+            new WelcomeMail($usuario->nombre)
+        );
 
         return redirect('/login')->with('status', 'Cuenta creada con éxito.');
+
     }
 }
