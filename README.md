@@ -1,9 +1,8 @@
-🎓 Portal de Empleabilidad — CFT Magallanes
+Portal de Empleabilidad — CFT Magallanes
 
-Proyecto web institucional desarrollado para el Centro de Formación Técnica de Magallanes.
-El objetivo principal es ofrecer una plataforma integral de empleabilidad para que estudiantes y egresados gestionen su perfil profesional y postulaciones, las empresas publiquen y administren sus vacantes, y el CFT mantenga control y trazabilidad de todo el proceso.
+Proyecto web institucional desarrollado para el Centro de Formación Técnica de Magallanes. Su objetivo es ofrecer una plataforma integral de empleabilidad para que estudiantes y egresados gestionen su perfil profesional y postulaciones, las empresas publiquen y administren sus vacantes y el CFT mantenga control y trazabilidad de todo el proceso.
 
-Este repositorio contiene el frontend completo (Blade + CSS) y el backend funcional basado en Laravel 10+, con base de datos relacional, autenticación personalizada y control de roles.
+Este repositorio contiene el frontend completo (Blade + CSS) y el backend funcional basado en Laravel 10+, con base de datos relacional, autenticación personalizada y control de roles.
 
 🧠 Objetivos del proyecto
 
@@ -18,49 +17,49 @@ Permitir al CFT control, validación y trazabilidad de ofertas, postulaciones y 
 Proveer una base escalable para futuras funcionalidades institucionales.
 
 👥 Perfiles y alcance funcional
-
-El sistema contempla tres perfiles diferenciados, protegidos por middleware y control de roles:
-
 Rol	ID	Descripción
 Admin	1	Acceso total al sistema: gestiona usuarios, empresas, ofertas y recursos.
-Empresa	2	Publica y administra ofertas laborales, revisa postulantes.
+Empresa	2	Publica y administra ofertas laborales y revisa postulantes.
 Postulante	3	Gestiona su perfil profesional, CV y postula a ofertas.
 🏗️ Arquitectura general
 
-Framework: Laravel 10+
+Framework: Laravel 10+
 
-Lenguaje: PHP 8.2+
+Lenguaje: PHP 8.2+
 
 Patrón: MVC (Model‑View‑Controller)
 
-Frontend: Blade + CSS puro, sin frameworks de JS
+Frontend: Blade + CSS puro, sin frameworks de JavaScript
 
 Backend: Controladores, modelos y middleware de Laravel
 
 Base de datos: MySQL o MariaDB
 
-Autenticación: Sistema propio (no se utiliza Breeze); middleware auth.custom y role
+Autenticación: Sistema propio (no se utiliza Breeze) mediante auth.custom y role
 
 Subida de archivos: storage/app/public con enlace simbólico (php artisan storage:link)
 
-Entorno recomendado: WSL 2 (Ubuntu) para desarrollo local
+Entorno recomendado: WSL 2 (Ubuntu) para desarrollo local
 
 📁 Estructura general del proyecto
+
+La siguiente estructura muestra los directorios y archivos más relevantes del repositorio:
+
 portal_empleabilidad_cft_magallanes/
 ├─ app/
 │  ├─ Http/
-│  │  ├─ Controllers/      ← Controladores de negocio y de panel de administración
+│  │  ├─ Controllers/      ← Controladores de negocio y panel de administración
 │  │  │  ├─ AuthController.php
 │  │  │  ├─ UsuarioController.php
 │  │  │  ├─ EmpresaController.php
 │  │  │  ├─ OfertaController.php
 │  │  │  ├─ PostulacionController.php
-│  │  │  ├─ EmpleabilidadController.php (blog de recursos)
+│  │  │  ├─ EmpleabilidadController.php   # blog de recursos
 │  │  │  ├─ AdminController.php
 │  │  │  ├─ AdminEstudianteController.php
 │  │  │  ├─ AdminEmpresaController.php
 │  │  │  ├─ AdminOfertaApprovalController.php
-│  │  │  └─ ...
+│  │  │  └─ … (otros controladores)
 │  │  └─ Middleware/
 │  │     ├─ AuthCustom.php
 │  │     └─ RoleMiddleware.php
@@ -70,7 +69,7 @@ portal_empleabilidad_cft_magallanes/
 │  │  ├─ OfertaTrabajo.php
 │  │  ├─ Postulacion.php
 │  │  └─ RecursoEmpleabilidad.php
-│  └─ ...
+│  └─ …
 ├─ database/
 │  └─ migrations/
 │     ├─ create_usuarios_table.php
@@ -84,7 +83,7 @@ portal_empleabilidad_cft_magallanes/
 │  ├─ img/                 ← Imágenes públicas
 │  ├─ js/                  ← JS mínimo para interacciones (opcional)
 │  ├─ index.php            ← Front controller de Laravel
-│  └─ ...
+│  └─ …
 ├─ resources/
 │  ├─ views/
 │  │  ├─ landing.blade.php
@@ -92,11 +91,11 @@ portal_empleabilidad_cft_magallanes/
 │  │  │  ├─ perfil.blade.php
 │  │  │  ├─ editar.blade.php
 │  │  │  └─ postulaciones.blade.php
-│  │  ├─ empresas/        ← Vistas para empresas
+│  │  ├─ empresas/         ← Vistas para empresas
 │  │  │  ├─ perfil.blade.php
 │  │  │  ├─ editar.blade.php
 │  │  │  └─ crear_oferta.blade.php
-│  │  ├─ jobs/             ← Buscador/listado de ofertas
+│  │  ├─ jobs/             ← Buscador / listado de ofertas
 │  │  │  └─ index.blade.php
 │  │  ├─ admin/            ← Panel de administración
 │  │  │  └─ dashboard.blade.php
@@ -104,22 +103,22 @@ portal_empleabilidad_cft_magallanes/
 │  │  ├─ layouts/
 │  │  │  └─ app.blade.php
 │  │  └─ partials/         ← Header, footer y otros parciales
-│  └─ ...
+│  └─ …
 ├─ routes/
-│  ├─ web.php               ← Rutas web (agrupadas por rol)
+│  ├─ web.php              ← Rutas web (agrupadas por rol)
 │  └─ console.php
 ├─ storage/
 │  ├─ app/public/          ← Almacén de archivos subidos (avatars, CV, imágenes)
 │  ├─ framework/
 │  └─ logs/
 ├─ .env.example
-├─ .gitignore              ← Se ignoran `vendor/`, `node_modules/`, `.env` y `storage` privado
+├─ .gitignore              ← Ignora `vendor/`, `node_modules/`, `.env` y almacenamiento privado
 ├─ composer.json
 ├─ package.json
 └─ README.md
 
 
-Nota: la carpeta vendor/ y node_modules/ existen localmente pero no se versionan.
+Nota: las carpetas vendor/ y node_modules/ existen localmente pero no se incluyen en el control de versiones.
 
 🎨 Frontend (Blade + CSS)
 Vistas públicas y privadas
@@ -130,13 +129,13 @@ Postulantes
 
 users/perfil.blade.php — Perfil del postulante.
 
-users/editar.blade.php — Formulario completo (identidad, contacto, formación, experiencia, CV, links).
+users/editar.blade.php — Formulario completo (identidad, contacto, formación, experiencia, CV, enlaces).
 
 users/postulaciones.blade.php — Listado de postulaciones del usuario.
 
 Empresas
 
-empresas/perfil.blade.php — Dashboard con métricas y CTA "Publicar Nueva Oferta".
+empresas/perfil.blade.php — Dashboard con métricas y botón “Publicar Nueva Oferta”.
 
 empresas/editar.blade.php — Edición de perfil de empresa.
 
@@ -148,15 +147,15 @@ Panel de administración (admin/dashboard.blade.php): vista base del panel con a
 
 Estilos y buenas prácticas
 
-Estilos organizados en public/css/ (ejemplo: empresa.css, landing.css, app.css).
+Estilos organizados en public/css/ (por ejemplo: empresa.css, landing.css, app.css).
 
-Componentes reutilizables: .btn, .btn-primary, .btn-publicar, .card, .grid-2, .grid-3.
+Componentes reutilizables como .btn, .btn-primary, .btn-publicar, .card, .grid-2, .grid-3.
 
 Diseño responsive mediante Flexbox y CSS Grid.
 
-Paleta y tipografía acorde a la identidad visual del CFT Magallanes.
+Paleta y tipografía acorde a la identidad visual del CFT Magallanes.
 
-Vistas ordenadas por dominio (users/, empresas/, jobs/, admin/), reutilizando layouts/ y partials/.
+Vistas organizadas por dominio (users/, empresas/, jobs/, admin/), reutilizando layouts y parciales.
 
 🔧 Backend (Laravel)
 Controladores y rutas principales
@@ -165,19 +164,19 @@ El backend utiliza controladores dedicados para cada dominio, agrupando lógica 
 
 AuthController: gestiona registro, login y cierre de sesión utilizando autenticación personalizada (Auth::attempt, Auth::login, etc.).
 
-UsuarioController: CRUD de postulantes: edición de datos, visualización de postulaciones, subida de avatar y CV.
+UsuarioController: CRUD de postulantes (editar datos, visualizar postulaciones, subir avatar y CV).
 
 EmpresaController: CRUD de empresas y gestión de información empresarial.
 
-OfertaController: CRUD completo de ofertas de trabajo. Incluye flujo de aprobación (pendiente → aprobada → rechazada) mediante el Admin.
+OfertaController: CRUD completo de ofertas de trabajo. Incluye flujo de aprobación (pendiente → aprobada → rechazada) mediante el rol Admin.
 
-PostulacionController: gestión de postulaciones de usuarios a ofertas; permite que los postulantes postulen y las empresas revisen postulantes.
+PostulacionController: gestiona las postulaciones de usuarios a ofertas; permite que los postulantes postulen y las empresas revisen postulantes.
 
 EmpleabilidadController: administración de recursos de empleabilidad (blog de artículos y tips). Permite subir imágenes y publicar entradas.
 
-AdminController y sub‑controllers: panel de administración para el rol Admin, gestionando usuarios (estudiantes y empresas), ofertas, postulaciones y recursos.
+AdminController y sub‑controladores: panel de administración para el rol Admin, gestionando usuarios (estudiantes y empresas), ofertas, postulaciones y recursos.
 
-Las rutas se definen en routes/web.php agrupadas por middleware auth.custom y role:X para asegurar el acceso adecuado a cada sección.
+Las rutas se definen en routes/web.php y se agrupan por middleware auth.custom y role:X para asegurar el acceso adecuado a cada sección.
 
 Ejemplo de agrupación de rutas protegidas:
 
@@ -186,29 +185,29 @@ Route::middleware(['auth.custom', 'role:admin'])->group(function () {
     Route::resource('/admin/estudiantes', AdminEstudianteController::class);
     Route::resource('/admin/empresas', AdminEmpresaController::class);
     Route::get('/admin/ofertas/pendientes', [AdminOfertaApprovalController::class, 'pendientes']);
-    // ...otras rutas de administración
+    // … otras rutas de administración
 });
 
 Modelos y migraciones
 
-El proyecto utiliza Eloquent ORM con migraciones versionadas que permiten recrear la base de datos automáticamente:
+El proyecto utiliza Eloquent ORM con migraciones versionadas que permiten recrear la base de datos automáticamente. Los principales modelos son:
 
-Usuario — información personal, rol, avatar y CV del postulante.
+Usuario — Información personal, rol, avatar y CV del postulante.
 
-Empresa — datos de la empresa (razón social, descripción, logo, etc.).
+Empresa — Datos de la empresa (razón social, descripción, logo, etc.).
 
-OfertaTrabajo — datos de cada vacante: título, descripción, requisitos, estado (pendiente/aprobada/rechazada).
+OfertaTrabajo — Datos de cada vacante: título, descripción, requisitos, estado (pendiente/aprobada/rechazada).
 
-Postulacion — tabla pivote que relaciona usuarios y ofertas; almacena estado de la postulación y notas.
+Postulacion — Tabla pivote que relaciona usuarios y ofertas; almacena estado de la postulación y notas.
 
-RecursoEmpleabilidad — artículos del blog con título, contenido y ruta de la imagen.
+RecursoEmpleabilidad — Artículos del blog con título, contenido y ruta de la imagen.
 
 Tras clonar el repositorio es necesario ejecutar las migraciones:
 
 php artisan migrate
 
 
-Cada nueva funcionalidad incorpora su propia migración, permitiendo a otros desarrolladores actualizar su base de datos con un simple git pull + php artisan migrate.
+Cada nueva funcionalidad incorpora su propia migración, permitiendo a otros desarrolladores actualizar su base de datos con un simple git pull y php artisan migrate.
 
 Autenticación y control de roles
 
@@ -225,7 +224,7 @@ Postulantes (Usuarios)
 
 Registro y login personalizados.
 
-Edición de perfil profesional (datos personales, formación, experiencia, links).
+Edición de perfil profesional (datos personales, formación, experiencia, enlaces).
 
 Subida de foto de perfil (avatar) y Curriculum Vitae (PDF).
 
@@ -259,7 +258,7 @@ Las empresas visualizan los perfiles de los postulantes y actualizan el estado d
 
 Relación n:m entre usuarios y ofertas.
 
-Recursos de empleabilidad (blog)
+Recursos de empleabilidad (Blog)
 
 CRUD completo desde el panel de administración.
 
@@ -270,7 +269,6 @@ Visualización pública de artículos para ayudar a estudiantes y empresas.
 Gestión de archivos
 
 Todos los archivos subidos (avatars, CVs, imágenes) se almacenan en storage/app/public/.
-
 Es obligatorio generar el enlace simbólico con:
 
 php artisan storage:link
@@ -278,7 +276,29 @@ php artisan storage:link
 
 Las rutas públicas quedan disponibles en http://localhost:8000/storage/avatars/, storage/cv/, storage/recursos/, etc.
 
-Panel de administración
+🔔 Configuración de correos automatizados
+
+El portal puede enviar notificaciones por correo electrónico cuando ocurren eventos clave, como postulaciones nuevas o cambios de estado en las ofertas. Para habilitar estas notificaciones debes:
+
+Configurar el sistema de correos de Laravel en el archivo .env (y opcionalmente en config/mail.php). Un ejemplo de configuración SMTP sería:
+
+MAIL_MAILER=smtp
+MAIL_SCHEME=tls
+MAIL_HOST=smtp.tudominio.com
+MAIL_PORT=587
+MAIL_USERNAME=tu_usuario
+MAIL_PASSWORD=tu_contraseña
+MAIL_FROM_ADDRESS="soporte@cftmagallanes.cl"
+MAIL_FROM_NAME="Portal CFT Magallanes"
+
+
+Asegurarte de que la cola de trabajos (QUEUE_CONNECTION) esté configurada (por defecto usa la base de datos). Esto permite enviar correos en segundo plano.
+
+Revisar y personalizar las plantillas de correo en resources/views o las clases Mailable (cuando se implementen) para adaptar el contenido a la identidad institucional.
+
+Con esta configuración, el sistema enviará correos automáticamente para notificar a postulantes y empresas sobre eventos relevantes (p. ej., confirmación de postulación, aprobación/rechazo de ofertas, etc.).
+
+🛠️ Panel de administración
 
 El rol Admin cuenta con un panel centralizado que le permite:
 
@@ -292,107 +312,111 @@ Gestionar postulaciones: revisar postulantes de cada oferta y registrar notas.
 
 Administrar recursos de empleabilidad (blog): publicar, editar y eliminar artículos.
 
-Todo el panel se encuentra protegido por el middleware auth.custom y role:admin.
+Todo el panel se encuentra protegido por los middleware auth.custom y role:admin.
 
-Base de datos
+🗄️ Base de datos
 
 La configuración de conexión (host, puerto, base de datos, usuario y contraseña) se define en el archivo .env.
+Las migraciones automatizan la creación de tablas y campos. Para actualizar cambios de estructura sólo es necesario ejecutar:
 
-Las migraciones automatizan la creación de tablas y campos.
+php artisan migrate
 
-Para actualizar cambios de estructura, sólo es necesario ejecutar php artisan migrate.
+🔧 Instalación y puesta en marcha (WSL recomendado)
 
-🔨 Instalación y puesta en marcha (WSL recomendado)
-
-Abrir WSL (Ubuntu)
+Abrir WSL (Ubuntu):
 
 wsl
 
 
-Clonar el repositorio
+Clonar el repositorio:
 
 mkdir -p ~/Proyectos && cd ~/Proyectos
 git clone https://github.com/Diegocarrasco12/portal_empleabilidad_cft_magallanes.git
 cd portal_empleabilidad_cft_magallanes
 
 
-Instalar dependencias
+Instalar dependencias:
 
 composer install
 npm install
 
 
-Configurar variables de entorno
+Configurar variables de entorno:
 
 cp .env.example .env
 php artisan key:generate
-# Editar .env para establecer credenciales de base de datos y correo
+# Edita .env para establecer credenciales de base de datos, correo y otros parámetros
 
 
-Ejecutar migraciones y crear enlace a storage
+Ejecutar migraciones y crear enlace a storage:
 
 php artisan migrate
 php artisan storage:link
 
 
-Levantar servidores de desarrollo
+Levantar servidores de desarrollo:
 
 # servidor PHP (Laravel)
 php artisan serve
+
 # (opcional) Vite en modo desarrollo para recargar assets
 npm run dev
 
 
-Acceder a la aplicación
+Acceder a la aplicación: abre http://localhost:8000 en el navegador.
 
-Abrir http://localhost:8000
- en el navegador para ver el portal.
-
-Nota importante: para evitar problemas de entorno, todos los comandos deben ejecutarse desde WSL (Ubuntu). Verificar versiones de PHP, Composer, Node y npm antes de iniciar.
+Nota importante: para evitar problemas de entorno, todos los comandos deben ejecutarse desde WSL (Ubuntu). Verifica las versiones de PHP, Composer, Node y npm antes de iniciar.
 
 📋 Requisitos
 
-WSL 2 con Ubuntu (o cualquier entorno Linux compatible).
+WSL 2 con Ubuntu (o cualquier entorno Linux compatible).
 
-PHP 8.2 o superior
+PHP 8.2 o superior.
 
-Composer 2.x
+Composer 2.x.
 
-Node 18+ y npm 9+
+Node 18+ y npm 9+.
 
-Git para clonar el repositorio
+Git para clonar el repositorio.
 
-Servidor de base de datos MySQL/MariaDB para desarrollo y producción
+Servidor de base de datos MySQL/MariaDB para desarrollo y producción.
 
 🚀 Despliegue en producción
 
-Para desplegar la aplicación en un servidor Linux se recomienda:
+Obtener el código:
 
-# 1. Obtener el código
 git clone https://github.com/Diegocarrasco12/portal_empleabilidad_cft_magallanes.git
 
-# 2. Instalar dependencias sin paquetes de desarrollo
+
+Instalar dependencias sin paquetes de desarrollo:
+
 composer install --no-dev
 npm ci --production
 
-# 3. Configurar .env con las credenciales de producción
+
+Configurar .env con las credenciales de producción:
+
 cp .env.example .env
-# editar valores de APP_KEY, DB_*, MAIL_*, etc.
+# Edita APP_KEY, DB_*, MAIL_*, etc.
 php artisan key:generate
 
-# 4. Ejecutar migraciones y enlaces
+
+Ejecutar migraciones y enlaces:
+
 php artisan migrate --force
 php artisan storage:link
 
-# 5. Limpiar cachés
+
+Limpiar cachés:
+
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 
-# 6. Servir la aplicación (Apache, Nginx o servidor integrado)
 
+Servir la aplicación (Apache, Nginx o servidor integrado).
 
-Asegúrese de configurar correctamente los permisos de escritura de las carpetas storage/ y bootstrap/cache/, así como la versión de PHP y base de datos.
+Asegúrate de configurar correctamente los permisos de escritura de las carpetas storage/ y bootstrap/cache/, así como la versión de PHP y la base de datos.
 
 📦 Estado del proyecto
 
@@ -422,16 +446,13 @@ Optimización de rendimiento y SEO.
 
 🙌 Contribuciones
 
-Se anima a otros desarrolladores a revisar el código, proponer mejoras y enviar pull requests.
-Mantener una estructura clara y seguir las buenas prácticas de Laravel y desarrollo web.
+Se anima a otros desarrolladores a revisar el código, proponer mejoras y enviar pull requests. Mantén una estructura clara y sigue las buenas prácticas de Laravel y desarrollo web.
 
 ✍️ Autores
 
-
-Bryan Jara Castillo - Diego Carrasco Ordóñez
+Bryan Jara Castillo · Diego Carrasco Ordóñez
 Desarrollador Full Stack (JS / PHP / Laravel) — Chile
 
 📝 Licencia
 
-Uso institucional y educativo para el CFT Magallanes.
-Prohibida su explotación comercial sin autorización expresa.
+Uso institucional y educativo para el CFT Magallanes. Prohibida su explotación comercial sin autorización expresa.
