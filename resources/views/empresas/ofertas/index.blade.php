@@ -94,8 +94,16 @@
                                     </button>
                                 </form>
                             </div>
-                        @elseif ($oferta->estado == \App\Models\OfertaTrabajo::ESTADO_RECHAZADA)
-                            <span class="info-msg error">❌ Rechazada — revisa el motivo y corrige</span>
+                        @elseif (in_array($oferta->estado, [
+                                \App\Models\OfertaTrabajo::ESTADO_RECHAZADA,
+                                \App\Models\OfertaTrabajo::ESTADO_REENVIADA,
+                            ]))
+                            <span
+                                class="info-msg {{ $oferta->estado == \App\Models\OfertaTrabajo::ESTADO_RECHAZADA ? 'error' : '' }}">
+                                {{ $oferta->estado == \App\Models\OfertaTrabajo::ESTADO_RECHAZADA
+                                    ? '❌ Rechazada — revisa el motivo y corrige'
+                                    : '📤 En revisión — puedes seguir editando antes de aprobación' }}
+                            </span>
 
                             <div class="actions-row">
                                 <a href="{{ route('empresas.ofertas.editar', $oferta->id) }}" class="btn-empresa btn-sm">
@@ -105,7 +113,7 @@
                                 <form action="{{ route('empresas.ofertas.enviarRevision', $oferta->id) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="btn-publicar btn-sm">
-                                        Reenviar
+                                        Enviar a revisión
                                     </button>
                                 </form>
 
@@ -116,8 +124,6 @@
                                     </button>
                                 </form>
                             </div>
-                        @elseif ($oferta->estado == \App\Models\OfertaTrabajo::ESTADO_REENVIADA)
-                            <span class="info-msg">📤 Enviada nuevamente — esperando revisión</span>
                         @elseif ($oferta->estado == \App\Models\OfertaTrabajo::ESTADO_FINALIZADA)
                             <span class="info-msg">
                                 🏁 Oferta finalizada — ya no recibe postulaciones

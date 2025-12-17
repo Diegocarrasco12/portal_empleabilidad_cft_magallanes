@@ -433,19 +433,21 @@ class EmpresaController extends Controller
             ->where('id', $id)
             ->firstOrFail();
 
-        // Opcional: solo permitir si está RECHAZADA
-        if ((int)$oferta->estado !== OfertaTrabajo::ESTADO_RECHAZADA) {
-            return back()->with('error', 'Solo puedes reenviar ofertas rechazadas.');
+        if (!in_array((int)$oferta->estado, [
+            OfertaTrabajo::ESTADO_RECHAZADA,
+            OfertaTrabajo::ESTADO_REENVIADA,
+        ])) {
+            return back()->with('error', 'Esta oferta no puede enviarse a revisión.');
         }
 
         $oferta->estado = OfertaTrabajo::ESTADO_REENVIADA;
         $oferta->save();
 
-
         return redirect()
             ->route('empresas.ofertas.index')
-            ->with('empresa_alerta', 'Tu oferta fue enviada a revisión nuevamente.');
+            ->with('success', 'Tu oferta fue enviada a revisión nuevamente.');
     }
+
     public function finalizarOferta($id)
     {
         $usuarioId = session('usuario_id');
