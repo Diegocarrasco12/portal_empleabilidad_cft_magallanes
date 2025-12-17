@@ -2,7 +2,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     {{-- WRAPPER para asegurar separación correcta del footer --}}
     <div class="apps-page-wrapper">
 
@@ -22,10 +21,11 @@
                         <label for="f_estado">Estado</label>
                         <select id="f_estado" name="estado">
                             <option value="">Todos</option>
-                            <option value="postulado">Postulado</option>
+                            <option value="pendiente">Pendiente</option>
                             <option value="en_revision">En revisión</option>
                             <option value="seleccionado">Seleccionado</option>
                             <option value="descartado">Descartado</option>
+                            <option value="retirada">Retirada</option>
                         </select>
                     </div>
 
@@ -71,7 +71,7 @@
                         $estado = $postulacion->estado_postulacion;
                         $badgeClass = match ($estado) {
                             'seleccionado' => 'seleccionada',
-                            'descartado' => 'rechazada',
+                            'descartado', 'retirada' => 'rechazada',
                             default => 'en-proceso',
                         };
 
@@ -85,9 +85,7 @@
                         {{-- ENCABEZADO --}}
                         <div class="app-card-head">
 
-                            <img class="company-logo"
-                                 src="{{ asset('img/empresas/empresa (1).png') }}"
-                                 alt="Logo empresa">
+                            <img class="company-logo" src="{{ asset('img/empresas/empresa (1).png') }}" alt="Logo empresa">
 
                             <div class="job-meta">
                                 <h3 class="job-title">{{ $titulo }}</h3>
@@ -117,12 +115,17 @@
                             <a class="btn btn-light btn-ver-detalle" href="#" data-id="{{ $postulacion->id }}">
                                 Ver detalle
                             </a>
-                            <a class="btn btn-light" href="#">
-                                Ver empresa
-                            </a>
-                            <a class="btn btn-danger" href="#" style="opacity:.5; pointer-events:none;">
-                                Retirar postulación
-                            </a>
+
+                            @if ($estado !== 'retirada' && $estado !== 'seleccionado')
+                                <form action="{{ route('postulaciones.retirar', $postulacion->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    <button class="btn btn-danger" type="submit"
+                                        onclick="return confirm('¿Seguro que deseas retirar esta postulación?')">
+                                        Retirar postulación
+                                    </button>
+                                </form>
+                            @endif
                         </div>
 
                     </article>
@@ -143,200 +146,199 @@
         ESTILOS LOCALES
 =========================== --}}
 @push('styles')
-<style>
-
-    /* Wrapper que genera espacio REAL antes del footer */
-    .apps-page-wrapper {
-        padding-bottom: 6rem; /* evita que el footer tape contenido */
-    }
-
-    .user-apps {
-        padding: 1.25rem 0 0;
-    }
-
-    .apps-header .muted {
-        color: #6b7280;
-        margin-bottom: .75rem;
-    }
-
-    /* --------------------------
-            FORMULARIO FILTROS
-    --------------------------- */
-    .apps-filters {
-        background: #ffffff;
-        padding: 1.2rem;
-        border-radius: 14px;
-        border: 1px solid #e5e7eb;
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(4, 1fr);
-        align-items: end;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-    }
-
-    .apps-filters .field {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .apps-filters label {
-        font-weight: 600;
-        margin-bottom: .3rem;
-        color: #374151;
-    }
-
-    .apps-filters select,
-    .apps-filters input {
-        padding: .55rem .75rem;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        font-size: .9rem;
-        background: #fafafa;
-        transition: .2s;
-    }
-
-    .apps-filters select:focus,
-    .apps-filters input:focus {
-        border-color: #c91e25;
-        background: #ffffff;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(201, 30, 37, .18);
-    }
-
-    .field-actions button {
-        width: 100%;
-        padding: .65rem;
-        border-radius: 8px;
-        background: #c91e25;
-        font-weight: 600;
-        color: white;
-        border: none;
-        transition: .2s;
-    }
-
-    .field-actions button:hover {
-        background: #a71820;
-    }
-
-    @media (max-width: 900px) {
-        .apps-filters {
-            grid-template-columns: 1fr 1fr;
+    <style>
+        /* Wrapper que genera espacio REAL antes del footer */
+        .apps-page-wrapper {
+            padding-bottom: 6rem;
+            /* evita que el footer tape contenido */
         }
-    }
 
-    @media (max-width: 600px) {
-        .apps-filters {
-            grid-template-columns: 1fr;
+        .user-apps {
+            padding: 1.25rem 0 0;
         }
-    }
 
-    /* --------------------------
-            TARJETAS
-    --------------------------- */
-    .apps-list {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: 1fr 1fr;
-        margin-top: 1rem;
-    }
+        .apps-header .muted {
+            color: #6b7280;
+            margin-bottom: .75rem;
+        }
 
-    .app-card {
-        background: #fff;
-        border: 1px solid #eee;
-        border-radius: 12px;
-        padding: 1rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
-    }
+        /* --------------------------
+                                FORMULARIO FILTROS
+                        --------------------------- */
+        .apps-filters {
+            background: #ffffff;
+            padding: 1.2rem;
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(4, 1fr);
+            align-items: end;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
 
-    .app-card-head {
-        display: grid;
-        grid-template-columns: 56px 1fr auto;
-        gap: .75rem;
-        align-items: center;
-    }
+        .apps-filters .field {
+            display: flex;
+            flex-direction: column;
+        }
 
-    .company-logo {
-        width: 56px;
-        height: 56px;
-        object-fit: cover;
-        border-radius: 8px;
-    }
+        .apps-filters label {
+            font-weight: 600;
+            margin-bottom: .3rem;
+            color: #374151;
+        }
 
-    .job-title {
-        font-size: 1.05rem;
-        font-weight: 700;
-    }
+        .apps-filters select,
+        .apps-filters input {
+            padding: .55rem .75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: .9rem;
+            background: #fafafa;
+            transition: .2s;
+        }
 
-    .badge {
-        padding: .25rem .6rem;
-        border-radius: 999px;
-        font-size: .78rem;
-    }
+        .apps-filters select:focus,
+        .apps-filters input:focus {
+            border-color: #c91e25;
+            background: #ffffff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(201, 30, 37, .18);
+        }
 
-    .status.en-proceso {
-        background: #f3f4f6;
-        color: #374151;
-        border: 1px solid #e5e7eb;
-    }
+        .field-actions button {
+            width: 100%;
+            padding: .65rem;
+            border-radius: 8px;
+            background: #c91e25;
+            font-weight: 600;
+            color: white;
+            border: none;
+            transition: .2s;
+        }
 
-    .status.seleccionada {
-        background: #d1fae5;
-        color: #065f46;
-        border: 1px solid #a7f3d0;
-    }
+        .field-actions button:hover {
+            background: #a71820;
+        }
 
-    .status.rechazada {
-        background: #fee2e2;
-        color: #991b1b;
-        border: 1px solid #fecaca;
-    }
+        @media (max-width: 900px) {
+            .apps-filters {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
 
-    .meta-inline {
-        display: flex;
-        gap: 1rem;
-        list-style: none;
-        padding: 0;
-        margin-bottom: .5rem;
-        color: #4b5563;
-        font-size: .92rem;
-    }
+        @media (max-width: 600px) {
+            .apps-filters {
+                grid-template-columns: 1fr;
+            }
+        }
 
-    .app-card-actions {
-        margin-top: .75rem;
-        display: flex;
-        gap: .5rem;
-        flex-wrap: wrap;
-    }
-
-    .btn-light {
-        background: #f3f4f6;
-        color: #111827;
-        padding: .6rem 1rem;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .btn-light:hover {
-        background: #e5e7eb;
-    }
-
-    .btn-danger {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: .6rem 1rem;
-        border-radius: 8px;
-        font-weight: 600;
-        text-decoration: none;
-    }
-
-    @media (max-width:768px) {
+        /* --------------------------
+                                TARJETAS
+                        --------------------------- */
         .apps-list {
-            grid-template-columns: 1fr;
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr 1fr;
+            margin-top: 1rem;
         }
-    }
 
-</style>
+        .app-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+        }
+
+        .app-card-head {
+            display: grid;
+            grid-template-columns: 56px 1fr auto;
+            gap: .75rem;
+            align-items: center;
+        }
+
+        .company-logo {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .job-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            padding: .25rem .6rem;
+            border-radius: 999px;
+            font-size: .78rem;
+        }
+
+        .status.en-proceso {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+
+        .status.seleccionada {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status.rechazada {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .meta-inline {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+            padding: 0;
+            margin-bottom: .5rem;
+            color: #4b5563;
+            font-size: .92rem;
+        }
+
+        .app-card-actions {
+            margin-top: .75rem;
+            display: flex;
+            gap: .5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-light {
+            background: #f3f4f6;
+            color: #111827;
+            padding: .6rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-light:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: .6rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        @media (max-width:768px) {
+            .apps-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 @endpush
 
 
@@ -345,32 +347,32 @@
         SCRIPTS
 =========================== --}}
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
 
-    document.querySelectorAll('.btn-ver-detalle').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            e.preventDefault();
+            document.querySelectorAll('.btn-ver-detalle').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
 
-            const id = btn.dataset.id;
+                    const id = btn.dataset.id;
 
-            const response = await fetch(`/usuarios/postulacion-detalle/${id}`);
-            const data = await response.json();
+                    const response = await fetch(`/usuarios/postulacion-detalle/${id}`);
+                    const data = await response.json();
 
-            if (data.html) {
-                document.querySelector('#modal-container').innerHTML = data.html;
+                    if (data.html) {
+                        document.querySelector('#modal-container').innerHTML = data.html;
 
-                const overlay = document.querySelector('.modal-overlay');
-                overlay.classList.add('show');
+                        const overlay = document.querySelector('.modal-overlay');
+                        overlay.classList.add('show');
 
-                document.querySelector('.modal-close').onclick = () => {
-                    overlay.classList.remove('show');
-                    setTimeout(() => overlay.remove(), 200);
-                };
-            }
+                        document.querySelector('.modal-close').onclick = () => {
+                            overlay.classList.remove('show');
+                            setTimeout(() => overlay.remove(), 200);
+                        };
+                    }
+                });
+            });
+
         });
-    });
-
-});
-</script>
+    </script>
 @endpush

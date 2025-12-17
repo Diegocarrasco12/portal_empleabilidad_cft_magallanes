@@ -100,30 +100,56 @@ class PostulacionController extends Controller
     /**
      * Mostrar las postulaciones del estudiante
      */
-    public function index()
+    public function index(Request $request)
     {
-        // 1. Usuario logueado (CORREGIDO)
         $usuarioId = session('usuario_id');
 
         if (!$usuarioId) {
             return redirect()->route('login')->with('error', 'Debes iniciar sesión.');
         }
 
-        // 2. Obtener el estudiante asociado
         $estudiante = Estudiante::where('usuario_id', $usuarioId)->first();
 
         if (!$estudiante) {
             return back()->with('error', 'No se encontró tu perfil de estudiante.');
         }
 
-        // 3. Obtener postulaciones
+        // 👉 filtros
+        $estado = $request->get('estado');
+        $orden  = $request->get('orden', 'recientes');
+        $q      = $request->get('q');
+
         $postulaciones = Postulacion::with(['oferta.empresa'])
-            ->where('estudiante_id', $estudiante->id)
-            ->orderBy('fecha_postulacion', 'desc')
-            ->get();
+            ->where('estudiante_id', $estudiante->id);
+
+        // FILTRO POR ESTADO
+        if ($estado) {
+            $postulaciones->where('estado_postulacion', $estado);
+        }
+
+        // BUSCADOR
+        if ($q) {
+            $postulaciones->whereHas('oferta', function ($query) use ($q) {
+                $query->where('titulo', 'like', "%{$q}%")
+                    ->orWhere('ciudad', 'like', "%{$q}%")
+                    ->orWhereHas('empresa', function ($q2) use ($q) {
+                        $q2->where('nombre_comercial', 'like', "%{$q}%");
+                    });
+            });
+        }
+
+        // ORDEN
+        if ($orden === 'antiguas') {
+            $postulaciones->orderBy('fecha_postulacion', 'asc');
+        } else {
+            $postulaciones->orderBy('fecha_postulacion', 'desc');
+        }
+
+        $postulaciones = $postulaciones->get();
 
         return view('users.mis-postulaciones', compact('postulaciones'));
     }
+
 
     /**
      * Mostrar detalle de una postulación específica
@@ -182,5 +208,32 @@ class PostulacionController extends Controller
         $html = view('partials.modal-postulacion', compact('postulacion'))->render();
 
         return response()->json(['html' => $html]);
+    }
+    public function retirar($id)
+    {
+        $usuarioId = session('usuario_id');
+        if (!$usuarioId) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión.');
+        }
+
+        $estudiante = \App\Models\Estudiante::where('usuario_id', $usuarioId)->first();
+        if (!$estudiante) {
+            return back()->with('error', 'No se encontró tu perfil de estudiante.');
+        }
+
+        $postulacion = \App\Models\Postulacion::where('id', $id)
+            ->where('estudiante_id', $estudiante->id)
+            ->first();
+
+        if (!$postulacion) {
+            return back()->with('error', 'Postulación no encontrada.');
+        }
+
+        // Cambiar estado (recomendado: NO borrar)
+        $postulacion->estado_postulacion = 'retirada';
+        $postulacion->actualizado_en = now();
+        $postulacion->save();
+
+        return back()->with('success', 'Postulación retirada correctamente.');
     }
 }

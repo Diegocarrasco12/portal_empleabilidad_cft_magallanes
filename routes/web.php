@@ -251,6 +251,8 @@ Route::middleware('auth.custom')->group(function () {
             Route::get('/postulacion-detalle/{id}', [PostulacionController::class, 'modal'])
                 ->middleware(['auth.custom', 'role:postulante'])
                 ->name('postulaciones.modal');
+            Route::post('/mis-postulaciones/{id}/retirar', [PostulacionController::class, 'retirar'])
+                ->name('postulaciones.retirar');
         });
 });
 
@@ -273,3 +275,6 @@ Route::get('/recursos-empleabilidad', [RecursoPublicoController::class, 'index']
 
 Route::get('/recursos-empleabilidad/{id}', [RecursoPublicoController::class, 'show'])
     ->name('recursos.show');
+
+Route::view('/terminos-y-condiciones', 'terminos.condiciones')->name('terminos.condiciones');
+Route::view('/terminos-difusion-marca', 'terminos.marca')->name('terminos.marca');

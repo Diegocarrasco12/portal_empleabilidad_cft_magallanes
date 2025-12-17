@@ -490,6 +490,27 @@
                     </div>
                 </div>
             </section>
+            {{-- === Autorización uso de marca === --}}
+            <section class="card">
+                <h2>Autorización de imagen de marca</h2>
+
+                <label class="check marca-consent">
+                    <input type="checkbox" name="autoriza_marca" value="1"
+                        {{ old('autoriza_marca', $empresa->autoriza_marca ?? false) ? 'checked' : '' }}>
+
+                    Autorizo a <strong>CFT Magallanes Empleabilidad</strong> a utilizar el
+                    <strong>logo e imagen de marca</strong> de la empresa dentro de la plataforma,
+                    exclusivamente con fines informativos y de vinculación laboral.
+
+                    <a href="{{ route('terminos.marca') }}" target="_blank" class="auth-link">
+                        Ver términos
+                    </a>
+                </label>
+
+                <p class="hint">
+                    Esta autorización es opcional y puede ser revocada en cualquier momento.
+                </p>
+            </section>
 
             {{-- Acciones --}}
             <div class="form-actions">

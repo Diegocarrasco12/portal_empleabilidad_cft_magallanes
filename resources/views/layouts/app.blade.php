@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CFT Magallanes – Empleabilidad</title>
+    <link rel="icon" href="{{ asset('img/iconos/logo.png') }}" type="image/png">
     <!--
       Esta plantilla base define la estructura general de la aplicación web.  Se
       incluyen enlaces a las hojas de estilos y scripts compartidos.  Las

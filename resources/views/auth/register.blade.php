@@ -84,13 +84,30 @@
                 </div>
 
                 <div class="auth-extra">
+
                     <label class="check">
                         <input type="checkbox" name="terms" required>
-                        Acepto los <a href="#" class="auth-link">Términos y Condiciones</a>
+                        <span class="check-text">
+                            Acepto los <a href="{{ route('terminos.condiciones') }}" target="_blank" class="auth-link">
+                                Términos y Condiciones
+                            </a>
+                        </span>
                     </label>
+
+                    {{-- Difusión de marca (solo empresa) --}}
+                    <div id="difusionMarcaBox" class="marca-consent" style="display:none;">
+                        <label class="check">
+                            <input type="checkbox" name="difusion_marca" value="1">
+                            <span class="check-text">
+                                Autorizo el uso del <strong>logo de la empresa</strong> en la plataforma.
+                                <a href="{{ route('terminos.marca') }}" target="_blank" class="auth-link">
+                                    Ver términos
+                                </a>
+                            </span>
+                        </label>
+                    </div>
                     <a class="auth-link" href="{{ url('/login') }}">¿Ya tienes cuenta? Ingresar</a>
                 </div>
-
                 <button type="submit" class="btn btn-primary btn-full">Crear cuenta</button>
             </form>
         </section>
@@ -218,11 +235,20 @@
 
         .check {
             display: flex;
-            align-items: center;
-            gap: .5rem;
-            color: #374151;
-            font-size: .95rem;
+            align-items: flex-start;
+            /* 👈 clave */
+            gap: .6rem;
         }
+
+        .check input[type="checkbox"] {
+            margin-top: .2rem;
+            /* ajusta visualmente el cuadrito */
+        }
+
+        .check-text {
+            line-height: 1.4;
+        }
+
 
         .auth-link {
             color: #c91e25;
@@ -256,6 +282,13 @@
             width: 100%;
         }
 
+        .auth-extra {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: .6rem;
+        }
+
+
         /* Responsive */
         @media (max-width:640px) {
             .auth-card {
@@ -276,20 +309,24 @@
 
 @push('scripts')
     <script>
-        // Mostrar/ocultar campos de empresa según el tipo de cuenta
         (function() {
             const sel = document.getElementById('account_type');
-            const box = document.getElementById('companyFields');
+            const companyBox = document.getElementById('companyFields');
+            const marcaBox = document.getElementById('difusionMarcaBox');
+            const companyName = document.getElementById('company_name');
 
             function toggleCompany() {
                 const isCompany = sel.value === 'empresa';
-                box.style.display = isCompany ? 'block' : 'none';
-                box.setAttribute('aria-hidden', isCompany ? 'false' : 'true');
-                // Requeridos condicionales
-                document.getElementById('company_name').toggleAttribute('required', isCompany);
+
+                companyBox.style.display = isCompany ? 'block' : 'none';
+                marcaBox.style.display = isCompany ? 'block' : 'none';
+
+                companyBox.setAttribute('aria-hidden', !isCompany);
+                companyName.toggleAttribute('required', isCompany);
             }
+
             sel.addEventListener('change', toggleCompany);
-            toggleCompany(); // init
+            toggleCompany();
         })();
     </script>
 @endpush

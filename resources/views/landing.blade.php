@@ -2,10 +2,10 @@
 
 @section('content')
     <!--
-                                                                                                Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
-                                                                                                principales descritas en el diseño de referencia: hero, trabajos
-                                                                                                destacados, empresas destacadas, testimonios y llamada a la acción.
-                                                                                              -->
+                                                                                                        Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
+                                                                                                        principales descritas en el diseño de referencia: hero, trabajos
+                                                                                                        destacados, empresas destacadas, testimonios y llamada a la acción.
+                                                                                                      -->
 
     <!-- Sección Hero -->
     <section class="hero">
@@ -108,6 +108,7 @@
                         'name' => 'Daniela Soto',
                         'role' => 'Técnico en Enfermería',
                         'cta' => 'Ver empleos del área salud',
+                        'area_id' => 2,
                         'photo' => 'test (1).png',
                         'quote' =>
                             '“Gracias al CFT Magallanes encontré una práctica donde puedo aplicar todo lo que aprendí. El equipo me ayudó en cada paso del proceso.”',
@@ -116,6 +117,7 @@
                         'name' => 'Camila Reyes',
                         'role' => 'Técnico en Administración',
                         'cta' => 'Ver empleos administrativos',
+                        'area_id' => 4,
                         'photo' => 'test (2).png',
                         'quote' =>
                             '“Participé en una feria laboral del CFT y hoy trabajo en una empresa local. Me sentí muy apoyado por los docentes y el equipo de vinculación.”',
@@ -124,6 +126,7 @@
                         'name' => 'Felipe Andrade',
                         'role' => 'Técnico en Educación Parvularia',
                         'cta' => 'Ver empleos en educación',
+                        'area_id' => 6,
                         'photo' => 'test (3).png',
                         'quote' =>
                             '“Nunca imaginé que una práctica profesional me abriría tantas puertas. El CFT Magallanes me ayudó a conectar con mi primer empleo.”',
@@ -141,7 +144,9 @@
                         <p class="quote">{{ $t['quote'] }}</p>
                         <p class="author"><strong>Nombre:</strong> {{ $t['name'] }}</p>
                         <p class="position"><strong>Cargo:</strong> {{ $t['role'] }}</p>
-                        <a href="#" class="job-link">{{ $t['cta'] }}</a>
+                        <a href="{{ route('empleos.index', ['area[]' => $t['area_id']]) }}" class="job-link">
+                            {{ $t['cta'] }}
+                        </a>
                     </article>
                 @endforeach
             </div>

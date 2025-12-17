@@ -215,9 +215,6 @@
                             </p>
 
                             <div class="cta-actions">
-                                {{-- Guardar (aún sin lógica, solo visual) --}}
-                                <button class="btn btn-light" type="button">Guardar</button>
-
                                 {{-- Postular / Ver detalle --}}
                                 <a href="{{ route('ofertas.detalle', $oferta->id) }}" class="btn btn-primary">
                                     Postular
