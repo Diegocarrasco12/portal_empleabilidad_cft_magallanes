@@ -151,5 +151,31 @@
             color: #777;
             font-size: 18px;
         }
+
+        .post-card {
+            display: flex;
+            align-items: stretch;
+            /* importante */
+        }
+
+        .post-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            /* importante */
+            min-height: 100%;
+        }
+
+        .btn-detail {
+            margin-top: auto;
+            /* esto lo baja al fondo */
+            display: inline-block;
+            text-align: center;
+            min-height: 44px;
+            /* para que todos queden igual */
+            line-height: 28px;
+            white-space: nowrap;
+            /* evita que “Ver perfil completo” se parta en 2 líneas */
+        }
     </style>
 @endpush

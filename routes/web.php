@@ -14,6 +14,7 @@ use App\Http\Controllers\AdminOfertaApprovalController;
 use App\Http\Controllers\AdminPostulanteController;
 use App\Http\Controllers\OfertaPublicaController;
 use App\Http\Controllers\RecursoController;
+use App\Http\Controllers\RecursoPublicoController;
 
 
 /*
@@ -262,7 +263,6 @@ Route::middleware('auth.custom')->group(function () {
    5) RECURSOS DE EMPLEABILIDAD (PÚBLICO)
 ============================================================ */
 
-use App\Http\Controllers\RecursoPublicoController;
 
 Route::get('/recursos-empleabilidad', [RecursoPublicoController::class, 'index'])
     ->name('recursos.index');

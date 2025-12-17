@@ -171,6 +171,7 @@
             margin-bottom: 12px;
             background: #fafafa;
         }
+        
     </style>
 
 @endsection
