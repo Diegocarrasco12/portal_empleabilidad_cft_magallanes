@@ -20,10 +20,14 @@ class OfertaTrabajo extends Model
     /** ============================
      *  Estados del Workflow de Ofertas
      *  ============================ */
+
     const ESTADO_PENDIENTE   = 0;
     const ESTADO_APROBADA    = 1;
     const ESTADO_RECHAZADA   = 2;
     const ESTADO_REENVIADA   = 3;
+    const ESTADO_FINALIZADA  = 4;
+
+
 
 
     protected $fillable = [
@@ -126,9 +130,11 @@ class OfertaTrabajo extends Model
             self::ESTADO_APROBADA    => 'Aprobada',
             self::ESTADO_RECHAZADA   => 'Rechazada',
             self::ESTADO_REENVIADA   => 'Reenviada',
+            self::ESTADO_FINALIZADA  => 'Finalizada',
             default                  => 'Pendiente',
         };
     }
+
     /** ============================
      *  Scope: Ofertas vigentes (públicas)
      *  ============================ */
@@ -141,6 +147,7 @@ class OfertaTrabajo extends Model
                     ->orWhere('fecha_cierre', '>=', now()->toDateString());
             });
     }
+
     public function esFavorita($estudianteId)
     {
         return $this->favoritos()->where('estudiante_id', $estudianteId)->exists();

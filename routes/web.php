@@ -213,14 +213,8 @@ Route::middleware('auth.custom')->group(function () {
                 ->name('empresas.ofertas.index');
             Route::post('/ofertas/{id}/enviar', [EmpresaController::class, 'enviarRevision'])
                 ->name('empresas.ofertas.enviarRevision');
-
-            Route::post('/ofertas/{id}/pausar', [EmpresaController::class, 'pausar'])
-                ->name('empresas.ofertas.pausar');
-            Route::post('/ofertas/{id}/reactivar', [EmpresaController::class, 'reactivar'])
-                ->name('empresas.ofertas.reactivar');
-
-            Route::post('/ofertas/{id}/cerrar', [EmpresaController::class, 'cerrar'])
-                ->name('empresas.ofertas.cerrar');
+            Route::post('/ofertas/{id}/finalizar', [EmpresaController::class, 'finalizarOferta'])
+                ->name('empresas.ofertas.finalizar');
         });
 
 

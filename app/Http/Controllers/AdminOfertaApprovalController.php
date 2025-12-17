@@ -24,8 +24,10 @@ class AdminOfertaApprovalController extends Controller
             'approved'    => OfertaTrabajo::ESTADO_APROBADA,
             'rejected'    => OfertaTrabajo::ESTADO_RECHAZADA,
             'resubmitted' => OfertaTrabajo::ESTADO_REENVIADA,
-            'all'         => null, // sin filtro
+            'finalized'   => OfertaTrabajo::ESTADO_FINALIZADA,
+            'all'         => null,
         ];
+
 
         // Si viene algo raro en la URL, forzamos a 'pending'
         if (! array_key_exists($estadoFiltro, $mapaEstados)) {
@@ -51,7 +53,9 @@ class AdminOfertaApprovalController extends Controller
             'approved'    => OfertaTrabajo::where('estado', OfertaTrabajo::ESTADO_APROBADA)->count(),
             'rejected'    => OfertaTrabajo::where('estado', OfertaTrabajo::ESTADO_RECHAZADA)->count(),
             'resubmitted' => OfertaTrabajo::where('estado', OfertaTrabajo::ESTADO_REENVIADA)->count(),
+            'finalized'   => OfertaTrabajo::where('estado', OfertaTrabajo::ESTADO_FINALIZADA)->count(),
         ];
+
 
         return view('admin.ofertas.index', [
             'ofertas'       => $ofertas,

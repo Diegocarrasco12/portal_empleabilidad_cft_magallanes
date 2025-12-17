@@ -48,20 +48,6 @@
 
                 {{-- IMPORTAMOS EL FORMULARIO REUTILIZABLE --}}
                 @include('ofertas.form', ['modo' => 'editar'])
-
-                {{-- BOTONES --}}
-                <div class="mt-4 d-flex justify-content-end gap-2">
-
-                    <a href="{{ route('empresas.ofertas.index') }}" 
-                       class="btn btn-outline-secondary px-4">
-                        Cancelar
-                    </a>
-
-                    <button type="submit" class="btn btn-primary px-4">
-                        Guardar Cambios
-                    </button>
-
-                </div>
             </form>
 
         </div>

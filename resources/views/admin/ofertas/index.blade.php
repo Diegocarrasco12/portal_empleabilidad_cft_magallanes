@@ -17,8 +17,10 @@
                         'approved' => 'Aprobadas',
                         'rejected' => 'Rechazadas',
                         'resubmitted' => 'Reenviadas',
+                        'finalized' => 'Finalizadas',
                         'all' => 'Todas',
                     ];
+
                 @endphp
 
                 <div class="filter-tabs">
@@ -28,9 +30,10 @@
 
                             {{ $label }}
 
-                            @if (in_array($key, ['pending', 'approved', 'rejected', 'resubmitted']))
+                            @if (in_array($key, ['pending', 'approved', 'rejected', 'resubmitted', 'finalized']))
                                 <span class="count">{{ $stats[$key] ?? 0 }}</span>
                             @endif
+
                         </a>
                     @endforeach
                 </div>
@@ -81,6 +84,7 @@
                                         'Aprobada' => 'Aprobada',
                                         'Rechazada' => 'Rechazada',
                                         'Reenviada' => 'Reenviada',
+                                        'Finalizada' => 'Finalizada',
                                     ];
 
                                     $classMap = [
@@ -88,7 +92,9 @@
                                         'Rechazada' => 'badge-red',
                                         'Reenviada' => 'badge-info',
                                         'Pendiente' => 'badge-info',
+                                        'Finalizada' => 'badge-dark',
                                     ];
+
                                 @endphp
 
                                 <span class="badge {{ $classMap[$estado] ?? 'badge-info' }}">

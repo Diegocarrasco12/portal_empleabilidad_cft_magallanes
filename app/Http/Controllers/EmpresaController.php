@@ -426,14 +426,46 @@ class EmpresaController extends Controller
 
     public function enviarRevision($id)
     {
-        $oferta = OfertaTrabajo::findOrFail($id);
+        $usuarioId = session('usuario_id');
+        $empresa = Empresa::where('usuario_id', $usuarioId)->firstOrFail();
 
-        // Cambiar estado a "pendiente" nuevamente (volver al flujo administrativo)
-        $oferta->estado = OfertaTrabajo::ESTADO_PENDIENTE;
+        $oferta = OfertaTrabajo::where('empresa_id', $empresa->id)
+            ->where('id', $id)
+            ->firstOrFail();
+
+        // Opcional: solo permitir si está RECHAZADA
+        if ((int)$oferta->estado !== OfertaTrabajo::ESTADO_RECHAZADA) {
+            return back()->with('error', 'Solo puedes reenviar ofertas rechazadas.');
+        }
+
+        $oferta->estado = OfertaTrabajo::ESTADO_REENVIADA;
+        $oferta->save();
+
+
+        return redirect()
+            ->route('empresas.ofertas.index')
+            ->with('empresa_alerta', 'Tu oferta fue enviada a revisión nuevamente.');
+    }
+    public function finalizarOferta($id)
+    {
+        $usuarioId = session('usuario_id');
+        $empresa = Empresa::where('usuario_id', $usuarioId)->firstOrFail();
+
+        $oferta = OfertaTrabajo::where('empresa_id', $empresa->id)
+            ->where('id', $id)
+            ->firstOrFail();
+
+        // Solo finalizar si está aprobada
+        if ((int)$oferta->estado !== OfertaTrabajo::ESTADO_APROBADA) {
+            return back()->with('error', 'Solo puedes finalizar ofertas publicadas.');
+        }
+
+        $oferta->estado = OfertaTrabajo::ESTADO_FINALIZADA;
+        $oferta->fecha_cierre = now();
         $oferta->save();
 
         return redirect()
             ->route('empresas.ofertas.index')
-            ->with('empresa_alerta', 'Tu oferta fue enviada a revisión nuevamente. Te avisaremos cuando sea aprobada.');
+            ->with('ok', 'Oferta finalizada correctamente.');
     }
 }

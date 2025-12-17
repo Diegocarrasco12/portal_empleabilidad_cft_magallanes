@@ -45,8 +45,8 @@
                 </div>
 
                 {{-- =======================
-            PANEL ADMIN (Acciones)
-            ======================== --}}
+    PANEL ADMIN (Acciones)
+======================== --}}
                 <div class="job-header-right">
 
                     @if ($oferta->mostrar_sueldo)
@@ -62,32 +62,51 @@
                     {{-- === ACCIONES ADMIN === --}}
                     <div class="admin-actions">
 
-                        {{-- Mostrar estado actual --}}
-                        <span class="estado-badge estado-{{ strtolower($oferta->estado) }}">
-                            {{ $oferta->estado }}
+                        {{-- Estado actual --}}
+                        <span class="estado-badge estado-{{ strtolower($oferta->estado_nombre) }}">
+                            {{ $oferta->estado_nombre }}
                         </span>
 
-                        @if (
-                            $oferta->estado === \App\Models\OfertaTrabajo::ESTADO_PENDIENTE ||
-                                $oferta->estado === \App\Models\OfertaTrabajo::ESTADO_REENVIADA)
-                            {{-- Botón aprobar --}}
+                        {{-- PENDIENTE / REENVIADA --}}
+                        @if (in_array($oferta->estado, [
+                                \App\Models\OfertaTrabajo::ESTADO_PENDIENTE,
+                                \App\Models\OfertaTrabajo::ESTADO_REENVIADA,
+                            ]))
+                            {{-- Aprobar --}}
                             <form action="{{ route('admin.ofertas.approve', $oferta->id) }}" method="POST"
                                 class="action-form">
-                                @csrf @method('PATCH')
+                                @csrf
+                                @method('PATCH')
                                 <button class="action-btn success">✔ Aprobar</button>
                             </form>
 
-                            {{-- Botón rechazar: abre modal --}}
-                            <button class="action-btn danger" onclick="openModal('reject')">❌ Rechazar</button>
+                            {{-- Rechazar --}}
+                            <button class="action-btn danger" onclick="openModal('reject')">
+                                ❌ Rechazar
+                            </button>
 
-                            {{-- Botón solicitar corrección: abre modal --}}
-                            <button class="action-btn warning" onclick="openModal('resubmit')">🔄 Pedir corrección</button>
+                            {{-- Pedir corrección --}}
+                            <button class="action-btn warning" onclick="openModal('resubmit')">
+                                🔄 Pedir corrección
+                            </button>
+
+                            {{-- FINALIZADA --}}
+                        @elseif ($oferta->estado === \App\Models\OfertaTrabajo::ESTADO_FINALIZADA)
+                            <p class="estado-info">
+                                🏁 Esta oferta fue finalizada por la empresa.
+                            </p>
+
+                            {{-- RESTO DE ESTADOS (Aprobada / Rechazada ya gestionada) --}}
                         @else
-                            <p class="estado-info">Esta oferta ya fue gestionada.</p>
+                            <p class="estado-info">
+                                Esta oferta ya fue gestionada.
+                            </p>
                         @endif
+
                     </div>
 
                 </div>
+
             </header>
 
 
@@ -489,8 +508,8 @@
         }
 
         /* ================================
-                               CENTRAR HEADER EN MOBILE
-                            ================================ */
+                                               CENTRAR HEADER EN MOBILE
+                                            ================================ */
         @media (max-width: 820px) {
 
             /* Centrar bloque izquierdo del header */
