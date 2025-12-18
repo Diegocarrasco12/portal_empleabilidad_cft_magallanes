@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     libpq-dev \
- && docker-php-ext-install \
+    && docker-php-ext-install \
     pdo \
     pdo_mysql \
     pdo_pgsql \
@@ -22,8 +22,8 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     exif \
     pcntl \
- && a2enmod rewrite \
- && rm -rf /var/lib/apt/lists/*
+    && a2enmod rewrite \
+    && rm -rf /var/lib/apt/lists/*
 
 # =====================================================
 # Composer (desde imagen oficial)
@@ -57,9 +57,9 @@ RUN printf '<Directory ${APACHE_DOCUMENT_ROOT}>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
-</Directory>\n' \
-> /etc/apache2/conf-available/laravel.conf \
- && a2enconf laravel
+    </Directory>\n' \
+    > /etc/apache2/conf-available/laravel.conf \
+    && a2enconf laravel
 
 # =====================================================
 # Instalar dependencias PHP del proyecto
@@ -75,14 +75,15 @@ RUN composer install \
 # Limpiar cachés (IMPORTANTE para Render)
 # =====================================================
 RUN php artisan config:clear \
- && php artisan route:clear \
- && php artisan view:clear
+    && php artisan config:cache \
+    && php artisan route:clear \
+    && php artisan view:clear
 
 # =====================================================
 # Permisos correctos para Laravel
 # =====================================================
 RUN chown -R www-data:www-data storage bootstrap/cache \
- && chmod -R 775 storage bootstrap/cache
+    && chmod -R 775 storage bootstrap/cache
 
 # =====================================================
 # Apache escucha en 8080 (requerido por Render)
