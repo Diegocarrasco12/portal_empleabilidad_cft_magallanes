@@ -16,13 +16,7 @@ use App\Http\Controllers\OfertaPublicaController;
 use App\Http\Controllers\RecursoController;
 use App\Http\Controllers\RecursoPublicoController;
 
-/* ============================================================
-   PRUEBA TEMPORAL – LANDING AISLADA
-============================================================ */
 
-Route::get('/', function () {
-    return 'OK LANDING PRODUCCION';
-});
 /*
 |--------------------------------------------------------------------------
 | WEB ROUTES – CFT Empleabilidad
@@ -41,7 +35,7 @@ Route::get('/', function () {
    1) RUTA PRINCIPAL / LANDING (Pública)
 ============================================================ */
 
-//Route::get('/', [OfertaPublicaController::class, 'landing'])->name('home');
+Route::get('/', [OfertaPublicaController::class, 'landing'])->name('home');
 
 Route::get('/empleos', [OfertaPublicaController::class, 'index'])
     ->name('empleos.index');
