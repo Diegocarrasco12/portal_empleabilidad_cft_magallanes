@@ -6,39 +6,36 @@
         <!-- ENCABEZADO -->
         <div class="panel-header">
             <h2 class="title">Validación de Ofertas</h2>
+        </div>
 
-            <div class="actions-top">
-                {{-- No usamos buscador aquí, solo filtros por estado --}}
+        <!-- FILTROS POR ESTADO -->
+        <div class="filter-tabs-wrapper">
+            @php
+                $tabs = [
+                    'pending' => 'Pendientes',
+                    'approved' => 'Aprobadas',
+                    'rejected' => 'Rechazadas',
+                    'resubmitted' => 'Reenviadas',
+                    'finalized' => 'Finalizadas',
+                    'all' => 'Todas',
+                ];
+            @endphp
 
-                {{-- Botones de Tabs --}}
-                @php
-                    $tabs = [
-                        'pending' => 'Pendientes',
-                        'approved' => 'Aprobadas',
-                        'rejected' => 'Rechazadas',
-                        'resubmitted' => 'Reenviadas',
-                        'finalized' => 'Finalizadas',
-                        'all' => 'Todas',
-                    ];
+            <div class="filter-tabs">
+                @foreach ($tabs as $key => $label)
+                    <a href="{{ route('admin.ofertas.index', ['estado' => $key]) }}"
+                        class="btn-status {{ $estadoFiltro === $key ? 'active' : '' }}">
 
-                @endphp
+                        {{ $label }}
 
-                <div class="filter-tabs">
-                    @foreach ($tabs as $key => $label)
-                        <a href="{{ route('admin.ofertas.index', ['estado' => $key]) }}"
-                            class="btn-status {{ $estadoFiltro === $key ? 'active' : '' }}">
-
-                            {{ $label }}
-
-                            @if (in_array($key, ['pending', 'approved', 'rejected', 'resubmitted', 'finalized']))
-                                <span class="count">{{ $stats[$key] ?? 0 }}</span>
-                            @endif
-
-                        </a>
-                    @endforeach
-                </div>
+                        @if (in_array($key, ['pending', 'approved', 'rejected', 'resubmitted', 'finalized']))
+                            <span class="count">{{ $stats[$key] ?? 0 }}</span>
+                        @endif
+                    </a>
+                @endforeach
             </div>
         </div>
+
 
         <!-- TABLA -->
         <div class="table-wrapper">
