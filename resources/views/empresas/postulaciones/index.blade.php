@@ -19,33 +19,32 @@
                 <article class="post-card">
 
                     {{-- Foto --}}
-                    <div class="post-img">
-                        <img src="{{ $post->estudiante->avatar ? asset('storage/' . $post->estudiante->avatar) : asset('img/otros/no-user.png') }}"
-                            alt="Foto postulante">
-                    </div>
+                    <img src="{{ $post->estudiante->avatar ? asset($post->estudiante->avatar) : asset('img/otros/no-user.png') }}"
+                        alt="Foto postulante">
+        </div>
 
-                    {{-- Info principal --}}
-                    <div class="post-info">
-                        <h3>{{ $post->estudiante->usuario->nombre }}</h3>
+        {{-- Info principal --}}
+        <div class="post-info">
+            <h3>{{ $post->estudiante->usuario->nombre }}</h3>
 
-                        <p class="puesto">{{ $post->oferta->titulo }}</p>
+            <p class="puesto">{{ $post->oferta->titulo }}</p>
 
-                        <p class="fecha">
-                            📅 Postulado el:
-                            {{ \Carbon\Carbon::parse($post->fecha_postulacion)->format('d M Y') }}
-                        </p>
+            <p class="fecha">
+                📅 Postulado el:
+                {{ \Carbon\Carbon::parse($post->fecha_postulacion)->format('d M Y') }}
+            </p>
 
-                        <a href="{{ route('empresas.postulante', $post->estudiante->id) }}" class="btn-detail">
-                            Ver perfil completo
-                        </a>
-                    </div>
+            <a href="{{ route('empresas.postulante', $post->estudiante->id) }}" class="btn-detail">
+                Ver perfil completo
+            </a>
+        </div>
 
-                </article>
+        </article>
 
-            @empty
+    @empty
 
-                <p class="no-data">Aún no has recibido postulaciones.</p>
-            @endforelse
+        <p class="no-data">Aún no has recibido postulaciones.</p>
+        @endforelse
         </div>
 
     </main>

@@ -145,7 +145,7 @@ class UsuarioController extends Controller
             }
 
             $archivo = $request->file('avatar');
-            $nombre = time() . '_' . $archivo->getClientOriginalName();
+            $nombre = uniqid() . '.' . $archivo->getClientOriginalExtension();
             $archivo->move(public_path('uploads/avatars'), $nombre);
 
             $estudiante->avatar = 'uploads/avatars/' . $nombre;

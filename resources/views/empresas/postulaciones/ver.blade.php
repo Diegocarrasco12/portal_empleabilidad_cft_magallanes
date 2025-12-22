@@ -9,7 +9,7 @@
         <section class="perfil-card">
 
             <div class="foto-area">
-                <img src="{{ $estudiante->avatar ? asset('storage/' . $estudiante->avatar) : asset('img/default-avatar.png') }}"
+                <img src="{{ $estudiante->avatar ? asset($estudiante->avatar) : asset('img/default-avatar.png') }}"
                     alt="Foto estudiante">
             </div>
 
@@ -30,7 +30,7 @@
                 @endif
 
                 @if ($estudiante->ruta_cv)
-                    <a href="{{ asset('storage/' . $estudiante->ruta_cv) }}" class="btn btn-danger mt-3" target="_blank">
+                    <a href="{{ asset($estudiante->ruta_cv) }}" class="btn btn-danger mt-3" target="_blank">
                         Ver CV en PDF
                     </a>
                 @else
@@ -171,7 +171,6 @@
             margin-bottom: 12px;
             background: #fafafa;
         }
-        
     </style>
 
 @endsection
