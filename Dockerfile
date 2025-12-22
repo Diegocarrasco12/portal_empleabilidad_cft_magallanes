@@ -75,7 +75,6 @@ RUN composer install \
 # Limpiar cachés (IMPORTANTE para Render)
 # =====================================================
 RUN php artisan config:clear \
-    && php artisan config:cache \
     && php artisan route:clear \
     && php artisan view:clear
 
