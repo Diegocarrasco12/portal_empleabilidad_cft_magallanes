@@ -119,9 +119,10 @@ class EmpresaController extends Controller
             }
 
             // guardar nuevo logo (MISMO patrón que Recursos / Estudiante)
-            $path = $request->file('logo')->store('empresas', 'public');
-            $empresa->ruta_logo = $path;
+            $filename = uniqid() . '.' . $request->file('logo')->getClientOriginalExtension();
+            $request->file('logo')->move(public_path('uploads/empresas'), $filename);
 
+            $empresa->ruta_logo = 'uploads/empresas/' . $filename;
             $empresa->save();
         }
 

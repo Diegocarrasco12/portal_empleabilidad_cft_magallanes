@@ -305,9 +305,7 @@
 
                         <div class="avatar-row">
                             <img class="avatar-preview"
-                                src="{{ $empresa && $empresa->ruta_logo
-                                    ? asset('storage/' . $empresa->ruta_logo)
-                                    : asset('img/placeholder-logo.png') }}"
+                                src="{{ $empresa && $empresa->ruta_logo ? asset($empresa->ruta_logo) : asset('img/placeholder-logo.png') }}"
                                 alt="Logo empresa">
 
                             <div class="avatar-actions">

@@ -27,7 +27,7 @@
                 <div class="empresa-info">
 
                     @if ($empresa->ruta_logo)
-                        <img src="{{ asset('storage/' . $empresa->ruta_logo) }}" alt="Logo empresa" class="empresa-logo" />
+                        <img src="{{ asset($empresa->ruta_logo) }}" alt="Logo empresa" class="empresa-logo" />
                     @else
                         <img src="{{ asset('img/otros/default-logo.png') }}" alt="Logo por defecto" class="empresa-logo" />
                     @endif
@@ -130,7 +130,7 @@
 
                 @foreach ($postulaciones as $post)
                     <article class="postulante-card">
-                        <img src="{{ $post->estudiante->avatar ? asset('storage/' . $post->estudiante->avatar) : asset('img/otros/no-user.png') }}"
+                        <img src="{{ $post->estudiante->avatar ? asset($post->estudiante->avatar) : asset('img/otros/no-user.png') }}"
                             alt="Foto postulante">
 
                         <div class="postulante-info">
