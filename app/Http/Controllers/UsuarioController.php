@@ -6,7 +6,7 @@ use App\Models\Estudiante;
 use App\Models\Postulacion;
 use Illuminate\Http\Request;
 use App\Services\OfertaRecommendationService;
-use Illuminate\Support\Facades\Storage;
+
 
 class UsuarioController extends Controller
 {
@@ -140,13 +140,15 @@ class UsuarioController extends Controller
         if ($request->hasFile('avatar')) {
 
             // borrar avatar anterior
-            if ($estudiante->avatar && Storage::disk('public')->exists($estudiante->avatar)) {
-                Storage::disk('public')->delete($estudiante->avatar);
+            if ($estudiante->avatar && file_exists(public_path($estudiante->avatar))) {
+                unlink(public_path($estudiante->avatar));
             }
 
-            // guardar nuevo avatar (MISMO patrón que Recursos)
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $estudiante->avatar = $path;
+            $archivo = $request->file('avatar');
+            $nombre = time() . '_' . $archivo->getClientOriginalName();
+            $archivo->move(public_path('uploads/avatars'), $nombre);
+
+            $estudiante->avatar = 'uploads/avatars/' . $nombre;
         }
 
         // ===========================
@@ -155,13 +157,15 @@ class UsuarioController extends Controller
         if ($request->hasFile('cv')) {
 
             // borrar CV anterior
-            if ($estudiante->ruta_cv && Storage::disk('public')->exists($estudiante->ruta_cv)) {
-                Storage::disk('public')->delete($estudiante->ruta_cv);
+            if ($estudiante->ruta_cv && file_exists(public_path($estudiante->ruta_cv))) {
+                unlink(public_path($estudiante->ruta_cv));
             }
 
-            // guardar nuevo CV (MISMO patrón que Recursos)
-            $path = $request->file('cv')->store('cv', 'public');
-            $estudiante->ruta_cv = $path;
+            $archivo = $request->file('cv');
+            $nombre = time() . '_' . $archivo->getClientOriginalName();
+            $archivo->move(public_path('uploads/cv'), $nombre);
+
+            $estudiante->ruta_cv = 'uploads/cv/' . $nombre;
         }
 
         $estudiante->save();

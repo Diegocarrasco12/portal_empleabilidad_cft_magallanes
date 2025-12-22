@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@php use Illuminate\Support\Facades\Storage; @endphp
 
 @section('content')
     <main class="container user-edit">
@@ -29,7 +28,7 @@
                         <label for="avatar">Foto de perfil</label>
                         <div class="avatar-row">
                             <img class="avatar-preview"
-                                src="{{ $estudiante->avatar ? Storage::url($estudiante->avatar) : asset('img/testimonios/test (2).png') }}"
+                                src="{{ $estudiante->avatar ? asset($estudiante->avatar) : asset('img/testimonios/test (2).png') }}"
                                 alt="Avatar actual">
                             <div class="avatar-actions">
                                 <input type="file" id="avatar" name="avatar" accept="image/*">
@@ -132,7 +131,7 @@
                         <input id="cv" name="cv" type="file" accept="application/pdf">
                         @if ($estudiante->ruta_cv)
                             <p class="hint">
-                                CV actual: <a href="{{ Storage::url($estudiante->ruta_cv) }}" target="_blank">Ver PDF</a>
+                                CV actual: <a href="{{ asset($estudiante->ruta_cv) }}" target="_blank">Ver PDF</a>
                             </p>
                         @endif
 

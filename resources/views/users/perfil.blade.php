@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@php use Illuminate\Support\Facades\Storage; @endphp
 
 @section('content')
     <main class="container perfil-user">
@@ -18,7 +17,7 @@
 
                     {{-- === Avatar dinámico === --}}
                     <img class="user-avatar"
-                        src="{{ $estudiante->avatar ? Storage::url($estudiante->avatar) : asset('img/default-avatar.png') }}"
+                        src="{{ $estudiante->avatar ? asset($estudiante->avatar) : asset('img/default-avatar.png') }}"
                         alt="Avatar estudiante">
 
                     <div class="user-meta">
@@ -48,7 +47,7 @@
                     <a href="{{ url('/usuarios/editar') }}" class="btn btn-primary">Editar Perfil</a>
 
                     @if ($estudiante->ruta_cv)
-                        <a href="{{ Storage::url($estudiante->ruta_cv) }}" target="_blank" class="btn btn-outline">
+                        <a href="{{ asset($estudiante->ruta_cv) }}" target="_blank" class="btn btn-outline">
                             Ver CV
                         </a>
                     @else
@@ -111,7 +110,7 @@
 
                         <article class="card job-card">
                             <header class="job-head">
-                                <img src="{{ $empresa && $empresa->ruta_logo ? Storage::url($empresa->ruta_logo) : asset('img/empresas/empresa (3).png') }}"
+                                <img src="{{ $empresa && $empresa->ruta_logo ? asset($empresa->ruta_logo) : asset('img/empresas/empresa (3).png') }}"
                                     class="job-icon" alt="Logo {{ $empresaNombre }}">
 
                                 <h4 class="job-title">{{ $titulo }}</h4>
@@ -157,7 +156,7 @@
 
                         <article class="card job-card">
                             <header class="job-head">
-                                <img src="{{ $empresa && $empresa->ruta_logo ? Storage::url($empresa->ruta_logo) : asset('img/empresas/empresa (4).png') }}"
+                                <img src="{{ $empresa && $empresa->ruta_logo ? asset($empresa->ruta_logo) : asset('img/empresas/empresa (4).png') }}"
                                     class="job-icon" alt="Logo {{ $empresa?->nombre_comercial ?? 'Empresa' }}">
 
                                 <h4 class="job-title">{{ $oferta->titulo }}</h4>
