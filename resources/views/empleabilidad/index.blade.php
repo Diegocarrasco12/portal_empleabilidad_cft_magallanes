@@ -11,12 +11,19 @@
     <div class="cft-blog-grid">
       @foreach ($recursos as $r)
         <article class="cft-blog-card">
-          <a href="{{ route('empleabilidad.show', $r['slug']) }}" class="cft-blog-media ratio ratio-16x9">
-            <img src="{{ $r['cover'] }}" alt="{{ $r['title'] }}">
+          <a href="{{ route('empleabilidad.show', $r->id) }}" class="cft-blog-media ratio ratio-16x9">
+            <img src="{{ asset($r->imagen) }}" alt="{{ $r->titulo }}">
           </a>
-          <h3 class="cft-blog-title mt-3 mb-2">{{ $r['title'] }}</h3>
-          <p class="text-muted mb-3" style="min-height:2.6em">{{ $r['excerpt'] }}</p>
-          <a href="{{ route('empleabilidad.show', $r['slug']) }}" class="btn btn-cft">LEER MÁS</a>
+
+          <h3 class="cft-blog-title mt-3 mb-2">{{ $r->titulo }}</h3>
+
+          <p class="text-muted mb-3" style="min-height:2.6em">
+            {{ $r->resumen }}
+          </p>
+
+          <a href="{{ route('empleabilidad.show', $r->id) }}" class="btn btn-cft">
+            LEER MÁS
+          </a>
         </article>
       @endforeach
     </div>
