@@ -2,10 +2,10 @@
 
 @section('content')
     <!--
-                                                                                                        Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
-                                                                                                        principales descritas en el diseño de referencia: hero, trabajos
-                                                                                                        destacados, empresas destacadas, testimonios y llamada a la acción.
-                                                                                                      -->
+                                                                                                                    Página de inicio de la bolsa de empleo.  Esta vista compone las secciones
+                                                                                                                    principales descritas en el diseño de referencia: hero, trabajos
+                                                                                                                    destacados, empresas destacadas, testimonios y llamada a la acción.
+                                                                                                                  -->
 
     <!-- Sección Hero -->
     <section class="hero">
@@ -36,9 +36,7 @@
 
                         <!-- Logo de la empresa -->
                         <div class="logo-wrapper">
-                            <img src="{{ $job->empresa && $job->empresa->ruta_logo
-                                ? asset('storage/' . $job->empresa->ruta_logo)
-                                : asset('img/iconos/logo.png') }}"
+                            <img src="{{ $job->empresa && $job->empresa->ruta_logo ? asset($job->empresa->ruta_logo) : asset('img/iconos/logo.png') }}"
                                 alt="{{ $job->empresa->nombre_comercial ?? 'Empresa no especificada' }}">
                         </div>
 
@@ -75,7 +73,7 @@
             <div class="companies-row">
                 @forelse ($topCompanies as $company)
                     <div class="company-item">
-                        <img src="{{ $company->ruta_logo ? asset('storage/' . $company->ruta_logo) : asset('img/iconos/logo.png') }}"
+                        <img src="{{ $company->ruta_logo ? asset($company->ruta_logo) : asset('img/iconos/logo.png') }}"
                             alt="{{ $company->nombre_comercial }}">
                     </div>
                 @empty
@@ -169,8 +167,8 @@
                         <a href="{{ route('recursos.show', $recurso->id) }}" class="cft-blog-media ratio ratio-16x9">
 
                             @if ($recurso->imagen)
-                                <img src="{{ asset('storage/' . $recurso->imagen) }}" alt="{{ $recurso->titulo }}"
-                                    loading="lazy">
+                                <img src="{{ $recurso->imagen ? asset($recurso->imagen) : asset('img/otros/placeholder.png') }}"
+                                    alt="{{ $recurso->titulo }}" loading="lazy">
                             @else
                                 <img src="{{ asset('img/otros/placeholder.png') }}" alt="Recurso sin imagen"
                                     loading="lazy">
