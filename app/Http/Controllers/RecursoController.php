@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recurso;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class RecursoController extends Controller
@@ -50,8 +49,13 @@ class RecursoController extends Controller
 
         // GUARDAR IMAGEN (si existe)
         if ($request->hasFile('imagen')) {
-            $path = $request->file('imagen')->store('recursos', 'public');
-            $recurso->imagen = $path;
+
+            $archivo = $request->file('imagen');
+            $nombre  = time() . '_' . $archivo->getClientOriginalName();
+
+            $archivo->move(public_path('uploads/recursos'), $nombre);
+
+            $recurso->imagen = 'uploads/recursos/' . $nombre;
         }
 
         // GUARDAR EN DB
@@ -98,13 +102,17 @@ class RecursoController extends Controller
         if ($request->hasFile('imagen')) {
 
             // eliminar la imagen anterior si existe
-            if ($recurso->imagen && Storage::disk('public')->exists($recurso->imagen)) {
-                Storage::disk('public')->delete($recurso->imagen);
+            if ($recurso->imagen && file_exists(public_path($recurso->imagen))) {
+                unlink(public_path($recurso->imagen));
             }
 
             // guardar nueva
-            $path = $request->file('imagen')->store('recursos', 'public');
-            $recurso->imagen = $path;
+            $archivo = $request->file('imagen');
+            $nombre  = time() . '_' . $archivo->getClientOriginalName();
+
+            $archivo->move(public_path('uploads/recursos'), $nombre);
+
+            $recurso->imagen = 'uploads/recursos/' . $nombre;
         }
 
         // GUARDAR

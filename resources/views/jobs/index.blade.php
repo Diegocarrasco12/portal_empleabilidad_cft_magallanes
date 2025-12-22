@@ -165,7 +165,7 @@
                                 $empresa = $oferta->empresa;
                                 $logo =
                                     $empresa && $empresa->ruta_logo
-                                        ? asset('storage/' . $empresa->ruta_logo)
+                                        ? asset($empresa->ruta_logo)
                                         : asset('img/empresas/empresa (1).png');
                             @endphp
                             <img src="{{ $logo }}" alt="Logo {{ $empresa->nombre_comercial ?? 'Empresa' }}">

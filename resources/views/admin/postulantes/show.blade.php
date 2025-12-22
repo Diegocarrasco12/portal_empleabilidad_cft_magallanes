@@ -13,10 +13,8 @@
 
                 {{-- AVATAR (null-safe) --}}
                 <img class="avatar"
-                     src="{{ optional($estudiante)->avatar
-                            ? asset('storage/' . $estudiante->avatar)
-                            : asset('img/default-avatar.png') }}"
-                     alt="Foto postulante">
+                    src="{{ optional($estudiante)->avatar ? asset($estudiante->avatar) : asset('img/default-avatar.png') }}"
+                    alt="Foto postulante">
 
                 <div class="profile-info">
                     <h2 class="name">
@@ -31,21 +29,16 @@
 
                     {{-- CV --}}
                     @if (optional($estudiante)->ruta_cv)
-                        <a href="{{ asset('storage/' . $estudiante->ruta_cv) }}"
-                           class="btn btn-primary"
-                           target="_blank">
+                        <a href="{{ asset($estudiante->ruta_cv) }}" class="btn btn-primary" target="_blank">
                             📄 Ver / Descargar CV
                         </a>
-                    @else
-                        <span class="btn btn-outline disabled">CV no disponible</span>
                     @endif
                 </div>
             </div>
 
             {{-- RESUMEN --}}
             <p class="profile-summary">
-                {{ optional($estudiante)->resumen
-                    ?: 'El postulante no ha ingresado un resumen profesional.' }}
+                {{ optional($estudiante)->resumen ?: 'El postulante no ha ingresado un resumen profesional.' }}
             </p>
         </section>
 

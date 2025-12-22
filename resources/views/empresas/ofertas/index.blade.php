@@ -42,7 +42,7 @@
 
                     {{-- Logo --}}
                     <div class="oferta-logo">
-                        <img src="{{ $empresa->ruta_logo ? asset('storage/' . $empresa->ruta_logo) : asset('img/logo-placeholder.png') }}"
+                        <img src="{{ $empresa->ruta_logo ? asset($empresa->ruta_logo) : asset('img/logo-placeholder.png') }}"
                             alt="Logo empresa">
                     </div>
 
