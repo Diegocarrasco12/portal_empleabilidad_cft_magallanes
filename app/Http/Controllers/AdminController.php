@@ -8,6 +8,7 @@ use App\Models\OfertaTrabajo;
 use App\Models\Postulacion;
 use App\Models\Usuario;
 use App\Models\Estudiante; // <- agrega esto
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -33,13 +34,26 @@ class AdminController extends Controller
             ->take(6)
             ->get();
 
-        // === 1) OFERTAS CREADAS POR MES (usa creado_en) ===
-        $ofertasPorMes = OfertaTrabajo::selectRaw('MONTH(creado_en) as mes, COUNT(*) as total')
-            ->whereYear('creado_en', now()->year)
-            ->groupBy('mes')
-            ->orderBy('mes')
-            ->pluck('total', 'mes')
-            ->toArray();
+        // === 1) OFERTAS CREADAS POR MES (MySQL + PostgreSQL) ===
+        $driver = DB::getDriverName();
+
+        if ($driver === 'pgsql') {
+            // PostgreSQL
+            $ofertasPorMes = OfertaTrabajo::selectRaw('EXTRACT(MONTH FROM creado_en) as mes, COUNT(*) as total')
+                ->whereYear('creado_en', now()->year)
+                ->groupByRaw('EXTRACT(MONTH FROM creado_en)')
+                ->orderBy('mes')
+                ->pluck('total', 'mes')
+                ->toArray();
+        } else {
+            // MySQL / MariaDB
+            $ofertasPorMes = OfertaTrabajo::selectRaw('MONTH(creado_en) as mes, COUNT(*) as total')
+                ->whereYear('creado_en', now()->year)
+                ->groupBy('mes')
+                ->orderBy('mes')
+                ->pluck('total', 'mes')
+                ->toArray();
+        }
 
         // Normalizar a los 12 meses
         $ofertasMesArray = [];
