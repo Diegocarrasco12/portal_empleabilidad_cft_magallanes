@@ -6,10 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Estudiante;
 use App\Models\OfertaTrabajo;
 use App\Models\Postulacion;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\PostulacionConfirmadaMail;
-use App\Mail\NuevaPostulacionEmpresaMail;
 use App\Models\Usuario;
+use App\Services\BrevoMailService;
 
 
 class PostulacionController extends Controller
@@ -77,41 +75,27 @@ class PostulacionController extends Controller
         $usuarioEstudiante = Usuario::find($usuarioId);
 
         // Correo al ESTUDIANTE (NO debe romper el flujo)
-        try {
-            Mail::to($usuarioEstudiante->email)->send(
-                new PostulacionConfirmadaMail(
-                    $usuarioEstudiante->nombre,
-                    $oferta->titulo
-                )
-            );
-        } catch (\Throwable $e) {
-            logger()->error('Error correo postulación estudiante', [
-                'usuario_id' => $usuarioId,
-                'email'      => $usuarioEstudiante->email ?? null,
-                'oferta_id'  => $oferta->id ?? null,
-                'error'      => $e->getMessage(),
-            ]);
-        }
+        BrevoMailService::send(
+            $usuarioEstudiante->email,
+            'Postulación enviada correctamente',
+            view('emails.postulacion-confirmada', [
+                'nombre' => $usuarioEstudiante->nombre,
+                'oferta' => $oferta->titulo,
+            ])->render()
+        );
+
 
         // Correo a la EMPRESA (NO debe romper el flujo)
         if ($oferta->empresa && $oferta->empresa->correo_contacto) {
-            try {
-                Mail::to($oferta->empresa->correo_contacto)->send(
-                    new NuevaPostulacionEmpresaMail(
-                        $usuarioEstudiante->nombre . ' ' . $usuarioEstudiante->apellido,
-                        $oferta->titulo
-                    )
-                );
-            } catch (\Throwable $e) {
-                logger()->error('Error correo nueva postulación empresa', [
-                    'usuario_id' => $usuarioId,
-                    'email'      => $oferta->empresa->correo_contacto,
-                    'oferta_id'  => $oferta->id ?? null,
-                    'error'      => $e->getMessage(),
-                ]);
-            }
+            BrevoMailService::send(
+                $oferta->empresa->correo_contacto,
+                'Nueva postulación recibida',
+                view('emails.nueva-postulacion-empresa', [
+                    'nombre' => $usuarioEstudiante->nombre . ' ' . $usuarioEstudiante->apellido,
+                    'oferta' => $oferta->titulo,
+                ])->render()
+            );
         }
-
         // 7. Devolver mensaje
         return back()->with('success', '¡Tu postulación fue enviada exitosamente!');
     }
