@@ -22,7 +22,15 @@ class OfertaAprobadaEmpresaMail extends Mailable
     public function build()
     {
         return $this
+            ->from(
+                config('mail.from.address'),
+                config('mail.from.name')
+            )
             ->subject('Tu oferta ha sido aprobada')
-            ->view('emails.oferta-aprobada-empresa');
+            ->view('emails.oferta-aprobada-empresa')
+            ->with([
+                'empresa' => $this->empresa,
+                'titulo'  => $this->titulo,
+            ]);
     }
 }

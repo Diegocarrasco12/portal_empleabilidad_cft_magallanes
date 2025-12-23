@@ -25,7 +25,12 @@ class OfertasRecomendadasEstudianteMail extends Mailable
     {
         $nombre = $this->estudiante->usuario->nombre ?? 'Estudiante';
 
-        return $this->subject('📌 Ofertas recomendadas para ti (CFT Magallanes)')
+        return $this
+            ->from(
+                config('mail.from.address'),
+                config('mail.from.name')
+            )
+            ->subject('📌 Ofertas recomendadas para ti (CFT Magallanes)')
             ->view('emails.ofertas-recomendadas-estudiante')
             ->with([
                 'nombre'  => $nombre,

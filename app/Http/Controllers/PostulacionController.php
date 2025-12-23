@@ -76,23 +76,42 @@ class PostulacionController extends Controller
         // Usuario estudiante
         $usuarioEstudiante = Usuario::find($usuarioId);
 
-        // Correo al ESTUDIANTE
-        Mail::to($usuarioEstudiante->email)->send(
-            new PostulacionConfirmadaMail(
-                $usuarioEstudiante->nombre,
-                $oferta->titulo
-            )
-        );
-
-        // Correo a la EMPRESA
-        if ($oferta->empresa && $oferta->empresa->correo_contacto) {
-            Mail::to($oferta->empresa->correo_contacto)->send(
-                new NuevaPostulacionEmpresaMail(
-                    $usuarioEstudiante->nombre . ' ' . $usuarioEstudiante->apellido,
+        // Correo al ESTUDIANTE (NO debe romper el flujo)
+        try {
+            Mail::to($usuarioEstudiante->email)->send(
+                new PostulacionConfirmadaMail(
+                    $usuarioEstudiante->nombre,
                     $oferta->titulo
                 )
             );
+        } catch (\Throwable $e) {
+            logger()->error('Error correo postulación estudiante', [
+                'usuario_id' => $usuarioId,
+                'email'      => $usuarioEstudiante->email ?? null,
+                'oferta_id'  => $oferta->id ?? null,
+                'error'      => $e->getMessage(),
+            ]);
         }
+
+        // Correo a la EMPRESA (NO debe romper el flujo)
+        if ($oferta->empresa && $oferta->empresa->correo_contacto) {
+            try {
+                Mail::to($oferta->empresa->correo_contacto)->send(
+                    new NuevaPostulacionEmpresaMail(
+                        $usuarioEstudiante->nombre . ' ' . $usuarioEstudiante->apellido,
+                        $oferta->titulo
+                    )
+                );
+            } catch (\Throwable $e) {
+                logger()->error('Error correo nueva postulación empresa', [
+                    'usuario_id' => $usuarioId,
+                    'email'      => $oferta->empresa->correo_contacto,
+                    'oferta_id'  => $oferta->id ?? null,
+                    'error'      => $e->getMessage(),
+                ]);
+            }
+        }
+
         // 7. Devolver mensaje
         return back()->with('success', '¡Tu postulación fue enviada exitosamente!');
     }

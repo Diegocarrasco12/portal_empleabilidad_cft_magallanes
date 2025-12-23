@@ -24,6 +24,10 @@ class OfertaRechazadaEmpresaMail extends Mailable
     public function build()
     {
         return $this
+            ->from(
+                config('mail.from.address'),
+                config('mail.from.name')
+            )
             ->subject('Oferta rechazada – Requiere correcciones')
             ->view('emails.oferta-rechazada-empresa')
             ->with([

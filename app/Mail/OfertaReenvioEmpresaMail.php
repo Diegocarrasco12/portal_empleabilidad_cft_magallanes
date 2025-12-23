@@ -30,7 +30,16 @@ class OfertaReenvioEmpresaMail extends Mailable
     public function build()
     {
         return $this
+            ->from(
+                config('mail.from.address'),
+                config('mail.from.name')
+            )
             ->subject('Correcciones solicitadas para tu oferta laboral')
-            ->view('emails.oferta-reenvio-empresa');
+            ->view('emails.oferta-reenvio-empresa')
+            ->with([
+                'empresa' => $this->empresa,
+                'titulo'  => $this->titulo,
+                'motivo'  => $this->motivo,
+            ]);
     }
 }

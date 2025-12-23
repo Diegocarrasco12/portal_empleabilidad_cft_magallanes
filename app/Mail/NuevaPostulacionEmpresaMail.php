@@ -21,7 +21,12 @@ class NuevaPostulacionEmpresaMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Nueva postulación recibida')
+        return $this
+            ->from(
+                config('mail.from.address'),
+                config('mail.from.name')
+            )
+            ->subject('Nueva postulación recibida')
             ->view('emails.nueva-postulacion-empresa')
             ->with([
                 'nombre' => $this->nombre,

@@ -82,16 +82,24 @@ class AdminOfertaApprovalController extends Controller
         // CORREO A EMPRESA (OFERTA APROBADA)
         // ================================
         if ($oferta->empresa && $oferta->empresa->correo_contacto) {
-            Mail::to($oferta->empresa->correo_contacto)->send(
-                new OfertaAprobadaEmpresaMail(
-                    (
-                        $oferta->empresa?->razon_social
-                        ?? $oferta->empresa?->nombre_comercial
-                        ?? 'Empresa'
-                    ),
-                    $oferta->titulo
-                )
-            );
+            try {
+                Mail::to($oferta->empresa->correo_contacto)->send(
+                    new OfertaAprobadaEmpresaMail(
+                        (
+                            $oferta->empresa?->razon_social
+                            ?? $oferta->empresa?->nombre_comercial
+                            ?? 'Empresa'
+                        ),
+                        $oferta->titulo
+                    )
+                );
+            } catch (\Throwable $e) {
+                logger()->error('Error correo oferta aprobada', [
+                    'oferta_id' => $oferta->id,
+                    'email'     => $oferta->empresa->correo_contacto,
+                    'error'     => $e->getMessage(),
+                ]);
+            }
         }
 
         $mensaje = AlertMessageService::mensaje('APROBADA');
@@ -119,15 +127,23 @@ class AdminOfertaApprovalController extends Controller
         // 📧 CORREO A EMPRESA (RECHAZO)
         // ================================
         if ($oferta->empresa && $oferta->empresa->correo_contacto) {
-            Mail::to($oferta->empresa->correo_contacto)->send(
-                new OfertaRechazadaEmpresaMail(
-                    $oferta->empresa->razon_social
-                        ?? $oferta->empresa->nombre_comercial
-                        ?? 'Empresa',
-                    $oferta->titulo,
-                    $motivo
-                )
-            );
+            try {
+                Mail::to($oferta->empresa->correo_contacto)->send(
+                    new OfertaRechazadaEmpresaMail(
+                        $oferta->empresa->razon_social
+                            ?? $oferta->empresa->nombre_comercial
+                            ?? 'Empresa',
+                        $oferta->titulo,
+                        $motivo
+                    )
+                );
+            } catch (\Throwable $e) {
+                logger()->error('Error correo oferta rechazada', [
+                    'oferta_id' => $oferta->id,
+                    'email'     => $oferta->empresa->correo_contacto,
+                    'error'     => $e->getMessage(),
+                ]);
+            }
         }
 
         $mensaje = AlertMessageService::mensaje('RECHAZADA');
@@ -156,15 +172,23 @@ class AdminOfertaApprovalController extends Controller
         // 📧 CORREO A EMPRESA (REENVÍO)
         // ================================
         if ($oferta->empresa && $oferta->empresa->correo_contacto) {
-            Mail::to($oferta->empresa->correo_contacto)->send(
-                new OfertaReenvioEmpresaMail(
-                    $oferta->empresa->razon_social
-                        ?? $oferta->empresa->nombre_comercial
-                        ?? 'Empresa',
-                    $oferta->titulo,
-                    $motivo
-                )
-            );
+            try {
+                Mail::to($oferta->empresa->correo_contacto)->send(
+                    new OfertaReenvioEmpresaMail(
+                        $oferta->empresa->razon_social
+                            ?? $oferta->empresa->nombre_comercial
+                            ?? 'Empresa',
+                        $oferta->titulo,
+                        $motivo
+                    )
+                );
+            } catch (\Throwable $e) {
+                logger()->error('Error correo oferta reenviada', [
+                    'oferta_id' => $oferta->id,
+                    'email'     => $oferta->empresa->correo_contacto,
+                    'error'     => $e->getMessage(),
+                ]);
+            }
         }
 
         $mensaje = AlertMessageService::mensaje('REENVIADA');

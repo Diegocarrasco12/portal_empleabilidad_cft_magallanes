@@ -12,7 +12,7 @@ Lamentamos informarle que la siguiente oferta de trabajo ha sido <strong>rechaza
 </p>
 
 <p>
-<strong>{{ $tituloOferta }}</strong>
+<strong>{{ $titulo }}</strong>
 </p>
 
 <p>

@@ -20,7 +20,14 @@ class WelcomeMail extends Mailable
     public function build()
     {
         return $this
+            ->from(
+                config('mail.from.address'),
+                config('mail.from.name')
+            )
             ->subject('Bienvenido/a al Portal de Empleabilidad CFT Magallanes')
-            ->view('emails.welcome');
+            ->view('emails.welcome')
+            ->with([
+                'nombre' => $this->nombre,
+            ]);
     }
 }

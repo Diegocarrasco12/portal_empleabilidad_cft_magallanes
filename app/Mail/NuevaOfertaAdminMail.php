@@ -22,6 +22,10 @@ class NuevaOfertaAdminMail extends Mailable
     public function build()
     {
         return $this
+            ->from(
+                config('mail.from.address'),
+                config('mail.from.name')
+            )
             ->subject('Nueva oferta pendiente de aprobación')
             ->view('emails.nueva-oferta-admin')
             ->with([

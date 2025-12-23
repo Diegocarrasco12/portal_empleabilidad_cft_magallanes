@@ -21,7 +21,11 @@ class PostulacionConfirmadaMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Postulación enviada correctamente')
+        return $this->from(
+            config('mail.from.address'),
+            config('mail.from.name')
+        )
+            ->subject('Postulación enviada correctamente')
             ->view('emails.postulacion-confirmada')
             ->with([
                 'nombre' => $this->nombre,
