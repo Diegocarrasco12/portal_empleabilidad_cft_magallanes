@@ -8,8 +8,7 @@ use App\Models\Estudiante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use App\Mail\WelcomeMail;
-use Illuminate\Support\Facades\Mail;
+use App\Services\BrevoMailService;
 
 
 class AuthController extends Controller
@@ -128,14 +127,15 @@ class AuthController extends Controller
                 'usuario_id' => $usuario->id,
             ]);
         }
-        // ============================================================
         // CORREO DE BIENVENIDA
-        // ============================================================
-        Mail::to($usuario->email)->send(
-            new WelcomeMail($usuario->nombre)
+        BrevoMailService::send(
+            $usuario->email,
+            'Bienvenido/a al Portal de Empleabilidad CFT Magallanes',
+            view('emails.welcome', [
+                'nombre' => $usuario->nombre,
+            ])->render()
         );
 
         return redirect('/login')->with('status', 'Cuenta creada con éxito.');
-
     }
 }

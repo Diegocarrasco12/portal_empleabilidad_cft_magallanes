@@ -8,6 +8,8 @@ use App\Models\OfertaTrabajo;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Estudiante;
 use App\Models\Postulacion;
+use App\Services\BrevoMailService;
+
 
 class EmpresaController extends Controller
 {
@@ -210,6 +212,17 @@ class EmpresaController extends Controller
             'fecha_cierre'       => $request->fecha_cierre,
             'estado' => \App\Models\OfertaTrabajo::ESTADO_PENDIENTE,
         ]);
+        // ================================
+        // 📧 CORREO A ADMIN – NUEVA OFERTA
+        // ================================
+        BrevoMailService::send(
+            config('mail.from.address'), // o correo del admin
+            'Nueva oferta pendiente de aprobación',
+            view('emails.nueva-oferta-admin', [
+                'empresa' => $empresa->nombre_comercial ?? 'Empresa',
+                'oferta'  => $oferta->titulo,
+            ])->render()
+        );
 
         /* -----------------------------
        3) Redirección correcta
