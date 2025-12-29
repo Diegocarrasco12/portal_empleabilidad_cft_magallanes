@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AdminEmpresaController extends Controller
 {
@@ -69,7 +70,7 @@ class AdminEmpresaController extends Controller
             'telefono_contacto' => $request->telefono,
             'razon_social' => $validated['razon_social'],
             'sitio_web' => $request->sitio_web,
-            'correo_contacto' => $validated['email'], 
+            'correo_contacto' => $validated['email'],
         ]);
 
 
@@ -91,31 +92,54 @@ class AdminEmpresaController extends Controller
     /**
      * Actualizar empresa
      */
+
     public function update(Request $request, $id)
     {
-        $usuario = Usuario::findOrFail($id);
+        $usuario = Usuario::with('empresa')->findOrFail($id);
 
+        // 1️⃣ Validación flexible (edición)
         $request->validate([
-            'nombre'        => 'required',
-            'email'         => "required|email|unique:usuarios,email,$id",
-            'rut'           => "required|unique:usuarios,rut,$id",
-            'razon_social'  => 'required',
+            'nombre' => 'nullable|string|max:255',
+            'email' => [
+                'nullable',
+                'email',
+                Rule::unique('usuarios', 'email')->ignore($id),
+            ],
+            'rut' => [
+                'nullable',
+                Rule::unique('usuarios', 'rut')->ignore($id),
+            ],
+            'razon_social' => 'nullable|string|max:255',
+            'telefono' => 'nullable|string|max:20',
+            'sitio_web' => 'nullable|string|max:255',
         ]);
 
-        $usuario->update([
+        // 2️⃣ Actualizar SOLO lo que venga (usuario)
+        $dataUsuario = array_filter([
             'nombre' => $request->nombre,
-            'apellido' => null, // ← también aquí
             'email' => $request->email,
             'rut' => $request->rut,
-        ]);
+        ], fn($v) => filled($v));
 
-        $usuario->empresa()->update([
-            'telefono_contacto' => $request->telefono,
-            'razon_social'      => $request->razon_social,
-            'sitio_web'         => $request->sitio_web,
-        ]);
+        if (!empty($dataUsuario)) {
+            $usuario->update($dataUsuario);
+        }
 
-        return redirect()->route('admin.empresas.index')
+        // 3️⃣ Actualizar empresa (si existe)
+        if ($usuario->empresa) {
+            $dataEmpresa = array_filter([
+                'razon_social' => $request->razon_social,
+                'telefono_contacto' => $request->telefono,
+                'sitio_web' => $request->sitio_web,
+            ], fn($v) => filled($v));
+
+            if (!empty($dataEmpresa)) {
+                $usuario->empresa->update($dataEmpresa);
+            }
+        }
+
+        return redirect()
+            ->route('admin.empresas.index')
             ->with('success', 'Empresa actualizada correctamente.');
     }
 

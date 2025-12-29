@@ -43,7 +43,8 @@
                     <label class="check">
                         <input type="checkbox" name="remember"> Mantener mi sesión iniciada
                     </label>
-                    <a class="auth-link" href="{{ url('/password/forgot') }}">¿Olvidaste tu contraseña?</a>
+                    <a class="auth-link" href="{{ route('password.request') }}">
+                        ¿Olvidaste tu contraseña?</a>
                 </div>
 
                 <button class="btn btn-primary btn-full" type="submit">Ingresar</button>

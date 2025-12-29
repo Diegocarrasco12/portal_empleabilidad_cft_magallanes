@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminPostulanteController;
 use App\Http\Controllers\OfertaPublicaController;
 use App\Http\Controllers\RecursoController;
 use App\Http\Controllers\RecursoPublicoController;
+use App\Http\Controllers\Auth\PasswordResetController;
 
 
 /*
@@ -55,7 +56,21 @@ Route::get('/registrarse', [AuthController::class, 'showRegister'])->name('regis
 Route::post('/registrarse', [AuthController::class, 'register'])->name('register.process');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+/* ============================
+   OLVIDÉ / RESET CONTRASEÑA
+============================ */
 
+Route::get('/forgot-password', [PasswordResetController::class, 'showForgotForm'])
+    ->name('password.request');
+
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])
+    ->name('password.email');
+
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])
+    ->name('password.reset');
+
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])
+    ->name('password.update');
 
 
 /* ============================================================
