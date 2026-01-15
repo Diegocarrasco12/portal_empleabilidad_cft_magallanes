@@ -44,11 +44,6 @@
 </head>
 
 <body>
-    <div style="text-align:center; margin-bottom: 20px;">
-        <img src="{{ public_path('img/iconos/logo.png') }}" style="height:80px;">
-    </div>
-
-
     <h1>Reporte General de Empleabilidad</h1>
 
     <table>
