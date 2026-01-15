@@ -138,6 +138,20 @@ Route::middleware('auth.custom')->group(function () {
             Route::patch('/estudiantes/{id}/restaurar', [AdminEstudianteController::class, 'restore'])
                 ->name('admin.estudiantes.restore');
             /* ===============================
+            MÓDULO ADMIN: GESTIÓN ADMINISTRADORES
+               =============================== */
+
+            Route::get('/administradores', [\App\Http\Controllers\AdminAdministradorController::class, 'index'])
+                ->name('admin.administradores.index');
+
+            Route::get('/administradores/crear', [\App\Http\Controllers\AdminAdministradorController::class, 'create'])
+                ->name('admin.administradores.create');
+
+            Route::post('/administradores', [\App\Http\Controllers\AdminAdministradorController::class, 'store'])
+                ->name('admin.administradores.store');
+
+
+            /* ===============================
               MÓDULO ADMIN: GESTIÓN EMPRESAS
              =============================== */
 
@@ -195,6 +209,18 @@ Route::middleware('auth.custom')->group(function () {
 
             Route::get('/postulaciones', [\App\Http\Controllers\AdminPostulacionesController::class, 'index'])
                 ->name('admin.postulaciones.index');
+            /* ===============================
+               MÓDULO ADMIN: REPORTES
+            =============================== */
+
+            Route::get('/reportes', [\App\Http\Controllers\AdminReporteController::class, 'index'])
+                ->name('admin.reportes.index');
+
+            Route::get('/reportes/export/excel', [\App\Http\Controllers\AdminReporteController::class, 'exportExcel'])
+                ->name('admin.reportes.export.excel');
+
+            Route::get('/reportes/export/pdf', [\App\Http\Controllers\AdminReporteController::class, 'exportPdf'])
+                ->name('admin.reportes.export.pdf');
         });
 
     /* ------------------------- EMPRESAS (rol: empresa) ------------------------- */

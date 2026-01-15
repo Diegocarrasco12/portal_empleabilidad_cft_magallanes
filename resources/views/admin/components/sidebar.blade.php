@@ -20,6 +20,13 @@
                     🎓 Estudiantes
                 </a>
             </li>
+            {{-- Administradores --}}
+            <li>
+                <a href="{{ url('admin/administradores') }}"
+                    class="admin-sidebar__link {{ request()->is('admin/administradores*') ? 'active' : '' }}">
+                    🛡️ Administradores
+                </a>
+            </li>
 
             {{-- Empresas --}}
             <li>
@@ -57,6 +64,13 @@
                 <a href="{{ url('admin/recursos') }}"
                     class="admin-sidebar__link {{ request()->is('admin/recursos*') ? 'active' : '' }}">
                     📚 Recursos
+                </a>
+            </li>
+            {{-- Reportes --}}
+            <li>
+                <a href="{{ url('admin/reportes') }}"
+                    class="admin-sidebar__link {{ request()->is('admin/reportes*') ? 'active' : '' }}">
+                    📊 Reportes
                 </a>
             </li>
 
