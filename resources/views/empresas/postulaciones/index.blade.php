@@ -1,180 +1,220 @@
 @extends('layouts.app')
 
-@section('content')
-    <main class="container mt-4">
-
-        {{-- TÍTULO PRINCIPAL --}}
-        <h1 class="page-title">Postulaciones Recibidas</h1>
-        <p class="page-subtitle">Revisa todos los candidatos interesados en tus ofertas laborales.</p>
-
-        {{-- TOTAL --}}
-        <div class="total-box">
-            Total: <strong>{{ $postulaciones->count() }}</strong>
-        </div>
-
-        {{-- GRID DE POSTULACIONES --}}
-        <div class="postulaciones-grid">
-
-            @forelse ($postulaciones as $post)
-                <article class="post-card">
-
-                    {{-- Foto --}}
-                    <img src="{{ $post->estudiante->avatar ? asset($post->estudiante->avatar) : asset('img/otros/no-user.png') }}"
-                        alt="Foto postulante">
-        </div>
-
-        {{-- Info principal --}}
-        <div class="post-info">
-            <h3>{{ $post->estudiante->usuario->nombre }}</h3>
-
-            <p class="puesto">{{ $post->oferta->titulo }}</p>
-
-            <p class="fecha">
-                📅 Postulado el:
-                {{ \Carbon\Carbon::parse($post->fecha_postulacion)->format('d M Y') }}
-            </p>
-
-            <a href="{{ route('empresas.postulante', $post->estudiante->id) }}" class="btn-detail">
-                Ver perfil completo
-            </a>
-        </div>
-
-        </article>
-
-    @empty
-
-        <p class="no-data">Aún no has recibido postulaciones.</p>
-        @endforelse
-        </div>
-
-    </main>
-@endsection
-
-
 @push('styles')
-    <style>
-        /* ===== TITULOS ===== */
-        .page-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
+<style>
+/* =========================================================
+   CONTENEDOR GENERAL
+========================================================= */
+.container-postulaciones {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+}
 
-        .page-subtitle {
-            color: #666;
-            margin-bottom: 20px;
-        }
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+.header-section {
+    margin-bottom: 25px;
+}
 
-        /* ===== TOTAL BOX ===== */
-        .total-box {
-            background: #f8f8f8;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-size: 16px;
-            margin-bottom: 25px;
-            border: 1px solid #e5e5e5;
-        }
+.titulo-section {
+    font-size: 34px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
 
-        /* ===== GRID ===== */
-        .postulaciones-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-            gap: 20px;
-            margin-bottom: 60px;
-        }
+.subtitulo-section {
+    color: #666;
+    font-size: 16px;
+}
 
-        /* ===== CARD ===== */
-        .post-card {
-            background: #fff;
-            border-radius: 14px;
-            padding: 20px;
-            display: flex;
-            gap: 20px;
-            border: 1px solid #ececec;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: .2s ease;
-        }
+/* =========================================================
+   TOTAL
+========================================================= */
+.total-box {
+    background: #f8f8f8;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-size: 16px;
+    margin-bottom: 30px;
+    border: 1px solid #e5e5e5;
+    width: fit-content;
+}
 
-        .post-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
+/* =========================================================
+   GRID
+========================================================= */
+.postulaciones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 22px;
+}
 
-        /* Foto */
-        .post-img img {
-            width: 90px;
-            height: 90px;
-            border-radius: 10px;
-            object-fit: cover;
-        }
+/* =========================================================
+   CARD POSTULANTE
+========================================================= */
+.post-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+    border: 1px solid #ececec;
+    box-shadow: 0 4px 10px rgba(0,0,0,.06);
+    display: flex;
+    gap: 18px;
+    transition: .25s ease;
+}
 
-        /* Info */
-        .post-info h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 0;
-        }
+.post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0,0,0,.12);
+}
 
-        .puesto {
-            color: #444;
-            margin: 5px 0 10px;
-            font-size: 15px;
-        }
+/* =========================================================
+   FOTO
+========================================================= */
+.post-img {
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #f1f1f1;
+}
 
-        .fecha {
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
+.post-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-        .btn-detail {
-            display: inline-block;
-            background: #c91e25;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: .2s;
-        }
+/* =========================================================
+   INFO
+========================================================= */
+.post-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
 
-        .btn-detail:hover {
-            background: #a5161c;
-        }
+.post-info h3 {
+    font-size: 20px;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.2;
+}
 
-        /* No data */
-        .no-data {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px 0;
-            color: #777;
-            font-size: 18px;
-        }
+.puesto {
+    color: #333;
+    font-size: 15px;
+    margin: 6px 0 10px;
+}
 
-        .post-card {
-            display: flex;
-            align-items: stretch;
-            /* importante */
-        }
+.fecha {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
 
-        .post-info {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            /* importante */
-            min-height: 100%;
-        }
+/* =========================================================
+   BOTÓN
+========================================================= */
+.btn-detail {
+    margin-top: auto;
+    display: block;
+    background: #c91e25;
+    color: #fff;
+    text-align: center;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    min-height: 44px;
+    line-height: 24px;
+    white-space: nowrap;
+    transition: .2s;
+}
 
-        .btn-detail {
-            margin-top: auto;
-            /* esto lo baja al fondo */
-            display: inline-block;
-            text-align: center;
-            min-height: 44px;
-            /* para que todos queden igual */
-            line-height: 28px;
-            white-space: nowrap;
-            /* evita que “Ver perfil completo” se parta en 2 líneas */
-        }
-    </style>
+.btn-detail:hover {
+    background: #a5161c;
+}
+
+/* =========================================================
+   NO DATA
+========================================================= */
+.no-data {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 0;
+    color: #777;
+    font-size: 18px;
+}
+</style>
 @endpush
+
+@section('content')
+<div class="container-postulaciones">
+
+    {{-- ENCABEZADO --}}
+    <div class="header-section">
+        <h1 class="titulo-section">Postulaciones Recibidas</h1>
+        <p class="subtitulo-section">
+            Revisa todos los candidatos interesados en tus ofertas laborales.
+        </p>
+    </div>
+
+    {{-- TOTAL --}}
+    <div class="total-box">
+        Total: <strong>{{ $postulaciones->count() }}</strong>
+    </div>
+
+    {{-- GRID --}}
+    <div class="postulaciones-grid">
+
+        @forelse ($postulaciones as $post)
+            <article class="post-card">
+
+                {{-- FOTO --}}
+                <div class="post-img">
+                    <img
+                        src="{{ $post->estudiante->avatar
+                            ? asset($post->estudiante->avatar)
+                            : asset('img/otros/no-user.png') }}"
+                        alt="Foto postulante">
+                </div>
+
+                {{-- INFO --}}
+                <div class="post-info">
+
+                    <h3>
+                        {{ $post->estudiante->usuario->nombre }}
+                        {{ $post->estudiante->usuario->apellido }}
+                    </h3>
+
+                    <p class="puesto">
+                        {{ $post->oferta->titulo }}
+                    </p>
+
+                    <p class="fecha">
+                        📅 Postulado el
+                        {{ \Carbon\Carbon::parse($post->fecha_postulacion)->format('d M Y') }}
+                    </p>
+
+                    <a href="{{ route('empresas.postulante', $post->estudiante->id) }}"
+                       class="btn-detail">
+                        Ver perfil completo
+                    </a>
+
+                </div>
+
+            </article>
+        @empty
+            <p class="no-data">
+                Aún no has recibido postulaciones.
+            </p>
+        @endforelse
+
+    </div>
+</div>
+@endsection
