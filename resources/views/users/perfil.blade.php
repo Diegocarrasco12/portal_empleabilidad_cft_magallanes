@@ -138,7 +138,7 @@
 
 
         {{-- =========================================================
-         OFERTAS RECOMENDADAS (dinámico)
+         OFERTAS RECOMENDADAS
          ========================================================== --}}
         <section class="user-section">
             <h3 class="section-title alt">Ofertas Recomendadas</h3>
