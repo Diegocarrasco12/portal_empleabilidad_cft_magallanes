@@ -80,31 +80,34 @@ class UsuarioController extends Controller
         // 2. VALIDAR DATOS
         // ===========================
         $request->validate([
-            'nombre'   => 'required|string|max:150',
-            'apellido' => 'required|string|max:150',
-            'email'    => 'required|email|max:150',
+    'nombre'   => 'required|string|max:150',
+    'apellido' => 'required|string|max:150',
+    'email'    => 'required|email|max:150',
 
-            'run'            => 'nullable|string|max:20',
-            'estado'         => 'nullable|string|max:50',
-            'titulo'         => 'nullable|string|max:255',
-            'telefono'       => 'nullable|string|max:50',
-            'ciudad'         => 'nullable|string|max:150',
-            'resumen'        => 'nullable|string|max:2000',
-            'institucion'    => 'nullable|string|max:255',
-            'anio_egreso'    => 'nullable|integer|min:1990|max:2099',
-            'cursos'         => 'nullable|string|max:2000',
+    'run'            => 'nullable|string|max:20',
+    'estado'         => 'nullable|string|max:50',
+    'titulo'         => 'nullable|string|max:255',
+    'telefono'       => 'nullable|string|max:50',
+    'ciudad'         => 'nullable|string|max:150',
+    'resumen'        => 'nullable|string|max:2000',
+    'institucion'    => 'nullable|string|max:255',
+    'anio_egreso'    => 'nullable|integer|min:1990|max:2099',
+    'cursos'         => 'nullable|string|max:2000',
 
-            'linkedin'       => 'nullable|url|max:255',
-            'portfolio'      => 'nullable|url|max:255',
+    'linkedin'       => 'nullable|url|max:255',
+    'portfolio'      => 'nullable|url|max:255',
 
-            'area'           => 'nullable|integer',
-            'jornada'        => 'nullable|integer',
-            'modalidad'      => 'nullable|integer',
+    'area'           => 'nullable|integer',
+    'jornada'        => 'nullable|integer',
+    'modalidad'      => 'nullable|integer',
 
-            // Archivos
-            'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'cv'     => 'nullable|mimes:pdf|max:4096',
-        ]);
+    'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    'cv'     => 'nullable|mimes:pdf|max:4096',
+], [
+    'resumen.max' => 'El resumen no puede superar los 2000 caracteres.',
+    'cursos.max'  => 'La sección de cursos no puede superar los 2000 caracteres.',
+]);
+
 
         // ===========================
         // 3. ACTUALIZAR USUARIO
