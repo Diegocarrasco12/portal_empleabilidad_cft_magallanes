@@ -19,6 +19,16 @@
 
         <form action="{{ url('/usuarios/editar') }}" method="post" enctype="multipart/form-data">
             @csrf
+            @if ($errors->any())
+    <div class="alert-error">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 
             {{-- === Avatar + Nombre / Titulación === --}}
             <section class="card">
@@ -98,7 +108,13 @@
                 <div class="field">
     <label for="resumen">Resumen (extracto breve)</label>
     <textarea id="resumen" name="resumen" rows="3" maxlength="2000">{{ $estudiante->resumen }}</textarea>
-    <span class="hint">
+
+@error('resumen')
+    <span class="error-text">{{ $message }}</span>
+@enderror
+
+<span class="hint">
+
         Máximo: 2000 caracteres.
         <span id="contador-resumen">0 / 2000</span>
     </span>
@@ -122,7 +138,13 @@
                 <div class="field">
     <label for="cursos">Cursos / Certificaciones (opcional)</label>
     <textarea id="cursos" name="cursos" rows="2" maxlength="2000">{{ $estudiante->cursos }}</textarea>
-    <span class="hint">
+
+@error('cursos')
+    <span class="error-text">{{ $message }}</span>
+@enderror
+
+<span class="hint">
+
         Máximo: 2000 caracteres.
         <span id="contador-cursos">0 / 2000</span>
     </span>
@@ -499,6 +521,21 @@
                     padding: .85rem;
                 }
             }
+            .alert-error {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #7f1d1d;
+    padding: .75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.error-text {
+    color: #b91c1c;
+    font-size: .85rem;
+    margin-top: .25rem;
+}
+
         </style>
     @endpush
             @push('scripts')
