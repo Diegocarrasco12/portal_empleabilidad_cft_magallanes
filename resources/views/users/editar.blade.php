@@ -523,13 +523,39 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         textarea.addEventListener('input', actualizar);
-        actualizar(); // inicial
+        actualizar();
     }
 
     activarContador('resumen', 'contador-resumen', 2000);
     activarContador('cursos', 'contador-cursos', 2000);
+
+    // ===============================
+    // BLOQUEAR ENVÍO SI EXCEDE 2000
+    // ===============================
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', function (e) {
+        const resumen = document.getElementById('resumen');
+        const cursos = document.getElementById('cursos');
+
+        if (resumen && resumen.value.length > 2000) {
+            e.preventDefault();
+            alert('El resumen supera los 2000 caracteres permitidos.');
+            resumen.focus();
+            return;
+        }
+
+        if (cursos && cursos.value.length > 2000) {
+            e.preventDefault();
+            alert('La sección de cursos supera los 2000 caracteres permitidos.');
+            cursos.focus();
+            return;
+        }
+    });
+
 });
 </script>
 @endpush
+
 
 @endsection
