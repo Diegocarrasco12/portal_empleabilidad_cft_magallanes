@@ -89,10 +89,10 @@ class UsuarioController extends Controller
             'titulo'         => 'nullable|string|max:255',
             'telefono'       => 'nullable|string|max:50',
             'ciudad'         => 'nullable|string|max:150',
-            'resumen'        => 'nullable|string|max:800',
+            'resumen'        => 'nullable|string|max:2000',
             'institucion'    => 'nullable|string|max:255',
             'anio_egreso'    => 'nullable|integer|min:1990|max:2099',
-            'cursos'         => 'nullable|string',
+            'cursos'         => 'nullable|string|max:2000',
 
             'linkedin'       => 'nullable|url|max:255',
             'portfolio'      => 'nullable|url|max:255',
